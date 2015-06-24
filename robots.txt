@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://nshintio.github.io/sitemap.xml 

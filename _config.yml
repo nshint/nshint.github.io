@@ -100,7 +100,7 @@ google_analytics_tracking_id:
 # Facebook Like
 facebook_like: false
 
-author_ids: [matt, woj, rafa]
+author_ids: [matt, woj, rafa, marcin]
 authors: 
    matt:
       display_name: Mateusz Matoszko
@@ -117,3 +117,8 @@ authors:
       email: rafael@nshint.io
       twitter: rakaramos
       github: rakaramos
+   marcin:
+        display_name: Marcin Małysz
+        email: marcin@nshint.io
+        twitter: noxytrux
+        github: noxytrux

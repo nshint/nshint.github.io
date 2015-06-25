@@ -13,7 +13,7 @@ Internationalizing the users interface in Xcode is [really easy](https://develop
 
 Easier than that, are the `extensions` to unleash this fancy feature.
 
-```
+```swift
 extension UITextField {
 
     @IBInspectable var localizedPlaceholder: String {

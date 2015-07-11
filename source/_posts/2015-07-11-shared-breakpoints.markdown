@@ -14,7 +14,7 @@ iOS has some gotchas regarding multithread, things that if you don't respect, ma
 - Performing network requests on the main thread, will hang the users interface.<br/>
 
 {% img left /images/shared-breakpoints/1.png %}
-We can solve those situations using the so called `Symbolic Breakpoints` and [share those breakpoints](https://developer.apple.com/library/ios/recipes/xcode_help-breakpoint_navigator/articles/sharing_a_breakpoint.html) with your team. Thereby, every developer can take advantage of that, and get notified, when they occur.
+We can solve those situations by using the so called `Symbolic Breakpoints` and [share those breakpoints](https://developer.apple.com/library/ios/recipes/xcode_help-breakpoint_navigator/articles/sharing_a_breakpoint.html) with your team. Thereby, every developer can take advantage of that, and get notified, when they occur.
 
 To help you out, we created a bunch of shared breakpoints and integrate them into your project is very easy:
 
@@ -24,7 +24,7 @@ To help you out, we created a bunch of shared breakpoints and integrate them int
 - Breakpoints are saved into `Breakpoints_v2.xcbkptlist`.<br/>
 -  Now you just have to paste the following content into the `<Breakpoints>` node.
 
-(We could also add those using [`LLDB` commands](https://developer.apple.com/library/mac/documentation/IDEs/Conceptual/gdb_to_lldb_transition_guide/document/lldb-terminal-workflow-tutorial.html), but those won't show up on the Breakpoints navigator)
+(We could also add those by using [`LLDB` commands](https://developer.apple.com/library/mac/documentation/IDEs/Conceptual/gdb_to_lldb_transition_guide/document/lldb-terminal-workflow-tutorial.html), but those won't show up on the Breakpoints navigator)
 
 {% img center /images/shared-breakpoints/3.png %}
 

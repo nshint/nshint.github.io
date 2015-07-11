@@ -6,9 +6,9 @@ date: 2015-07-11 14:00:40 -0300
 comments: false
 categories: 
 ---
-Developing multithread application is not something new, and it's become more and more popular with multicore processors. And one thing it's for sure, debugging multithread applications is hard.
+Developing multithreaded application is not something new and it's become more and more popular with multicore processors. One thing it's for sure, debugging multithread applications is tough.
 
-iOS has some gotchas, regarding multithread, things that if you don't respect, may cause your application to crash or hang the users interface, for example:
+iOS has some gotchas regarding multithread, things that if you don't respect, may cause your application to crash or hang the users interface, for example:
 
 - Animations outside the main thread, may crash the application.<br/>
 - Performing network requests on the main thread, will hang the users interface.<br/>

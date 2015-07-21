@@ -52,7 +52,7 @@ override func viewDidLoad() {
     }
 ```
 
-We stored selected index path obtained in long press gesture handler and depending on wether it has any value we allow to pan gesture to kick in. Then, we send a message to collection view, according to the gesture state:
+We stored selected index path obtained in long press gesture handler and depending on wether it has any value we allow to pan gesture to kick in. Then, we call some new collection view methods accordingly to the gesture state:
 
 * `beginInteractiveMovementForItemAtIndexPath(indexPath: NSIndexPath)` which starts interactive movement for cell at specific index path
 * `updateInteractiveMovementTargetPosition(targetPosition: CGPoint)` which updates interactive movement target position during gesture

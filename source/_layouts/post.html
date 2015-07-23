@@ -8,7 +8,6 @@ single: true
   {% include article.html %}
   <footer>
     <em>by <a href="https://www.twitter.com/{{ author.twitter }}" >{{ author.display_name }}</a>, {{ page.date | date: "%-Y %b %-d" }}</em>
-    <em>{% include post/sharing.html %}</em>
   </footer>
 </article>
 {% if site.disqus_short_name and page.comments == true %}

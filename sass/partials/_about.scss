@@ -1,4 +1,4 @@
-#about {
+ #about {
   .quote {
     font-style: italic;
   }
@@ -20,7 +20,7 @@
     color: $text-color-light;
   }
   color: $text-color-light;
-  min-height: 500px;
+  min-height: 300px;
   p { margin-bottom: 1em; color: #333;}
   a:hover { color: $link-color-hover; }
   @media only screen and (min-width: 550px) {

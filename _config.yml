@@ -100,7 +100,7 @@ google_analytics_tracking_id:
 # Facebook Like
 facebook_like: false
 
-author_ids: [matt, woj, rafa, marcin]
+author_ids: [matt, woj, rafa, marcin, kondrat]
 authors: 
    matt:
       display_name: Mateusz Matoszko
@@ -122,3 +122,8 @@ authors:
         email: marcin@nshint.io
         twitter: noxytrux
         github: noxytrux
+   kondrat:
+        display_name: Kondrat Kielar
+        email: kondratk@gmail.com
+        twitter: Maroreram
+        github: kondratk

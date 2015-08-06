@@ -36,7 +36,7 @@ extension AppDelegate {
         UIApplication.doSomething()
     }
 }
-``
+```
 
 Now the class would just call `UIApplication.doSomething()` or `AppDelegate.doSomething()`.
 

@@ -44,7 +44,7 @@ Another situation that's a claimer for LoD is when you have chained 'get' statem
 
 ```swift
 let myDesire = Metallica().gimmeFuel().gimmeFire().gimmeThatWhichIDesire()
-``
+```
 
 In such a case, the `Metallica` class should be refactored and provide it with a mean of calling `Metallica().gimmeThatWhichIDesire()`, for example:
 

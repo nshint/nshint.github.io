@@ -34,7 +34,7 @@ All right, here's what Xcode want's you to do:
 Honestly, that won't help much, because basically it'll just stop the execution and leave you up with `LLDB`, alone in the dark.
 
 But there's a little trick you can do to enhance the preceding symbolic breakpoint.
-Adding `po [[UIWindow keyWindow] _autolayoutTrace]` to it.
+Adding `po [[UIWindow keyWindow] _autolayoutTrace]` to it (for Obj-C projects) or `expr -l objc++ -O -- [[UIWindow keyWindow] _autolayoutTrace]` (for Swift projects).
 
 {% img center /images/autolayout-breakpoints/2.png %}
 
@@ -57,3 +57,5 @@ And if that's not enough for you to find out your autolayout issue, try changing
 ```
 
 Fear no more young Padawan, make symbolic breakpoints and `LLDB` work for you!
+
+I would like to thank [Porter Hoskins](https://twitter.com/PorterHoskins) for pointing out the correct `LLDB` command for Swift.

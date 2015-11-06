@@ -12,7 +12,7 @@ categories:
 Motion effects is an easy way to react to external variations on the device's orientation. To say, `UIKit` performs UI changes whenever the user tilts the device, vertically or horizontally.
 
 Let's use `UIInterpolatingMotionEffect` a subclass of `UIMotionEffects`, with `MapKit`. Notice how appealing it is.
-
+<!--more-->
 {% img center /images/dont-forget-about-motion-effects/01.gif %}
 
 Sweet, right?

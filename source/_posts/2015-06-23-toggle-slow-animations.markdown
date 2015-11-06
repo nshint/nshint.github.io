@@ -10,7 +10,7 @@ categories:
 iOS Simulator has a feature that slows animations, you can toggle it either by pressing `⌘T` or choosing `Debug > Toggle Slow Animations in Frontmost App`. It's very useful, but what if we want to do the same on device? It's easy, fast and simple.
 
 `CALayer` has a property called `speed`, which is a time multiplier. This means that if we have an animation with a duration of 1 second, and set the layer's speed to 2, it'll take just 0.5 seconds to finish. The best thing about it is that it's related to the parent layer. So when we change the speed of a particular `CALayer`, every child layer will be affected. So, if we change `UIWindow` layer speed, every `CALayer` in our application will perform animations with that custom speed value. That leaves us with this two extensions:
-
+<!--more-->
 ``` swift
 extension UIWindow {
 

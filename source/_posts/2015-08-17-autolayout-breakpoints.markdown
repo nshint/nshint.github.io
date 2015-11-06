@@ -8,7 +8,7 @@ categories:
 ---
 
 Auto layout has become a crucial tool for iOS and OS X development. It makes creating layout for multiple screen sizes easy peasy. But sometimes it can drive you crazy, with verbose and misleading logs.
-
+<!--more-->
 ```
 Unable to simultaneously satisfy constraints.
 Probably at least one of the constraints in the following list is one you don't want.

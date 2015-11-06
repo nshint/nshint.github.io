@@ -8,7 +8,7 @@ categories:
 ---
 
 Swift like objC allow us to mix it with other languages, unfotunately when it comes to Swift we can only choose between our good old friend objC or ANIS C, as there is still lack of C++ support. Basically using function pointers allows us to call C functions inside Swift. Swift will automatically convert methods included in Bridge Header into Swift equivalents:
-
+<!--more-->
 This code:  
 
 ```C

@@ -9,7 +9,7 @@ categories:
 Have you ever encountered a situation where you want to build some record or music app ? But you need to somehow react on a phone call which in many cases break recording or playing in more advanced app (mostly when it comes to `CoreAudio`) or switch UI in case of call? `CoreTelephony` is a great library which will help in most of the situations.  
 
 To detect phone call on your iPhone or iPad app (this may be the case now when we use continuity) simply use this piece of code:  
-
+<!--more-->
 ```objc
 #import <CoreTelephony/CTCall.h>
 #import <CoreTelephony/CTCallCenter.h>

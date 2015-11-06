@@ -1,7 +1,8 @@
 ---
-layout: nil
+layout: null
 ---
 User-agent: *
 Disallow: 
 
 Sitemap: {{ site.url }}/sitemap.xml 
+

@@ -11,7 +11,7 @@ Swift 1.2 introduced us with `@noescape` attribute. It's a very important featur
 
 While digging into [release notes](https://developer.apple.com/library/ios/releasenotes/DeveloperTools/RN-Xcode/Chapters/xc6_release_notes.html) we can see a bunch of clever words:
 > A new `@noescape` attribute may be used on closure parameters to functions. This indicates that the parameter is only ever called (or passed as an @noescape parameter in a call), which means that it cannot outlive the lifetime of the call. This enables some minor performance optimizations, but more importantly disables the `self.` requirement in closure arguments.
-
+<!--more-->
 Lets analyze those smart statements and put it into code so everyone can enjoy it: 
 
 ```swift

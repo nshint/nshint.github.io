@@ -17,7 +17,7 @@ Do you sometimes see this in your code while performing custom drawing using <co
 <Error>: CGContextDrawImage: invalid context 0x0
 <Error>: CGContextRestoreGState: invalid context 0x0
 ```
-
+<!--more-->
 And as always is very hard to track, because you cannot exactly say which draw command actually cause this or where does it comes from.
 But there is a simple solution to this:
 

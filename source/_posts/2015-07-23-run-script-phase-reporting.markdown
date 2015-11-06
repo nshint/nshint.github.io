@@ -8,7 +8,7 @@ categories:
 ---
 Bash scripts are commonly used in Mac/iOS development to make repetitive operations hands-free. However sometimes things go wrong and in a perfect world I’d like to be properly informed about the errors.
 Here comes view called „Report Navigator”, which displays any type of errors, warnings at compile time of Objective-C/Swift, or even while typing new lines of code. Let me show how to use the Report Navigator.
-
+<!--more-->
 As usual create new `Run Script Phase` and insert your Bash script:
 
 {% img center /images/bash-scripts-marks/bash-scripts-new-script-phase.png %}  

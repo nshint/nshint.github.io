@@ -10,7 +10,7 @@ categories:
 Internationalizing the users interface in Xcode is [really easy](https://developer.apple.com/library/ios/documentation/MacOSX/Conceptual/BPInternational/InternationalizingYourUserInterface/InternationalizingYourUserInterface.html). Xcode separates all the texts from your views in a dictionary. However, we can make it better, using `extensions` and `@IBDesignables`. How handy would it be, if setting localized strings were as easy as the following?<br/><br/>
 {% img center /images/storyboard-localization/1.png %}
 <br/>
-
+<!--more-->
 Easier than that, are the `extensions` to unleash this fancy feature.
 
 ```swift

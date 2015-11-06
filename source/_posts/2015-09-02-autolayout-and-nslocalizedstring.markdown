@@ -10,7 +10,7 @@ categories:
 A localized application is the one that has all of its texts, translated into the users device current language. And this, for us developers, means one thing, and one thing only. Nightmare.
 
 Every time a new translation comes, it's necessary to run the application and check for broken layouts. Take this quite simple UI.
-
+<!--more-->
 {% img center /images/autolayout-and-nslocalizedstrings/01.png 375 %}
 
 Simple, huh?

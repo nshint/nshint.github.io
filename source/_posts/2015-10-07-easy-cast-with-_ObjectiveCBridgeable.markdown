@@ -8,7 +8,7 @@ categories:
 ---
 
 Swift is out there for about a year and it's a great programming language. I think that almost every iOS/OSX developer out there has already written couple of things in Swift (if you haven't, go ahead and try, you won't regret it, I promise). Although, we have many years of libs and frameworks built using Objective-C and sooner or later a project may have both Swift and Objective-C working together.
-
+<!--more-->
 Fortunately, Apple gave us a [book](https://itunes.apple.com/us/book/using-swift-cocoa-objective/id888894773?mt=11) and a couple of WWDC session ([here](https://developer.apple.com/videos/play/wwdc2014-406/) and [here](https://developer.apple.com/videos/play/wwdc2015-401/)) with the intent to help developers on this task.
 
 For those who have some experience with this integration knows that casting plays an important role. So, todays hint will dig into an poor documented protocol called `_ObjectiveCBridgeable`.

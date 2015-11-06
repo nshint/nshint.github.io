@@ -1,4 +1,9 @@
 {% if site.title %}
-	<!-- <div class="header-title"><a href="{{ root_url }}/">{{ site.title }}</a></div> -->
 	<a href="{{ root_url }}/"><img src="{{ root_url }}/images/nshint_logo.png" /></a>
+	<br/>
+	<div class="social">
+		<a href="{{ site.social.twitter }}"><img src="{{ root_url }}/images/twitter.png" /></a>
+		<a href="{{ site.social.github }}"><img src="{{ root_url }}/images/github.png" /></a>
+		<a href="{{ site.social.rss }}"><img src="{{ root_url }}/images/rss.png" /></a>
+	</div>
 {% endif %}

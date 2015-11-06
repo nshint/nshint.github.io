@@ -8,7 +8,7 @@ categories:
 ---
 
 Gone are the days where there was just one iPhone for developers as a target. Now we have to support multiple devices with different screen sizes. Fortunately, we have autolayout, which solves a part of this design equation, the other part is solved with [`UITraitCollection`](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UITraitCollection_ClassReference/). Trait collection object has two size classes: horizontal and vertical. Each of these classes has three possible values: compact, regular or any. The current device+orientation can be described as a combination of the sizes.
-
+<!--more-->
 {% img center /images/uitraitcollection_trick/1.png %}  
 
 The best thing is that storyboards and nib files support these size classes. We can make layout changes directly onto them. Every view or auto-layout constraint can exist in one or several other size classes. So it is possible to support multiple devices and orientations without any code. Nevertheless there is a case, which is not covered at all. Imagine that you support only portrait mode and the designer wishes to make a difference between iPhone 5 and iPhone 6+ screen. In this case, size classes are not much helpful. However, we can leverage them in an unusual way.

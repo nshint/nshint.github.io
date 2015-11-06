@@ -100,6 +100,11 @@ google_analytics_tracking_id: UA-66445219-1
 # Facebook Like
 facebook_like: false
 
+social:
+  twitter: https://twitter.com/nshintio
+  github: https://github.com/nshintio/
+  rss: http://nshint.io/atom.xml
+
 author_ids: [matt, woj, rafa, marcin, kondrat]
 authors: 
    matt:

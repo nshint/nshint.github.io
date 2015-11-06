@@ -11,7 +11,7 @@ In iOS7 and OS X 10.9 Apple released NSProgess. Its a nice, helpful piece of cod
 If you finally [find a proper way to use it](http://oleb.net/blog/2014/03/nsprogress/) it can be very beneficial.
 
 Besides of helpfull UserInfo object keys which give us comprehensive text information about progress of our tasks in proper language, NSProgress was supposed to provide us way of compositioning objects into trees. However, first version of class allowed this in an implicit way which does not look very clear first time you learn it.
-
+<!--more-->
 I will try to present it to you in a short way:
 ```swift
 let parentProgress = NSProgress()

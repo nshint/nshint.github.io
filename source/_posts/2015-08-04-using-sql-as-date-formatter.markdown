@@ -8,7 +8,7 @@ categories:
 ---
 
 This post is a quick update to [Vombat's blog post](http://vombat.tumblr.com/post/60530544401/date-parsing-performance-on-ios-nsdateformatter) about using SQL instead of `NSDateFormatter` when it comes to parsing dates in your project. If you don't read it yet, I will highly recommend to do it now. This time we will use Swift to make same measurements.
-
+<!--more-->
 TL;DR:
 
 You can use sql database function `strftime` to get UNIX time from e.g.: ISO8061 date string.

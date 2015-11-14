@@ -10,7 +10,7 @@ Logging excessive blocks on the main thread
 
 Having an application running at 60 FPS is every programmers dream, and users delight.
 The worst users experience ever is a frozen and unresponsive screen. It's a dreadful crime in mobile world nowadays. Users try to interact at any moment and according to Murphy’s law they will find all your mistakes. So, you better keep the main thread slim.
-
+<!--more-->
 To keep things smoothly in the users interface, every single operation that's schedule to run into the main thread can take longer than 16 milliseconds, and there's a handy solution to get you covered. It's a little library called [Watchdog](https://github.com/wojteklukaszuk/Watchdog).
 
 Watchdog is a very simple and straightforward library that logs excessive blocking on the main thread. Let's take a look at how to use it:

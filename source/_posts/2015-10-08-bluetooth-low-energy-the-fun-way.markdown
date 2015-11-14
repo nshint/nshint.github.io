@@ -10,7 +10,7 @@ categories:
 Today Bluetooth Low Energy can be found in many cool applications, it can be used from simple data exchange to payment terminals and the more popular usage with iBeacons. But what if we want to build something funny with it? Like some simple game not even realtime, it may be even turn based game. Imagine you do not need to go through this long setup, waiting for server players to be ready etc.
 
 Everyone knows that building good multiplayer game is hard, multiplayer itself is hard... But here I want to show you my small proof of concept of working bluetooth low enery multiplayer game.
-
+<!--more-->
 It can be used in any kind of game! Strategy, board, rpg, race. I built§ a small demo project to show this in details but now let's focus on basics:
 
 Pros:  

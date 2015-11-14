@@ -18,7 +18,7 @@ self.someLabel.textColor = [UIColor blueColor];
 				  		self.someLabel.textColor = [UIColor redColor];
 				  	}];
 ```
-
+<!--more-->
 But there is a simple solution. Instead of animating property we will perform transition on object itself.
 
 Using `transitionWithView` should solve our problem:

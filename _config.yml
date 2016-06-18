@@ -106,7 +106,7 @@ social:
   rss: http://nshint.io/atom.xml
 
 author_ids: [matt, woj, rafa, marcin, kondrat]
-authors: 
+authors:
    matt:
       display_name: Mateusz Matoszko
       email: mateusz@nshint.io
@@ -116,7 +116,7 @@ authors:
       display_name: Wojciech Łukaszuk
       email: wojtek@nshint.io
       twitter: wojteklu
-      github: wojteklukaszuk
+      github: wojteklu
    rafa:
       display_name: Rafael Machado
       email: rafael@nshint.io

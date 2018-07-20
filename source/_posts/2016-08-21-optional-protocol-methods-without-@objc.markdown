@@ -14,6 +14,7 @@ What Objective-C protocols are in Swift is very special. There is so much that w
 There is also no ability to talk to extensions of these protocols. Either they are concrete extensions, with no way you can talk to a protocol and build things like protocol extensions, which we all love and use in Swift. So they’re very limited altogether.
 If you actually are writing Swift code, please don’t use these, they make everyone’s life bad as well as they could not be used, say, in a Linux environment, where you don’t have Objective-C runtime.
 
+<!--more-->
 He's right! When you annotate a protocol with `@objc`, LLVM will generate a bunch of extra things: an `isa` pointer, runtime sections like: `__objc_imageinfo`, `__objc_classref`, etc. It seems that it's casting the protocol into a `NSObject`, and maybe it will have a performance penalty. Also `@objc` protocols can not be used with struct and enums, just class types.
 
 The following assembly is for `@objc protocol`:

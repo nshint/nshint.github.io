@@ -113,7 +113,9 @@ p, li {
 }
 
 .pre-code {
-  font-family: $mono !important;
+  font-family: $fira !important;
+  font-feature-settings: "calt" 1;
+  font-variant-ligatures: contextual;
   overflow: scroll;
   overflow-y: hidden;
   display: block;

@@ -2,7 +2,7 @@
 layout: post
 author: rafa
 title: "Testing the camera on the simulator"
-date: 2019-04-02 22:36:49 +0200
+date: 2019-04-08 22:36:49 +0200
 comments: false
 categories: 
 ---
@@ -35,7 +35,7 @@ final class Camera: NSObject {
     private let session: AVCaptureSession
     private let metadataOutput: AVCaptureMetadataOutput
     private weak var delegate: CameraOutputDelegate?
-    
+
     public init(
         session: AVCaptureSession = AVCaptureSession(),
         metadataOutput: AVCaptureMetadataOutput = AVCaptureMetadataOutput(),
@@ -43,9 +43,9 @@ final class Camera: NSObject {
     ) {
         self.session = session
         self.metadataOutput = metadataOutput
-        
+
         super.init()
-        
+
         self.metadataOutput.setMetadataObjectsDelegate(self, queue: .main)
     }
 }
@@ -61,7 +61,7 @@ extension Camera: AVCaptureMetadataOutputObjectsDelegate {
                 delegate?.qrCode(failed: .invalidMetadata)
                 return
         }
-        
+
         delegate?.qrCode(read: code)
     }
 }
@@ -77,7 +77,7 @@ final class CameraOutputSpy: CameraOutputDelegate {
     var qrCodePassed: String?
     var qrCodeFailedCalled: Bool?
     var qrCodeErrorPassed: CameraError?
-    
+
     func qrCode(read code: String) {
         qrCodeReadCalled = true
         qrCodePassed = code
@@ -114,20 +114,20 @@ I'm not going to lay down the nitty-gritty details about how it works, but the m
 ```swift
 struct Swizzler {
     private let `class`: AnyClass
-    
+
     init(_ class: AnyClass) {
         self.`class` = `class`
     }
-    
+
     func injectNSObjectInit(into selector: Selector) {
         let original = [
             class_getInstanceMethod(`class`, selector)
         ].compactMap { $0 }
-        
+
         let swizzled = [
             class_getInstanceMethod(`class`, #selector(NSObject.init))
         ].compactMap { $0 }
-        
+
         zip(original, swizzled)
             .forEach {
                 method_setImplementation($0.0, method_getImplementation($0.1))
@@ -168,7 +168,7 @@ final class FakeMachineReadableCodeObject: AVMetadataMachineReadableCodeObject {
 
     // 2
     static func createFake(code: String, type: AVMetadataObject.ObjectType) -> FakeMachineReadableCodeObject? {
-    	 // 3
+        // 3
         Swizzler(self).injectNSObjectInit(into: #selector(FakeMachineReadableCodeObject.init(fake:)))
         return fake(fake: code, type: type)
     }
@@ -207,4 +207,4 @@ XCTAssertNil(delegate.qrCodeErrorPassed)
 
 As you can see, you can also check if your [`sut`](https://en.wikipedia.org/wiki/System_under_test) handles just QR code.
 
-P.S: You can use this technique along side with other collaborators, like `AVCaptureDevice`, `AVCaptureInput` and `AVCaptureOutput`.
+You can use this technique along side with other collaborators, like `AVCaptureDevice`, `AVCaptureInput` and `AVCaptureOutput`.

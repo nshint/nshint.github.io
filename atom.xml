@@ -4,7 +4,7 @@
   <title><![CDATA[NSHint]]></title>
   <link href="http://nshint.github.io/atom.xml" rel="self"/>
   <link href="http://nshint.github.io/"/>
-  <updated>2019-04-05T11:28:57-03:00</updated>
+  <updated>2019-04-05T12:56:14-03:00</updated>
   <id>http://nshint.github.io/</id>
   <author>
     <name><![CDATA[NSHint]]></name>
@@ -16,10 +16,10 @@
   <entry>
     
     <title type="html"><![CDATA[Testing the camera on the simulator]]></title>
-    <link href="http://nshint.github.io/blog/2019/04/08/testing%20the%20camera%20on%20the%20simulator/"/>
+    <link href="http://nshint.github.io/blog/2019/04/08/testing-the-camera-on-the-simulator/"/>
     
     <updated>2019-04-08T17:36:49-03:00</updated>
-    <id>http://nshint.github.io/blog/2019/04/08/testing the camera on the simulator</id>
+    <id>http://nshint.github.io/blog/2019/04/08/testing-the-camera-on-the-simulator</id>
     
     <content type="html"><![CDATA[<p>Testing code often demands faking the &ldquo;real world&rdquo;. <a href="https://en.wikipedia.org/wiki/Inversion_of_control">IoC</a> plays a huge role in here where you flip the dependency from a concrete implementation to an interface.</p>
 

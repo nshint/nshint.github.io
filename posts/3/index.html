@@ -1,0 +1,365 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>NSHint</title>
+  <meta name="author" content="NSHint">
+
+  
+  <meta name="description" content="Do you sometimes see this in your code while performing custom drawing using drawRect? 1
+2
+3
+4
+5
+6
+7
+&lt;Error&gt;: CGContextSaveGState: invalid &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://nshint.github.io/posts/3">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-66445219-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner">
+	<a href="/"><img src="/svg/nshint_logo.svg" height="120px"></a>
+	<br/>
+	<div class="social">
+		<a href="https://twitter.com/nshintio"><img src="/svg/twitter.svg" height="40px"/></a>
+		<a href="https://github.com/nshintio/"><img src="/svg/github.svg" height="40px"/></a>
+		<a href="http://nshint.io/atom.xml"><img src="/svg/rss.svg" height="40px"/></a>
+	</div>
+
+
+
+</header>
+  <nav role="navigation"><ul class="main-navigation">
+  <li><a href="/">articles</a></li>
+  <li><a href="/blog/archives">archives</a></li>
+  <li><a href="/team">team</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+  
+    
+      <h1 class="entry-title"><a href="/blog/2015/06/27/tracking-drawing-errors/">Tracking Down Drawing Errors</a></h1>
+      
+      
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-27T06:35:32-03:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Do you sometimes see this in your code while performing custom drawing using <code>drawRect</code>?</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;Error&gt;: CGContextSaveGState: invalid context 0x0
+</span><span class='line'>&lt;Error&gt;: CGContextSetBlendMode: invalid context 0x0
+</span><span class='line'>&lt;Error&gt;: CGContextSetAlpha: invalid context 0x0
+</span><span class='line'>&lt;Error&gt;: CGContextTranslateCTM: invalid context 0x0
+</span><span class='line'>&lt;Error&gt;: CGContextScaleCTM: invalid context 0x0
+</span><span class='line'>&lt;Error&gt;: CGContextDrawImage: invalid context 0x0
+</span><span class='line'>&lt;Error&gt;: CGContextRestoreGState: invalid context 0x0</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/06/27/tracking-drawing-errors/">Read on</a> 
+    </footer>
+  
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+  
+    
+      <h1 class="entry-title"><a href="/blog/2015/06/25/storyboard-localization/">Storyboard Localization</a></h1>
+      
+      
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-25T03:00:00-03:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Internationalizing the users interface in Xcode is <a href="https://developer.apple.com/library/ios/documentation/MacOSX/Conceptual/BPInternational/InternationalizingYourUserInterface/InternationalizingYourUserInterface.html">really easy</a>. Xcode separates all the texts from your views in a dictionary. However, we can make it better, using <code>extensions</code> and <code>@IBDesignables</code>. How handy would it be, if setting localized strings were as easy as the following?<br/><br/>
+<img class="center" src="/images/storyboard-localization/1.png">
+<br/></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/06/25/storyboard-localization/">Read on</a> 
+    </footer>
+  
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+  
+    
+      <h1 class="entry-title"><a href="/blog/2015/06/24/detailed-exceptions/">Detailed Exceptions</a></h1>
+      
+      
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-24T05:00:00-03:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There are a lot of tools in Xcode that help us during the debugging process. No doubt. Breakpoints for example are these tiny signals that tell the debugger to temporarily suspend execution of program at a certain point. My favourite type of breakpoints are the exceptional ones. Exceptional breakpoint is this guardian that pauses the execution of our program, as soon as it knows that things are going to be pretty bad.
+When this happens, we are usually presented with all the stack trace and in the blink of an eye we know what happened that was bad. This is the usual scenario.</p>
+
+<p>But sometimes we see things like that:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>*** Assertion failure in -[UITableView _endCellAnimationsWithContext:], /SourceCache/UIKit_Sim/UIKit-3347.44/UITableView.m:1623</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Which with tells us literally nothing, when we are not familiar enough with the code that we are working. We get sterile error message that tells us that we are doing something wrong with UITableView animations, but it&rsquo;s all we get out of the box.</p>
+
+<p>However, there is a way to get more detailed info. The thing that we can do to know the issue of our crash is this:</p>
+
+<p><img class="right" src="/images/detailed-exceptions/1.png"></p>
+
+<ol>
+<li>Go do debug navigator</li>
+<li>Select <code>objc_exception_throw</code> frame</li>
+<li>Go to console</li>
+<li>Type in: <code>po $eax</code> when using simulator or <code>po $r0</code> when debugging on a device.</li>
+</ol>
+
+
+<p><img class="center" src="/images/detailed-exceptions/2.png"></p>
+
+<p>This way you get more detailed error description which tells you a lot more about the place that you should be looking for to find your mistake.</p>
+</div>
+  
+  
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+  
+    
+      <h1 class="entry-title"><a href="/blog/2015/06/23/toggle-slow-animations/">Toggle Slow Animations</a></h1>
+      
+      
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-23T17:36:49-03:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>iOS Simulator has a feature that slows animations, you can toggle it either by pressing <code>⌘T</code> or choosing <code>Debug &gt; Toggle Slow Animations in Frontmost App</code>. It&rsquo;s very useful, but what if we want to do the same on device? It&rsquo;s easy, fast and simple.</p>
+
+<p><code>CALayer</code> has a property called <code>speed</code>, which is a time multiplier. This means that if we have an animation with a duration of 1 second, and set the layer&rsquo;s speed to 2, it&rsquo;ll take just 0.5 seconds to finish. The best thing about it is that it&rsquo;s related to the parent layer. So when we change the speed of a particular <code>CALayer</code>, every child layer will be affected. So, if we change <code>UIWindow</code> layer speed, every <code>CALayer</code> in our application will perform animations with that custom speed value. That leaves us with this two extensions:</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/06/23/toggle-slow-animations/">Read on</a> 
+    </footer>
+  
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/posts/2">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2019/04/08/testing%20the%20camera%20on%20the%20simulator/">Testing the camera on the simulator</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/23/noescape-attribute/">@noescape attribute</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/10/working-with-cfunction-pointers-in-swift/">Working with CFunction pointers in Swift</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/08/bluetooth-low-energy-the-fun-way/">Bluetooth low energy the fun way</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 -  NSHint <br/>
+</span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Law Of Demeter - NSHint</title>
+  <meta name="author" content="NSHint">
+
+  
+  <meta name="description" content="You may haven&rsquo;t heard about this law or if you have, you may have wondered who&rsquo;s this Demeter guy. Regardless of it, the Law Of Demeter ( &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://nshint.github.io/blog/2015/08/03/law-of-demeter">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-66445219-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner">
+	<a href="/"><img src="/svg/nshint_logo.svg" height="120px"></a>
+	<br/>
+	<div class="social">
+		<a href="https://twitter.com/nshintio"><img src="/svg/twitter.svg" height="40px"/></a>
+		<a href="https://github.com/nshintio/"><img src="/svg/github.svg" height="40px"/></a>
+		<a href="http://nshint.io/atom.xml"><img src="/svg/rss.svg" height="40px"/></a>
+	</div>
+
+
+
+</header>
+  <nav role="navigation"><ul class="main-navigation">
+  <li><a href="/">articles</a></li>
+  <li><a href="/blog/archives">archives</a></li>
+  <li><a href="/team">team</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      
+<div>
+<article class="hentry" role="article">
+  
+  <header>
+  
+    
+      <h1 class="entry-title">Law of Demeter</h1>
+    
+  
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-03T08:24:06-03:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>You may haven&rsquo;t heard about this law or if you have, you may have wondered <a href="http://homepages.cwi.nl/~storm/teaching/reader/LieberherrHolland89.pdf">who&rsquo;s this Demeter guy</a>. Regardless of it, the Law Of Demeter (LoD) is a foundation concept that&rsquo;s used among several design patterns, to wit: Delegate, Proxy, Façade, Adapter and Decorator. Therefore, you probably are already taking advantage of this Law, knowing it or not.</p>
+
+<!--more-->
+
+
+<p>There&rsquo;s a particular situation that occurs with iOS, that&rsquo;s perfect for applying the LoD. Sometimes it&rsquo;s needed to call method in our <code>UIApplicationDelegate</code>. The common way of doing that is the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">let</span> <span class="n">sharedApplication</span> <span class="o">=</span> <span class="bp">UIApplication</span><span class="p">.</span><span class="n">sharedApplication</span><span class="p">()</span>
+</span><span class='line'><span class="k">let</span> <span class="n">delegate</span> <span class="o">=</span> <span class="n">sharedApplication</span><span class="p">.</span><span class="n">delegate</span>
+</span><span class='line'><span class="k">if</span> <span class="k">let</span> <span class="n">delegate</span> <span class="o">=</span> <span class="n">delegate</span> <span class="kt">as</span><span class="o">?</span> <span class="n">AppDelegate</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">delegate</span><span class="p">.</span><span class="n">doSomething</span><span class="p">()</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There are too many temporary objects, and presumably, there&rsquo;s no reason why this class should know about <code>AppDelegate</code> casting and so on.</p>
+
+<p>Using the <code>Decorator</code> pattern, is a way to wrap up this logic and decouple stuff.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">extension</span> <span class="bp">UIApplication</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">class</span> <span class="k">func</span> <span class="n">myDelegate</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">AppDelegate</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="p">(</span><span class="nb">self</span><span class="p">.</span><span class="n">sharedApplication</span><span class="p">().</span><span class="n">delegate</span> <span class="kt">as</span><span class="o">!</span> <span class="n">AppDelegate</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">class</span> <span class="k">func</span> <span class="n">doSomething</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">myDelegate</span><span class="p">().</span><span class="n">doSomething</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">extension</span> <span class="n">AppDelegate</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">class</span> <span class="k">func</span> <span class="n">doSomething</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="bp">UIApplication</span><span class="p">.</span><span class="n">doSomething</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now the class would just call <code>UIApplication.doSomething()</code> or <code>AppDelegate.doSomething()</code>.</p>
+
+<p>Another situation that&rsquo;s a claimer for LoD is when you have chained &lsquo;get&rsquo; statements, for example:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">let</span> <span class="n">myDesire</span> <span class="o">=</span> <span class="n">Metallica</span><span class="p">().</span><span class="n">gimmeFuel</span><span class="p">().</span><span class="n">gimmeFire</span><span class="p">().</span><span class="n">gimmeThatWhichIDesire</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In such a case, the <code>Metallica</code> class should be refactored and provide it with a mean of calling <code>Metallica().gimmeThatWhichIDesire()</code>, for example:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">class</span> <span class="n">Metallica</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">func</span> <span class="n">fuelSetOnFire</span><span class="p">(</span><span class="nl">fuel</span><span class="p">:</span> <span class="n">Fuel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Fire</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">Fire</span><span class="p">.</span><span class="n">setFuelOnFire</span><span class="p">(</span><span class="n">fuel</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">gimmeThatWhichIDesire</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Desire</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">Desire</span><span class="p">.</span><span class="n">fromFire</span><span class="p">(</span><span class="n">fuelSetOnFire</span><span class="p">(</span><span class="n">metallicasFuel</span><span class="p">))</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Wrapping up method calls, separating concerns and decoupling classes are the spine of LoD. Some can say that objects become more complex, but one thing is for sure, your software components will be more testable, and that is a big win!</p>
+
+<p>Now go ahead and follow the rule!</p>
+</div>
+
+  <footer>
+    <em>by <a href="https://www.twitter.com/rakaramos" >Rafael Machado</a>, 2015 Aug 3</em>
+    <em><div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://nshint.github.io/blog/2015/08/03/law-of-demeter/" data-via="nshintio" data-counturl="http://nshint.github.io/blog/2015/08/03/law-of-demeter/" >Tweet</a>
+  
+  
+  
+</div>
+</em>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2019/04/08/testing%20the%20camera%20on%20the%20simulator/">Testing the camera on the simulator</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/23/noescape-attribute/">@noescape attribute</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/10/working-with-cfunction-pointers-in-swift/">Working with CFunction pointers in Swift</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/08/bluetooth-low-energy-the-fun-way/">Bluetooth low energy the fun way</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 -  NSHint <br/>
+</span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

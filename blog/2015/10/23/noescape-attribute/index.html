@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>@noescape attribute - NSHint</title>
+  <meta name="author" content="NSHint">
+
+  
+  <meta name="description" content="Swift 1.2 introduced us with @noescape attribute. It&rsquo;s a very important feature, when we want to make our code more cleaner and stricter. Using &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://nshint.github.io/blog/2015/10/23/noescape-attribute">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-66445219-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner">
+	<a href="/"><img src="/svg/nshint_logo.svg" height="120px"></a>
+	<br/>
+	<div class="social">
+		<a href="https://twitter.com/nshintio"><img src="/svg/twitter.svg" height="40px"/></a>
+		<a href="https://github.com/nshintio/"><img src="/svg/github.svg" height="40px"/></a>
+		<a href="http://nshint.io/atom.xml"><img src="/svg/rss.svg" height="40px"/></a>
+	</div>
+
+
+
+</header>
+  <nav role="navigation"><ul class="main-navigation">
+  <li><a href="/">articles</a></li>
+  <li><a href="/blog/archives">archives</a></li>
+  <li><a href="/team">team</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      
+<div>
+<article class="hentry" role="article">
+  
+  <header>
+  
+    
+      <h1 class="entry-title">@noescape Attribute</h1>
+    
+  
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-23T13:00:00-02:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Swift 1.2 introduced us with <code>@noescape</code> attribute. It&rsquo;s a very important feature, when we want to make our code more cleaner and stricter. Using it properly at 3am will prevent many unwanted retain cycles.</p>
+
+<p>While digging into <a href="https://developer.apple.com/library/ios/releasenotes/DeveloperTools/RN-Xcode/Chapters/xc6_release_notes.html">release notes</a> we can see a bunch of clever words:</p>
+
+<blockquote><p>A new <code>@noescape</code> attribute may be used on closure parameters to functions. This indicates that the parameter is only ever called (or passed as an @noescape parameter in a call), which means that it cannot outlive the lifetime of the call. This enables some minor performance optimizations, but more importantly disables the <code>self.</code> requirement in closure arguments.</p></blockquote>
+
+<!--more-->
+
+
+<p>Lets analyze those smart statements and put it into code so everyone can enjoy it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">func</span> <span class="nf">foo</span><span class="p">(@</span><span class="n">noescape</span> <span class="nl">code</span><span class="p">:(()</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">String</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s">&quot;foo \(bar(code))&quot;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">func</span> <span class="n">bar</span><span class="p">(@</span><span class="n">noescape</span> <span class="nl">code</span><span class="p">:(()</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">String</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">code</span><span class="p">()</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">print</span><span class="p">(</span><span class="n">foo</span><span class="p">()</span> <span class="p">{</span><span class="s">&quot;bar&quot;</span><span class="p">})</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It can be also captured in another <code>@noescape</code> closure:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">func</span> <span class="nf">baz</span><span class="p">(@</span><span class="n">noescape</span> <span class="nl">code</span><span class="p">:(()</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="p">))</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">qux</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">code</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">func</span> <span class="nf">qux</span><span class="p">(@</span><span class="n">noescape</span> <span class="nl">code</span><span class="p">:(()</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="p">))</span> <span class="p">{}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s important to point out, that closures (and functions) annotated with <code>@noescape</code> can only be passed as <code>@noescape</code> parameters. What this mean is:</p>
+
+<ul>
+<li>we cannot run it asynchronously:
+<img class="center" src="/images/noescape-attribute/noescape-async.png"></li>
+<li>we can&rsquo;t store it
+<img class="center" src="/images/noescape-attribute/noescape-store.png"></li>
+<li>we can&rsquo;t capture it in another non-<code>@noescape</code> closure
+<img class="center" src="/images/noescape-attribute/noescape-capture.png"></li>
+</ul>
+
+
+<p>Last to mention, in the future releases this will be taken even further:</p>
+
+<blockquote><p>This enables control-flow-like functions to be more transparent about their behavior. In a future beta, the standard library will adopt this attribute in functions like autoreleasepool().</p></blockquote>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">func</span> <span class="nf">autoreleasepool</span><span class="p">(@</span><span class="n">noescape</span> <span class="nl">code</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="p">())</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">pushAutoreleasePool</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">code</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">popAutoreleasePool</span><span class="p">()</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So dear developer the best is yet to come! ;]</p>
+</div>
+
+  <footer>
+    <em>by <a href="https://www.twitter.com/mmatoszko" >Mateusz Matoszko</a>, 2015 Oct 23</em>
+    <em><div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://nshint.github.io/blog/2015/10/23/noescape-attribute/" data-via="nshintio" data-counturl="http://nshint.github.io/blog/2015/10/23/noescape-attribute/" >Tweet</a>
+  
+  
+  
+</div>
+</em>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2019/04/08/testing%20the%20camera%20on%20the%20simulator/">Testing the camera on the simulator</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/23/noescape-attribute/">@noescape attribute</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/10/working-with-cfunction-pointers-in-swift/">Working with CFunction pointers in Swift</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/08/bluetooth-low-energy-the-fun-way/">Bluetooth low energy the fun way</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 -  NSHint <br/>
+</span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

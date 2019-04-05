@@ -1,0 +1,369 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Working with CFunction pointers in Swift - NSHint</title>
+  <meta name="author" content="NSHint">
+
+  
+  <meta name="description" content="Swift like objC allow us to mix it with other languages, unfotunately when it comes to Swift we can only choose between our good old friend objC or &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://nshint.github.io/blog/2015/10/10/working-with-cfunction-pointers-in-swift">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-66445219-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner">
+	<a href="/"><img src="/svg/nshint_logo.svg" height="120px"></a>
+	<br/>
+	<div class="social">
+		<a href="https://twitter.com/nshintio"><img src="/svg/twitter.svg" height="40px"/></a>
+		<a href="https://github.com/nshintio/"><img src="/svg/github.svg" height="40px"/></a>
+		<a href="http://nshint.io/atom.xml"><img src="/svg/rss.svg" height="40px"/></a>
+	</div>
+
+
+
+</header>
+  <nav role="navigation"><ul class="main-navigation">
+  <li><a href="/">articles</a></li>
+  <li><a href="/blog/archives">archives</a></li>
+  <li><a href="/team">team</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      
+<div>
+<article class="hentry" role="article">
+  
+  <header>
+  
+    
+      <h1 class="entry-title">Working With CFunction Pointers in Swift</h1>
+    
+  
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-10T06:03:46-03:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Swift like objC allow us to mix it with other languages, unfotunately when it comes to Swift we can only choose between our good old friend objC or ANIS C, as there is still lack of C++ support. Basically using function pointers allows us to call C functions inside Swift. Swift will automatically convert methods included in Bridge Header into Swift equivalents:</p>
+
+<!--more-->
+
+
+<p>This code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="kt">void</span> <span class="nf">InitializeAudioSource</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">userAudioClass</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">PlayAudio</span><span class="p">();</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">SetAudioGain</span><span class="p">(</span><span class="n">Float32</span> <span class="n">gain</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Will be converted into:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='Swift'><span class='line'><span class="n">Void</span> <span class="n">InitializeAudioSource</span><span class="p">(</span><span class="nl">userAudioClass</span><span class="p">:</span> <span class="n">UnsafeMutablePointer</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span><span class="p">)</span>
+</span><span class='line'><span class="n">Void</span> <span class="n">PlayAudio</span><span class="p">(</span><span class="n">Void</span><span class="p">)</span>
+</span><span class='line'><span class="n">Void</span> <span class="n">SetAudioGain</span><span class="p">(</span><span class="nl">gain</span><span class="p">:</span><span class="n">Float32</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And as far this is all pretty straightforward so now having our C CoreAudio implementation we can use it in our Swift project like that:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='Swift'><span class='line'><span class="k">class</span> <span class="nl">KWSBackgroundStreamPlayer</span><span class="p">:</span> <span class="bp">NSObject</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">setGain</span><span class="p">(</span><span class="nl">gain</span> <span class="p">:</span> <span class="n">Float32</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">SetAudioGain</span><span class="p">(</span><span class="n">gain</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">play</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">PlayAudio</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">pause</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">PauseAudio</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">close</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="nb">self</span><span class="p">.</span><span class="n">trackClosed</span> <span class="o">==</span> <span class="nb">true</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">return</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">trackClosed</span> <span class="o">=</span> <span class="nb">true</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">CloseAudio</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">deinit</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But because Swift is very strict when it comes to type checks we are no more able to pass our class to <code>InitializeAudioSource</code> function, if you try to do so:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='Swift'><span class='line'><span class="n">InitializeAudioSource</span><span class="p">(</span> <span class="o">&amp;</span><span class="nb">self</span> <span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You will end up with this error:</p>
+
+<p><img class="center" src="/images/cfunction_pointers/error_cfunction.png"></p>
+
+<p>And this is were the bad hacks come in. Unfotunately we need to get a &ldquo;true&rdquo; raw pointer to be able to pass it back to C code and to so we need this piece of code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='Swift'><span class='line'><span class="c1">//convert self to unmanaged object</span>
+</span><span class='line'><span class="k">let</span> <span class="n">anUnmanaged</span> <span class="o">=</span> <span class="n">Unmanaged</span><span class="o">&lt;</span><span class="n">KWSBackgroundStreamPlayer</span><span class="o">&gt;</span><span class="p">.</span><span class="n">passUnretained</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+</span><span class='line'><span class="c1">//get raw data pointer</span>
+</span><span class='line'><span class="k">let</span> <span class="nl">opaque</span><span class="p">:</span> <span class="n">COpaquePointer</span> <span class="o">=</span> <span class="n">anUnmanaged</span><span class="p">.</span><span class="n">toOpaque</span><span class="p">()</span>
+</span><span class='line'><span class="c1">//convert to Mutable to match Swift safe type check</span>
+</span><span class='line'><span class="k">let</span> <span class="n">voidSelf</span> <span class="o">=</span> <span class="n">UnsafeMutablePointer</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span><span class="p">(</span><span class="n">opaque</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">InitializeAudioSource</span><span class="p">(</span> <span class="n">voidSelf</span> <span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And that&rsquo;s how you pass Swift classes and objects to C code, and you will need to do it every time you need a void or any other fancy pointer on C side.</p>
+
+<p>What happens here is that we first take an <code>Unmanaged</code> version of our class object this tells compiler that we are now responsible for memory management, and stops doing retain release magic under the hood for us. But still this is not enough, now we need a raw memory pointer from that unmanaged object and thats where <code>toOpaque()</code> comes in. This will return an raw C pointer of our class object. This is the true <code>void *</code> pointer.
+<code>COpaquePointer</code> is memory representation of something that cannot be represented in Swift so you should be very careful when playing with this kind of pointers. Now we just need to make it a proper type in this case <code>UnsafeMutablePointer</code> with <code>&lt;Void&gt;</code> class type. Every UnsafePointer have constructor that takes <code>COpaquePointer</code> so you have to be sure you are choosing proper type when creating it as there is no type check at this point!</p>
+
+<p>Hopefully on C side it&rsquo;s easy to convert void pointer to proper class type, you just need to use <code>bridge</code> to do so:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="kt">void</span> <span class="nf">InitializeAudioSource</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">userAudioClass</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="c1">//bridge it back to our class </span>
+</span><span class='line'>    <span class="n">KWSBackgroundStreamPlayer</span> <span class="o">*</span><span class="n">backgroundPlayer</span> <span class="o">=</span> <span class="p">(</span><span class="n">__bridge</span> <span class="n">KWSBackgroundStreamPlayer</span><span class="o">*</span><span class="p">)</span><span class="n">userAudioClass</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//get some properties</span>
+</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">path</span> <span class="o">=</span> <span class="n">backgroundPlayer</span><span class="p">.</span><span class="n">filePath</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">repeatSong</span> <span class="o">=</span> <span class="n">backgroundPlayer</span><span class="p">.</span><span class="n">repeatSong</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//...    </span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//we can even pass it as parameter with proper pointer type</span>
+</span><span class='line'>    <span class="n">OSStatus</span> <span class="n">result</span> <span class="o">=</span> <span class="n">AudioQueueNewOutput</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dataFormat</span><span class="p">,</span> <span class="n">BufferCallback</span><span class="p">,</span> <span class="p">(</span><span class="n">__bridge</span> <span class="kt">void</span> <span class="o">*</span><span class="p">)(</span><span class="n">backgroundPlayer</span><span class="p">),</span> <span class="n">nil</span><span class="p">,</span> <span class="n">nil</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">queue</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//... </span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I hope this will help people understand a bit more about how danger may be playing with C in Swift and vice versa. Using <code>Unmanaged</code> and <code>COpaquePointer</code> may lead to crashes and memory leaks, as in some cases you are again responsible for manual memory managment, you are able to get raw pointers with no type that can be casted to whatever you want and so on.</p>
+
+<p>Overall this is a powerful magic you can do in Swift but as someone said: &ldquo;With Great Power Comes Great Responsibility&rdquo; ;)</p>
+
+<p>Example usage available on <a href="https://github.com/noxytrux/KnightWhoSaidSwift">github</a></p>
+</div>
+
+  <footer>
+    <em>by <a href="https://www.twitter.com/noxytrux" >Marcin Małysz</a>, 2015 Oct 10</em>
+    <em><div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://nshint.github.io/blog/2015/10/10/working-with-cfunction-pointers-in-swift/" data-via="nshintio" data-counturl="http://nshint.github.io/blog/2015/10/10/working-with-cfunction-pointers-in-swift/" >Tweet</a>
+  
+  
+  
+</div>
+</em>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2019/04/08/testing%20the%20camera%20on%20the%20simulator/">Testing the camera on the simulator</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/23/noescape-attribute/">@noescape attribute</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/10/working-with-cfunction-pointers-in-swift/">Working with CFunction pointers in Swift</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/08/bluetooth-low-energy-the-fun-way/">Bluetooth low energy the fun way</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 -  NSHint <br/>
+</span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

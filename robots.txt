@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://nshint.github.io/sitemap.xml 
+

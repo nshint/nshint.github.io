@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Autolayout breakpoints - NSHint</title>
+  <meta name="author" content="NSHint">
+
+  
+  <meta name="description" content="Auto layout has become a crucial tool for iOS and OS X development. It makes creating layout for multiple screen sizes easy peasy. But sometimes it &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://nshint.github.io/blog/2015/08/17/autolayout-breakpoints">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-66445219-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner">
+	<a href="/"><img src="/svg/nshint_logo.svg" height="120px"></a>
+	<br/>
+	<div class="social">
+		<a href="https://twitter.com/nshintio"><img src="/svg/twitter.svg" height="40px"/></a>
+		<a href="https://github.com/nshintio/"><img src="/svg/github.svg" height="40px"/></a>
+		<a href="http://nshint.io/atom.xml"><img src="/svg/rss.svg" height="40px"/></a>
+	</div>
+
+
+
+</header>
+  <nav role="navigation"><ul class="main-navigation">
+  <li><a href="/">articles</a></li>
+  <li><a href="/blog/archives">archives</a></li>
+  <li><a href="/team">team</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      
+<div>
+<article class="hentry" role="article">
+  
+  <header>
+  
+    
+      <h1 class="entry-title">Autolayout Breakpoints</h1>
+    
+  
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-17T15:00:52-03:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Auto layout has become a crucial tool for iOS and OS X development. It makes creating layout for multiple screen sizes easy peasy. But sometimes it can drive you crazy, with verbose and misleading logs.</p>
+
+<!--more-->
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Unable to simultaneously satisfy constraints.
+</span><span class='line'>Probably at least one of the constraints in the following list is one you don't want.
+</span><span class='line'>Try this:
+</span><span class='line'>
+</span><span class='line'>(1) look at each constraint and try to figure out which you don't expect;
+</span><span class='line'>(2) find the code that added the unwanted constraint or constraints and fix it.
+</span><span class='line'>(Note: If you're seeing NSAutoresizingMaskLayoutConstraints that you don't understand, refer to the documentation for the UIView property translatesAutoresizingMaskIntoConstraints)
+</span><span class='line'>
+</span><span class='line'>(...........)
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>Make a symbolic breakpoint at UIViewAlertForUnsatisfiableConstraints to catch this in the debugger.
+</span><span class='line'>The methods in the UIConstraintBasedLayoutDebugging category on UIView listed in &lt;UIKit/UIView.h&gt; may also be helpful.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That&rsquo;s a huge log! And I cut off the <code>NSLayoutConstraint</code> part. Yet, the second last line is giving a clue in which direction to go to fix this issue. Symbolic breakpoint at <code>UIViewAlertForUnsatisfiableConstraints</code>.</p>
+
+<p>All right, here&rsquo;s what Xcode want&rsquo;s you to do:</p>
+
+<p><img class="center" src="/images/autolayout-breakpoints/1.png"></p>
+
+<p>Honestly, that won&rsquo;t help much, because basically it&rsquo;ll just stop the execution and leave you up with <code>LLDB</code>, alone in the dark.</p>
+
+<p>But there&rsquo;s a little trick you can do to enhance the preceding symbolic breakpoint.
+Adding <code>po [[UIWindow keyWindow] _autolayoutTrace]</code> to it (for Obj-C projects) or <code>expr -l objc++ -O -- [[UIWindow keyWindow] _autolayoutTrace]</code> (for Swift projects).</p>
+
+<p><img class="center" src="/images/autolayout-breakpoints/2.png"></p>
+
+<p>Now, on console, you&rsquo;ll see all the <code>UIView</code> hierarchy and exactly where it has ambiguity.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="nl">UIWindow</span><span class="p">:</span><span class="mh">0x7f9481c93360</span>
+</span><span class='line'><span class="o">|</span>   <span class="err">•</span><span class="nl">UIView</span><span class="p">:</span><span class="mh">0x7f9481c9d680</span>
+</span><span class='line'><span class="o">|</span>   <span class="o">|</span>   <span class="o">*</span><span class="nl">UIView</span><span class="p">:</span><span class="mh">0x7f9481c9d990</span><span class="o">-</span> <span class="n">AMBIGUOUS</span> <span class="n">LAYOUT</span> <span class="k">for</span> <span class="nl">UIView</span><span class="p">:</span><span class="mh">0x7f9481c9d990</span><span class="p">.</span><span class="n">minX</span><span class="p">{</span><span class="kt">id</span><span class="o">:</span> <span class="mi">13</span><span class="p">},</span> <span class="nl">UIView</span><span class="p">:</span><span class="mh">0x7f9481c9d990</span><span class="p">.</span><span class="n">minY</span><span class="p">{</span><span class="kt">id</span><span class="o">:</span> <span class="mi">16</span><span class="p">}</span>
+</span><span class='line'><span class="o">|</span>   <span class="o">|</span>   <span class="o">*</span><span class="nl">_UILayoutGuide</span><span class="p">:</span><span class="mh">0x7f9481c9e160</span><span class="o">-</span> <span class="n">AMBIGUOUS</span> <span class="n">LAYOUT</span> <span class="k">for</span> <span class="nl">_UILayoutGuide</span><span class="p">:</span><span class="mh">0x7f9481c9e160</span><span class="p">.</span><span class="n">minY</span><span class="p">{</span><span class="kt">id</span><span class="o">:</span> <span class="mi">17</span><span class="p">}</span>
+</span><span class='line'><span class="o">|</span>   <span class="o">|</span>   <span class="o">*</span><span class="nl">_UILayoutGuide</span><span class="p">:</span><span class="mh">0x7f9481c9ebb0</span><span class="o">-</span> <span class="n">AMBIGUOUS</span> <span class="n">LAYOUT</span> <span class="k">for</span> <span class="nl">_UILayoutGuide</span><span class="p">:</span><span class="mh">0x7f9481c9ebb0</span><span class="p">.</span><span class="n">minY</span><span class="p">{</span><span class="kt">id</span><span class="o">:</span> <span class="mi">27</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that as you hit continue it&rsquo;ll stop at every ambiguous layout you may have.
+And if that&rsquo;s not enough for you to find out your autolayout issue, try changing the view&rsquo;s color, who knows?</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">(</span><span class="n">lldb</span><span class="p">)</span> <span class="n">expr</span> <span class="p">((</span><span class="bp">UIView</span> <span class="o">*</span><span class="p">)</span><span class="mh">0x7f9ea3d43410</span><span class="p">).</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIColor</span> <span class="n">redColor</span><span class="p">]</span>
+</span><span class='line'><span class="p">(</span><span class="n">UICachedDeviceRGBColor</span> <span class="o">*</span><span class="p">)</span> <span class="err">$</span><span class="mi">1</span> <span class="o">=</span> <span class="mh">0x00007f9ea3d43410</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Fear no more young Padawan, make symbolic breakpoints and <code>LLDB</code> work for you!</p>
+
+<p>I would like to thank <a href="https://twitter.com/PorterHoskins">Porter Hoskins</a> for pointing out the correct <code>LLDB</code> command for Swift.</p>
+</div>
+
+  <footer>
+    <em>by <a href="https://www.twitter.com/rakaramos" >Rafael Machado</a>, 2015 Aug 17</em>
+    <em><div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://nshint.github.io/blog/2015/08/17/autolayout-breakpoints/" data-via="nshintio" data-counturl="http://nshint.github.io/blog/2015/08/17/autolayout-breakpoints/" >Tweet</a>
+  
+  
+  
+</div>
+</em>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2019/04/08/testing%20the%20camera%20on%20the%20simulator/">Testing the camera on the simulator</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/23/noescape-attribute/">@noescape attribute</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/10/working-with-cfunction-pointers-in-swift/">Working with CFunction pointers in Swift</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/08/bluetooth-low-energy-the-fun-way/">Bluetooth low energy the fun way</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 -  NSHint <br/>
+</span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

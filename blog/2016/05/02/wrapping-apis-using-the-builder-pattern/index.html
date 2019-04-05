@@ -1,0 +1,332 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Wrapping API's using the Builder Pattern - NSHint</title>
+  <meta name="author" content="NSHint">
+
+  
+  <meta name="description" content="The way I was introduced to the Design Patterns lead me to think that those clever and neat solutions were meant to be used just in big softwares &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://nshint.github.io/blog/2016/05/02/wrapping-apis-using-the-builder-pattern">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-66445219-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner">
+	<a href="/"><img src="/svg/nshint_logo.svg" height="120px"></a>
+	<br/>
+	<div class="social">
+		<a href="https://twitter.com/nshintio"><img src="/svg/twitter.svg" height="40px"/></a>
+		<a href="https://github.com/nshintio/"><img src="/svg/github.svg" height="40px"/></a>
+		<a href="http://nshint.io/atom.xml"><img src="/svg/rss.svg" height="40px"/></a>
+	</div>
+
+
+
+</header>
+  <nav role="navigation"><ul class="main-navigation">
+  <li><a href="/">articles</a></li>
+  <li><a href="/blog/archives">archives</a></li>
+  <li><a href="/team">team</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      
+<div>
+<article class="hentry" role="article">
+  
+  <header>
+  
+    
+      <h1 class="entry-title">Wrapping API's Using the Builder Pattern</h1>
+    
+  
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-05-02T17:36:49-03:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>The way I was introduced to the <a href="http://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612">Design Patterns</a> lead me to think that those clever and neat solutions were meant to be used just in big softwares solutions. I never considered using them into the small pieces of software. What do I mean by that? Please, read on.</p>
+
+<p>The Builder Pattern if defined as follows:</p>
+
+<blockquote><p>Separate the construction of a complex object from its representation so that the same construction process can create different representations.</p></blockquote>
+
+<!--more-->
+
+
+<p>Now, consider for a while the creation of an <code>UIAlertView</code> in iOS.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">let</span> <span class="n">alert</span> <span class="o">=</span> <span class="bp">UIAlertView</span><span class="p">(</span><span class="nl">title</span><span class="p">:</span> <span class="s">&quot;Question&quot;</span><span class="p">,</span> <span class="nl">message</span><span class="p">:</span> <span class="s">&quot;Do you like apples?&quot;</span><span class="p">,</span> <span class="nl">delegate</span><span class="p">:</span> <span class="nb">self</span><span class="p">,</span> <span class="nl">cancelButtonTitle</span><span class="p">:</span> <span class="s">&quot;I hate it!&quot;</span><span class="p">,</span> <span class="nl">otherButtonTitles</span><span class="p">:</span> <span class="s">&quot;Yes, I do!&quot;</span><span class="p">,</span> <span class="s">&quot;More of less&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is a long method call, right? But really, that&rsquo;s not the problem. The problem here is that our class has to conform to <code>UIAlertViewDelegate</code> in order to receive the alert result. Wouldn&rsquo;t be nicer to have that logic encapsulated? Well, go back and read the definition for the builder pattern, it fits like a glove, am I right?</p>
+
+<p>An idea on how to wrap the builder pattern around the <code>UIAlertView</code> class is as above:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">class</span> <span class="nl">AlertBuilder</span><span class="p">:</span> <span class="bp">NSObject</span><span class="p">,</span> <span class="bp">UIAlertViewDelegate</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">typealias</span> <span class="n">AlertBuilderCompletion</span> <span class="o">=</span> <span class="n">Int</span> <span class="o">-&gt;</span> <span class="n">Void</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">private</span> <span class="k">var</span> <span class="nl">alertTitle</span><span class="p">:</span> <span class="n">String</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+</span><span class='line'>    <span class="n">private</span> <span class="k">var</span> <span class="nl">alertMessage</span><span class="p">:</span> <span class="n">String</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+</span><span class='line'>    <span class="n">private</span> <span class="k">var</span> <span class="nl">alertStyle</span><span class="p">:</span> <span class="n">UIAlertViewStyle</span> <span class="o">=</span> <span class="p">.</span><span class="n">Default</span>
+</span><span class='line'>    <span class="n">private</span> <span class="k">var</span> <span class="nl">alertButtonTitles</span><span class="p">:</span> <span class="p">[</span><span class="n">String</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span class='line'>    <span class="n">private</span> <span class="k">var</span> <span class="nl">alertCompletion</span><span class="p">:</span> <span class="n">AlertBuilderCompletion</span><span class="o">?</span> <span class="o">=</span> <span class="nb">nil</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">title</span><span class="p">(</span><span class="nl">title</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AlertBuilder</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">alertTitle</span> <span class="o">=</span> <span class="n">title</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nb">self</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">message</span><span class="p">(</span><span class="nl">message</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AlertBuilder</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">alertMessage</span> <span class="o">=</span> <span class="n">message</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nb">self</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">style</span><span class="p">(</span><span class="nl">style</span><span class="p">:</span> <span class="n">UIAlertViewStyle</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AlertBuilder</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">alertStyle</span> <span class="o">=</span> <span class="n">style</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nb">self</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">buttonTitles</span><span class="p">(</span><span class="nl">titles</span><span class="p">:</span> <span class="n">String</span><span class="p">...)</span> <span class="o">-&gt;</span> <span class="n">AlertBuilder</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">alertButtonTitles</span> <span class="o">=</span> <span class="n">alertButtonTitles</span> <span class="o">+</span> <span class="n">titles</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nb">self</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">show</span><span class="p">(</span><span class="nl">completion</span><span class="p">:</span> <span class="n">AlertBuilderCompletion</span><span class="o">?</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">let</span> <span class="n">alertView</span> <span class="o">=</span> <span class="bp">UIAlertView</span><span class="p">()</span>
+</span><span class='line'>        <span class="n">alertView</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="nb">self</span>
+</span><span class='line'>        <span class="n">alertView</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">alertTitle</span>
+</span><span class='line'>        <span class="n">alertView</span><span class="p">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">alertMessage</span>
+</span><span class='line'>        <span class="n">alertView</span><span class="p">.</span><span class="n">alertViewStyle</span> <span class="o">=</span> <span class="n">alertStyle</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">alertButtonTitles</span><span class="p">.</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">title</span> <span class="k">in</span>
+</span><span class='line'>            <span class="n">alertView</span><span class="p">.</span><span class="n">addButtonWithTitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">alertCompletion</span> <span class="o">=</span> <span class="n">completion</span>
+</span><span class='line'>        <span class="n">alertView</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">alertView</span><span class="p">(</span><span class="nl">alertView</span><span class="p">:</span> <span class="bp">UIAlertView</span><span class="p">,</span> <span class="n">didDismissWithButtonIndex</span> <span class="nl">buttonIndex</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">alertCompletion</span><span class="o">?</span><span class="p">(</span><span class="n">buttonIndex</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, all that is necessary to use create an alert is:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="n">alert</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">&quot;Question&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="p">.</span><span class="n">message</span><span class="p">(</span><span class="s">&quot;Do you like apples?&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="p">.</span><span class="n">buttonTitles</span><span class="p">(</span><span class="s">&quot;Yes, I do!&quot;</span><span class="p">,</span><span class="s">&quot;More of less&quot;</span><span class="p">,</span> <span class="s">&quot;I hate it!&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="p">.</span><span class="n">show</span> <span class="p">{</span> <span class="n">index</span> <span class="k">in</span>
+</span><span class='line'>    <span class="n">print</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the past, I would have used the first approach and lived with that. Of course, showing alerts to the user is a very tiny part of a real work application. But that&rsquo;s preciselly where I was wrong. This kind of applicability of the builder (among all other design patterns) is what makes software components reusable.
+And there are some other places where you could apply the same principle, for example <code>NSAttributedString</code> or <code>UIActionSheet</code>.</p>
+
+<p>I hope you find that useful. Builder to the rescue!</p>
+
+<p>P.S: Yes, yes I know that Apple has released <code>UIAlertController</code> and deprecated both <code>UIAlertView</code> and <code>UIActionSheet</code>. However, the idea is pretty much the same, alothough what Apple did is Factory instead of a Builder.</p>
+</div>
+
+  <footer>
+    <em>by <a href="https://www.twitter.com/rakaramos" >Rafael Machado</a>, 2016 May 2</em>
+    <em><div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://nshint.github.io/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/" data-via="nshintio" data-counturl="http://nshint.github.io/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/" >Tweet</a>
+  
+  
+  
+</div>
+</em>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2019/04/08/testing%20the%20camera%20on%20the%20simulator/">Testing the camera on the simulator</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/23/noescape-attribute/">@noescape attribute</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/10/working-with-cfunction-pointers-in-swift/">Working with CFunction pointers in Swift</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/08/bluetooth-low-energy-the-fun-way/">Bluetooth low energy the fun way</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 -  NSHint <br/>
+</span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

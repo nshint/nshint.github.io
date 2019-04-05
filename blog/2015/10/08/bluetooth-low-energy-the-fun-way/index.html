@@ -1,0 +1,724 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Bluetooth low energy the fun way - NSHint</title>
+  <meta name="author" content="NSHint">
+
+  
+  <meta name="description" content="Today Bluetooth Low Energy can be found in many cool applications, it can be used from simple data exchange to payment terminals and the more popular &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://nshint.github.io/blog/2015/10/08/bluetooth-low-energy-the-fun-way">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-66445219-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner">
+	<a href="/"><img src="/svg/nshint_logo.svg" height="120px"></a>
+	<br/>
+	<div class="social">
+		<a href="https://twitter.com/nshintio"><img src="/svg/twitter.svg" height="40px"/></a>
+		<a href="https://github.com/nshintio/"><img src="/svg/github.svg" height="40px"/></a>
+		<a href="http://nshint.io/atom.xml"><img src="/svg/rss.svg" height="40px"/></a>
+	</div>
+
+
+
+</header>
+  <nav role="navigation"><ul class="main-navigation">
+  <li><a href="/">articles</a></li>
+  <li><a href="/blog/archives">archives</a></li>
+  <li><a href="/team">team</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      
+<div>
+<article class="hentry" role="article">
+  
+  <header>
+  
+    
+      <h1 class="entry-title">Bluetooth Low Energy the Fun Way</h1>
+    
+  
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-08T13:17:28-03:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Today Bluetooth Low Energy can be found in many cool applications, it can be used from simple data exchange to payment terminals and the more popular usage with iBeacons. But what if we want to build something funny with it? Like some simple game not even realtime, it may be even turn based game. Imagine you do not need to go through this long setup, waiting for server players to be ready etc.</p>
+
+<p>Everyone knows that building good multiplayer game is hard, multiplayer itself is hard&hellip; But here I want to show you my small proof of concept of working bluetooth low enery multiplayer game.</p>
+
+<!--more-->
+
+
+<p>It can be used in any kind of game! Strategy, board, rpg, race. I built§ a small demo project to show this in details but now let&rsquo;s focus on basics:</p>
+
+<p>Pros:</p>
+
+<ol>
+<li>It&rsquo;s simple!</li>
+<li>Works with any device</li>
+<li>No need to pair, login etc. Just come near other phone</li>
+</ol>
+
+
+<p>Cons:</p>
+
+<ol>
+<li>Bandwith (approx 30bytes of data per packet which todays is nothing)</li>
+<li>Limited distance (work well in approx 20m range)</li>
+</ol>
+
+
+<p>We have our interface class that will be used to extend functionality on both server and client logic (we use central and peripheral mode of our phone)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class='Swift'><span class='line'><span class="k">enum</span> <span class="nl">KWSPacketType</span> <span class="p">:</span> <span class="n">Int8</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">case</span> <span class="n">HearBeat</span>
+</span><span class='line'>    <span class="k">case</span> <span class="n">Connect</span>
+</span><span class='line'>    <span class="k">case</span> <span class="n">Disconnect</span>
+</span><span class='line'>    <span class="k">case</span> <span class="n">MoveUp</span>
+</span><span class='line'>    <span class="k">case</span> <span class="n">MoveDown</span>
+</span><span class='line'>    <span class="k">case</span> <span class="n">Jump</span>
+</span><span class='line'>    <span class="k">case</span> <span class="n">Attack</span>
+</span><span class='line'>    <span class="k">case</span> <span class="n">DefenseUp</span>
+</span><span class='line'>    <span class="k">case</span> <span class="n">DefenseDown</span>
+</span><span class='line'>    <span class="k">case</span> <span class="n">Restart</span>
+</span><span class='line'>    <span class="k">case</span> <span class="n">GameEnd</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">protocol</span> <span class="nl">KWSBlueToothLEDelegate</span><span class="p">:</span> <span class="k">class</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">interfaceDidUpdate</span><span class="p">(</span><span class="n">interface</span> <span class="nl">interface</span><span class="p">:</span> <span class="n">KWSBluetoothLEInterface</span><span class="p">,</span> <span class="nl">command</span><span class="p">:</span> <span class="n">KWSPacketType</span><span class="p">,</span> <span class="nl">data</span><span class="p">:</span> <span class="bp">NSData</span><span class="o">?</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nl">KWSBluetoothLEInterface</span><span class="p">:</span> <span class="bp">NSObject</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">weak</span> <span class="k">var</span> <span class="nl">delegate</span> <span class="p">:</span> <span class="n">KWSBlueToothLEDelegate</span><span class="o">?</span>
+</span><span class='line'>    <span class="k">weak</span> <span class="k">var</span> <span class="nl">ownerViewController</span> <span class="p">:</span> <span class="bp">UIViewController</span><span class="o">?</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">var</span> <span class="nl">interfaceConnected</span> <span class="p">:</span> <span class="n">Bool</span> <span class="o">=</span> <span class="nb">false</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">init</span><span class="p">(</span><span class="nl">ownerController</span> <span class="p">:</span> <span class="bp">UIViewController</span><span class="p">,</span> <span class="nl">delegate</span><span class="p">:</span> <span class="n">KWSBlueToothLEDelegate</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">ownerViewController</span> <span class="o">=</span> <span class="n">ownerController</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">delegate</span>
+</span><span class='line'>        <span class="nb">super</span><span class="p">.</span><span class="k">init</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">sendCommand</span><span class="p">(</span><span class="n">command</span> <span class="nl">command</span><span class="p">:</span> <span class="n">KWSPacketType</span><span class="p">,</span> <span class="nl">data</span><span class="p">:</span> <span class="bp">NSData</span><span class="o">?</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">doesNotRecognizeSelector</span><span class="p">(</span><span class="n">Selector</span><span class="p">(</span><span class="kt">__FUNCTION__</span><span class="p">))</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can see, it&rsquo;s very simple - one send and one receive method as delegate. As both recive and send arguments, we can get the command used in your game to recognize packet type and data which will come along with this command.</p>
+
+<p>Now we need to implement our server and client logic, i don&rsquo;t want to describe in details how to setup BluetoothLE on iPhone so insted I will highlight only important methods like receiving and sending packet on both client and server side.</p>
+
+<p><code>KWSBluetoothLEClient</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+</pre></td><td class='code'><pre><code class='Swift'><span class='line'><span class="k">class</span> <span class="nl">KWSBluetoothLEClient</span><span class="p">:</span> <span class="n">KWSBluetoothLEInterface</span><span class="p">,</span> <span class="bp">CBPeripheralManagerDelegate</span>  <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kr">override</span> <span class="k">func</span> <span class="n">sendCommand</span><span class="p">(</span><span class="n">command</span> <span class="nl">command</span><span class="p">:</span> <span class="n">KWSPacketType</span><span class="p">,</span> <span class="nl">data</span><span class="p">:</span> <span class="bp">NSData</span><span class="o">?</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">!</span><span class="n">interfaceConnected</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">return</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">var</span> <span class="nl">header</span> <span class="p">:</span> <span class="n">Int8</span> <span class="o">=</span> <span class="n">command</span><span class="p">.</span><span class="n">rawValue</span>
+</span><span class='line'>        <span class="k">let</span> <span class="nl">dataToSend</span> <span class="p">:</span> <span class="bp">NSMutableData</span> <span class="o">=</span> <span class="bp">NSMutableData</span><span class="p">(</span><span class="nl">bytes</span><span class="p">:</span> <span class="o">&amp;</span><span class="n">header</span><span class="p">,</span> <span class="nl">length</span><span class="p">:</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Int8</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="k">let</span> <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">dataToSend</span><span class="p">.</span><span class="n">appendData</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="n">dataToSend</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="n">kKWSMaxPacketSize</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">print</span><span class="p">(</span><span class="s">&quot;Error data packet to long!&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">return</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">peripheralManager</span><span class="p">.</span><span class="n">updateValue</span><span class="p">(</span> <span class="n">dataToSend</span><span class="p">,</span>
+</span><span class='line'>                         <span class="nl">forCharacteristic</span><span class="p">:</span> <span class="nb">self</span><span class="p">.</span><span class="n">readCharacteristic</span><span class="p">,</span>
+</span><span class='line'>                      <span class="nl">onSubscribedCentrals</span><span class="p">:</span> <span class="nb">nil</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">func</span> <span class="n">peripheralManager</span><span class="p">(</span><span class="nl">peripheral</span><span class="p">:</span> <span class="bp">CBPeripheralManager</span><span class="p">,</span> <span class="n">didReceiveWriteRequests</span> <span class="nl">requests</span><span class="p">:</span> <span class="p">[</span><span class="bp">CBATTRequest</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="n">requests</span><span class="p">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">for</span> <span class="n">req</span> <span class="k">in</span> <span class="n">requests</span> <span class="kt">as</span> <span class="p">[</span><span class="bp">CBATTRequest</span><span class="p">]</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">let</span> <span class="nl">data</span> <span class="p">:</span> <span class="bp">NSData</span> <span class="o">=</span> <span class="n">req</span><span class="p">.</span><span class="n">value</span><span class="o">!</span>
+</span><span class='line'>            <span class="k">let</span> <span class="nl">header</span> <span class="p">:</span> <span class="bp">NSData</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">subdataWithRange</span><span class="p">(</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Int8</span><span class="p">)))</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">let</span> <span class="n">remainingVal</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Int8</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">var</span> <span class="nl">body</span> <span class="p">:</span> <span class="bp">NSData</span><span class="o">?</span> <span class="o">=</span> <span class="nb">nil</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">if</span> <span class="n">remainingVal</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="n">body</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">subdataWithRange</span><span class="p">(</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Int8</span><span class="p">),</span> <span class="n">remainingVal</span><span class="p">))</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">let</span> <span class="nl">actionValue</span> <span class="p">:</span> <span class="n">UnsafePointer</span><span class="o">&lt;</span><span class="n">Int8</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">UnsafePointer</span><span class="o">&lt;</span><span class="n">Int8</span><span class="o">&gt;</span><span class="p">(</span><span class="n">header</span><span class="p">.</span><span class="n">bytes</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">let</span> <span class="nl">action</span> <span class="p">:</span> <span class="n">KWSPacketType</span> <span class="o">=</span> <span class="n">KWSPacketType</span><span class="p">(</span><span class="nl">rawValue</span><span class="p">:</span> <span class="n">actionValue</span><span class="p">.</span><span class="n">memory</span><span class="p">)</span><span class="o">!</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nb">self</span><span class="p">.</span><span class="n">delegate</span><span class="o">?</span><span class="p">.</span><span class="n">interfaceDidUpdate</span><span class="p">(</span><span class="nl">interface</span><span class="p">:</span> <span class="nb">self</span><span class="p">,</span> <span class="nl">command</span><span class="p">:</span> <span class="n">action</span><span class="p">,</span> <span class="nl">data</span><span class="p">:</span> <span class="n">body</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nb">self</span><span class="p">.</span><span class="n">peripheralManager</span><span class="p">.</span><span class="n">respondToRequest</span><span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="nl">withResult</span><span class="p">:</span> <span class="n">CBATTError</span><span class="p">.</span><span class="n">Success</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>KWSBluetoothLEServer</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+</pre></td><td class='code'><pre><code class='Swift'><span class='line'><span class="k">class</span> <span class="nl">KWSBluetoothLEServer</span><span class="p">:</span> <span class="n">KWSBluetoothLEInterface</span><span class="p">,</span> <span class="bp">CBCentralManagerDelegate</span><span class="p">,</span> <span class="bp">CBPeripheralDelegate</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kr">override</span> <span class="k">func</span> <span class="n">sendCommand</span><span class="p">(</span><span class="n">command</span> <span class="nl">command</span><span class="p">:</span> <span class="n">KWSPacketType</span><span class="p">,</span> <span class="nl">data</span><span class="p">:</span> <span class="bp">NSData</span><span class="o">?</span><span class="p">){</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">!</span><span class="n">interfaceConnected</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">return</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">var</span> <span class="nl">header</span> <span class="p">:</span> <span class="n">Int8</span> <span class="o">=</span> <span class="n">command</span><span class="p">.</span><span class="n">rawValue</span>
+</span><span class='line'>        <span class="k">let</span> <span class="nl">dataToSend</span> <span class="p">:</span> <span class="bp">NSMutableData</span> <span class="o">=</span> <span class="bp">NSMutableData</span><span class="p">(</span><span class="nl">bytes</span><span class="p">:</span> <span class="o">&amp;</span><span class="n">header</span><span class="p">,</span> <span class="nl">length</span><span class="p">:</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Int8</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="k">let</span> <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">dataToSend</span><span class="p">.</span><span class="n">appendData</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="n">dataToSend</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="n">kKWSMaxPacketSize</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">print</span><span class="p">(</span><span class="s">&quot;Error data packet to long!&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">return</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="k">let</span> <span class="n">discoveredPeripheral</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="n">discoveredPeripheral</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">discoveredPeripheral</span><span class="p">.</span><span class="n">writeValue</span><span class="p">(</span> <span class="n">dataToSend</span><span class="p">,</span>
+</span><span class='line'>                          <span class="nl">forCharacteristic</span><span class="p">:</span> <span class="nb">self</span><span class="p">.</span><span class="n">writeCharacteristic</span><span class="p">,</span>
+</span><span class='line'>                                       <span class="nl">type</span><span class="p">:</span> <span class="p">.</span><span class="n">WithResponse</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">peripheral</span><span class="p">(</span><span class="nl">peripheral</span><span class="p">:</span> <span class="bp">CBPeripheral</span><span class="p">,</span> <span class="n">didUpdateValueForCharacteristic</span> <span class="nl">characteristic</span><span class="p">:</span> <span class="bp">CBCharacteristic</span><span class="p">,</span> <span class="nl">error</span><span class="p">:</span> <span class="bp">NSError</span><span class="o">?</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="k">let</span> <span class="n">error</span> <span class="o">=</span> <span class="n">error</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">print</span><span class="p">(</span><span class="s">&quot;didUpdateValueForCharacteristic error: \(error.localizedDescription)&quot;</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">return</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">let</span> <span class="nl">data</span> <span class="p">:</span> <span class="bp">NSData</span> <span class="o">=</span> <span class="n">characteristic</span><span class="p">.</span><span class="n">value</span><span class="o">!</span>
+</span><span class='line'>        <span class="k">let</span> <span class="nl">header</span> <span class="p">:</span> <span class="bp">NSData</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">subdataWithRange</span><span class="p">(</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Int8</span><span class="p">)))</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">let</span> <span class="n">remainingVal</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Int8</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">var</span> <span class="nl">body</span> <span class="p">:</span> <span class="bp">NSData</span><span class="o">?</span> <span class="o">=</span> <span class="nb">nil</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="n">remainingVal</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">body</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">subdataWithRange</span><span class="p">(</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Int8</span><span class="p">),</span> <span class="n">remainingVal</span><span class="p">))</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">let</span> <span class="nl">actionValue</span> <span class="p">:</span> <span class="n">UnsafePointer</span><span class="o">&lt;</span><span class="n">Int8</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">UnsafePointer</span><span class="o">&lt;</span><span class="n">Int8</span><span class="o">&gt;</span><span class="p">(</span><span class="n">header</span><span class="p">.</span><span class="n">bytes</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">let</span> <span class="nl">action</span> <span class="p">:</span> <span class="n">KWSPacketType</span> <span class="o">=</span> <span class="n">KWSPacketType</span><span class="p">(</span><span class="nl">rawValue</span><span class="p">:</span> <span class="n">actionValue</span><span class="p">.</span><span class="n">memory</span><span class="p">)</span><span class="o">!</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">delegate</span><span class="o">?</span><span class="p">.</span><span class="n">interfaceDidUpdate</span><span class="p">(</span><span class="nl">interface</span><span class="p">:</span> <span class="nb">self</span><span class="p">,</span> <span class="nl">command</span><span class="p">:</span> <span class="n">action</span><span class="p">,</span> <span class="nl">data</span><span class="p">:</span> <span class="n">body</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In both cases sending and reciving is the same:</p>
+
+<p>Sending:</p>
+
+<ol>
+<li>Take raw value of the command</li>
+<li>Save into NSData</li>
+<li>Append using additional data that comes with the command</li>
+<li>Send to peripheral/central</li>
+</ol>
+
+
+<p>Receive:</p>
+
+<ol>
+<li>Take NSData from central / peripheral (update request status if needed)</li>
+<li>Get first byte to recognize command type</li>
+<li>Take subset of Data by removing 1st byte and store it as value coming along with command</li>
+<li>Take value of header byte and cast it to our PacketType</li>
+<li>Send it to delegate</li>
+</ol>
+
+
+<p>Thanks to that we can build our game logic like this:</p>
+
+<p>Setup:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='Swift'><span class='line'><span class="k">func</span> <span class="nf">setupGameLogic</span><span class="p">(</span><span class="nl">becomeServer</span><span class="p">:</span><span class="n">Bool</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">isServer</span> <span class="o">=</span> <span class="n">becomeServer</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="nb">self</span><span class="p">.</span><span class="n">isServer</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nb">self</span><span class="p">.</span><span class="n">communicationInterface</span> <span class="o">=</span> <span class="n">KWSBluetoothLEServer</span><span class="p">(</span><span class="nl">ownerController</span><span class="p">:</span> <span class="nb">self</span><span class="p">,</span> <span class="nl">delegate</span><span class="p">:</span> <span class="nb">self</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nb">self</span><span class="p">.</span><span class="n">communicationInterface</span> <span class="o">=</span> <span class="n">KWSBluetoothLEClient</span><span class="p">(</span><span class="nl">ownerController</span><span class="p">:</span> <span class="nb">self</span><span class="p">,</span> <span class="nl">delegate</span><span class="p">:</span> <span class="nb">self</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Sending data to other player:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='Swift'><span class='line'><span class="c1">//player is dead notify other player</span>
+</span><span class='line'><span class="nb">self</span><span class="p">.</span><span class="n">communicationInterface</span><span class="o">!</span><span class="p">.</span><span class="n">sendCommand</span><span class="p">(</span><span class="nl">command</span><span class="p">:</span> <span class="p">.</span><span class="n">GameEnd</span><span class="p">,</span> <span class="nl">data</span><span class="p">:</span> <span class="nb">nil</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//send some basic data about your player state (life, position)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">let</span> <span class="n">currentPlayer</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="n">gameScene</span><span class="p">.</span><span class="n">selectedPlayer</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">var</span> <span class="n">packet</span> <span class="o">=</span> <span class="n">syncPacket</span><span class="p">()</span>
+</span><span class='line'>        <span class="n">packet</span><span class="p">.</span><span class="n">healt</span> <span class="o">=</span> <span class="n">currentPlayer</span><span class="o">!</span><span class="p">.</span><span class="n">healt</span>
+</span><span class='line'>        <span class="n">packet</span><span class="p">.</span><span class="n">posx</span> <span class="o">=</span> <span class="n">Float16CompressorCompress</span><span class="p">(</span><span class="n">Float32</span><span class="p">(</span><span class="n">currentPlayer</span><span class="o">!</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">let</span> <span class="n">packetData</span> <span class="o">=</span> <span class="bp">NSData</span><span class="p">(</span><span class="nl">bytes</span><span class="p">:</span> <span class="o">&amp;</span><span class="n">packet</span><span class="p">,</span> <span class="nl">length</span><span class="p">:</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">syncPacket</span><span class="p">))</span>
+</span><span class='line'>    <span class="nb">self</span><span class="p">.</span><span class="n">communicationInterface</span><span class="o">!</span><span class="p">.</span><span class="n">sendCommand</span><span class="p">(</span><span class="nl">command</span><span class="p">:</span> <span class="p">.</span><span class="n">HearBeat</span><span class="p">,</span> <span class="nl">data</span><span class="p">:</span> <span class="n">packetData</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//send some other info </span>
+</span><span class='line'>
+</span><span class='line'><span class="k">let</span> <span class="n">directionData</span> <span class="o">=</span> <span class="bp">NSData</span><span class="p">(</span><span class="nl">bytes</span><span class="p">:</span> <span class="o">&amp;</span><span class="n">currentPlayer</span><span class="o">!</span><span class="p">.</span><span class="n">movingLeft</span><span class="p">,</span> <span class="nl">length</span><span class="p">:</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Bool</span><span class="p">))</span>
+</span><span class='line'><span class="nb">self</span><span class="p">.</span><span class="n">communicationInterface</span><span class="o">!</span><span class="p">.</span><span class="n">sendCommand</span><span class="p">(</span><span class="nl">command</span><span class="p">:</span> <span class="p">.</span><span class="n">MoveDown</span><span class="p">,</span> <span class="nl">data</span><span class="p">:</span> <span class="n">directionData</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Reciving data:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='Swift'><span class='line'><span class="k">func</span> <span class="nf">interfaceDidUpdate</span><span class="p">(</span><span class="n">interface</span> <span class="nl">interface</span><span class="p">:</span> <span class="n">KWSBluetoothLEInterface</span><span class="p">,</span> <span class="nl">command</span><span class="p">:</span> <span class="n">KWSPacketType</span><span class="p">,</span> <span class="nl">data</span><span class="p">:</span> <span class="bp">NSData</span><span class="o">?</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">switch</span><span class="p">(</span> <span class="n">command</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">case</span> <span class="p">.</span><span class="nl">HearBeat</span><span class="p">:</span>
+</span><span class='line'>  <span class="k">if</span> <span class="k">let</span> <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">let</span> <span class="nl">subData</span> <span class="p">:</span> <span class="bp">NSData</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">subdataWithRange</span><span class="p">(</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">syncPacket</span><span class="p">)))</span>
+</span><span class='line'>      <span class="k">let</span> <span class="n">packetMemory</span> <span class="o">=</span> <span class="n">UnsafePointer</span><span class="o">&lt;</span><span class="n">syncPacket</span><span class="o">&gt;</span><span class="p">(</span><span class="n">subData</span><span class="p">.</span><span class="n">bytes</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">let</span> <span class="n">packet</span> <span class="o">=</span> <span class="n">packetMemory</span><span class="p">.</span><span class="n">memory</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nb">self</span><span class="p">.</span><span class="n">gameScene</span><span class="p">.</span><span class="n">otherPlayer</span><span class="o">!</span><span class="p">.</span><span class="n">healt</span> <span class="o">=</span> <span class="n">packet</span><span class="p">.</span><span class="n">healt</span>
+</span><span class='line'>      <span class="nb">self</span><span class="p">.</span><span class="n">gameScene</span><span class="p">.</span><span class="n">otherPlayer</span><span class="o">!</span><span class="p">.</span><span class="n">applyDamage</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">let</span> <span class="n">decoded</span> <span class="o">=</span> <span class="n">Float16CompressorDecompress</span><span class="p">(</span><span class="n">packet</span><span class="p">.</span><span class="n">posx</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">let</span> <span class="n">realPos</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="n">gameScene</span><span class="p">.</span><span class="n">otherPlayer</span><span class="o">!</span><span class="p">.</span><span class="n">position</span>
+</span><span class='line'>      <span class="k">let</span> <span class="n">position</span> <span class="o">=</span> <span class="n">CGPointMake</span><span class="p">(</span><span class="n">CGFloat</span><span class="p">(</span><span class="n">decoded</span><span class="p">),</span> <span class="n">CGFloat</span><span class="p">(</span><span class="n">realPos</span><span class="p">.</span><span class="n">y</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nb">self</span><span class="p">.</span><span class="n">gameScene</span><span class="p">.</span><span class="n">otherPlayer</span><span class="o">!</span><span class="p">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">case</span> <span class="p">.</span><span class="nl">Jump</span><span class="p">:</span>
+</span><span class='line'>      <span class="nb">self</span><span class="p">.</span><span class="n">gameScene</span><span class="p">.</span><span class="n">otherPlayer</span><span class="o">!</span><span class="p">.</span><span class="n">playerJump</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">case</span> <span class="p">.</span><span class="nl">Restart</span><span class="p">:</span>
+</span><span class='line'>      <span class="nb">self</span><span class="p">.</span><span class="n">unlockControls</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">case</span> <span class="p">.</span><span class="nl">GameEnd</span><span class="p">:</span>
+</span><span class='line'>      <span class="nb">self</span><span class="p">.</span><span class="n">lockControls</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And i get some pretty promising results:</p>
+
+<p><img class="center" src="/images/bluetooth_low_energy/multi_btle.gif"></p>
+
+<p>Game works smoothly, there are no lags in connection and you can play almost instantly! And of course it allows you to integrate mutliplayer in your game in few minutes.</p>
+
+<p>If you are starting your journey with gamedev or iOS and plan to build simple SpriteKit game with some basic multiplayer support it may be worth considering this option.</p>
+
+<p>Demo project used to present the mechanics is available as always on <a href="https://github.com/noxytrux/KnightWhoSaidSwift">github</a></p>
+
+<p>Game require at least two iPhone 5 to test and play. To start simply open game, one of the players choose server, other one client mode and bring your phone next to each another. Once you do that you should be notified about successfull connection by tone sound.</p>
+</div>
+
+  <footer>
+    <em>by <a href="https://www.twitter.com/noxytrux" >Marcin Małysz</a>, 2015 Oct 8</em>
+    <em><div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://nshint.github.io/blog/2015/10/08/bluetooth-low-energy-the-fun-way/" data-via="nshintio" data-counturl="http://nshint.github.io/blog/2015/10/08/bluetooth-low-energy-the-fun-way/" >Tweet</a>
+  
+  
+  
+</div>
+</em>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2019/04/08/testing%20the%20camera%20on%20the%20simulator/">Testing the camera on the simulator</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/23/noescape-attribute/">@noescape attribute</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/10/working-with-cfunction-pointers-in-swift/">Working with CFunction pointers in Swift</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/08/bluetooth-low-energy-the-fun-way/">Bluetooth low energy the fun way</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 -  NSHint <br/>
+</span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

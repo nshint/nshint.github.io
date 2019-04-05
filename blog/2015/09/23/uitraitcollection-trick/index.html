@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>UITraitCollection trick - NSHint</title>
+  <meta name="author" content="NSHint">
+
+  
+  <meta name="description" content="Gone are the days where there was just one iPhone for developers as a target. Now we have to support multiple devices with different screen sizes. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://nshint.github.io/blog/2015/09/23/uitraitcollection-trick">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-66445219-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner">
+	<a href="/"><img src="/svg/nshint_logo.svg" height="120px"></a>
+	<br/>
+	<div class="social">
+		<a href="https://twitter.com/nshintio"><img src="/svg/twitter.svg" height="40px"/></a>
+		<a href="https://github.com/nshintio/"><img src="/svg/github.svg" height="40px"/></a>
+		<a href="http://nshint.io/atom.xml"><img src="/svg/rss.svg" height="40px"/></a>
+	</div>
+
+
+
+</header>
+  <nav role="navigation"><ul class="main-navigation">
+  <li><a href="/">articles</a></li>
+  <li><a href="/blog/archives">archives</a></li>
+  <li><a href="/team">team</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      
+<div>
+<article class="hentry" role="article">
+  
+  <header>
+  
+    
+      <h1 class="entry-title">UITraitCollection Trick</h1>
+    
+  
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-09-23T14:15:43-03:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Gone are the days where there was just one iPhone for developers as a target. Now we have to support multiple devices with different screen sizes. Fortunately, we have autolayout, which solves a part of this design equation, the other part is solved with <a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UITraitCollection_ClassReference/"><code>UITraitCollection</code></a>. Trait collection object has two size classes: horizontal and vertical. Each of these classes has three possible values: compact, regular or any. The current device+orientation can be described as a combination of the sizes.</p>
+
+<!--more-->
+
+
+<p><img class="center" src="/images/uitraitcollection_trick/1.png"></p>
+
+<p>The best thing is that storyboards and nib files support these size classes. We can make layout changes directly onto them. Every view or auto-layout constraint can exist in one or several other size classes. So it is possible to support multiple devices and orientations without any code. Nevertheless there is a case, which is not covered at all. Imagine that you support only portrait mode and the designer wishes to make a difference between iPhone 5 and iPhone 6+ screen. In this case, size classes are not much helpful. However, we can leverage them in an unusual way.</p>
+
+<p><code>UITraitEnvironment</code> is a protocol which provides access to trait collection. Its conformed by most of the objects in view hierarchy: <code>UIScreen</code>, <code>UIWindow</code>, <code>UIViewController</code>, <code>UIView</code>. Every child inherits the trait collection object from its parent. The trick is to override the trait collection in <code>UIWindow</code> and return a custom value for iPhone 6+ device. Take a look:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="p">@</span><span class="n">objc</span> <span class="n">public</span> <span class="k">class</span> <span class="nl">Window</span><span class="p">:</span> <span class="bp">UIWindow</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kr">override</span> <span class="n">public</span> <span class="k">var</span> <span class="nl">traitCollection</span><span class="p">:</span> <span class="n">UITraitCollection</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="n">DeviceType</span><span class="p">.</span><span class="n">isIPhone6P</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">var</span> <span class="n">collections</span> <span class="o">=</span> <span class="p">[</span><span class="n">UITraitCollection</span><span class="p">(</span><span class="nl">horizontalSizeClass</span><span class="p">:</span> <span class="p">.</span><span class="n">Compact</span><span class="p">),</span>
+</span><span class='line'>                <span class="n">UITraitCollection</span><span class="p">(</span><span class="nl">verticalSizeClass</span><span class="p">:</span> <span class="p">.</span><span class="n">Compact</span><span class="p">)]</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">return</span> <span class="n">UITraitCollection</span><span class="p">(</span><span class="nl">traitsFromCollections</span><span class="p">:</span> <span class="n">collections</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="nb">super</span><span class="p">.</span><span class="n">traitCollection</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We override trait collection in <code>UIWindow</code> just for iPhone 6+ model. Now we can make layout changes in storyboard directly for this model by changing size class selectors at the bottom of Interface Builder pane. Trait collection with horizontal compact class and vertical compact class is reserved for iPhone 6+.</p>
+
+<p><img class="center" src="/images/uitraitcollection_trick/2.png"></p>
+
+<p>We can install additional views and change layout constraints only for iPhone 6+.</p>
+
+<p><img class="center" src="/images/uitraitcollection_trick/3.png"><br/>
+<img class="center" src="/images/uitraitcollection_trick/4.png"></p>
+
+<p>Tell your designer about that cool hint and you will probably get some treats. The project shown above can be found on <a href="https://github.com/nshintio/uitraitcollection-trick">GitHub</a>.</p>
+</div>
+
+  <footer>
+    <em>by <a href="https://www.twitter.com/wojteklu" >Wojciech Łukaszuk</a>, 2015 Sep 23</em>
+    <em><div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://nshint.github.io/blog/2015/09/23/uitraitcollection-trick/" data-via="nshintio" data-counturl="http://nshint.github.io/blog/2015/09/23/uitraitcollection-trick/" >Tweet</a>
+  
+  
+  
+</div>
+</em>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2019/04/08/testing%20the%20camera%20on%20the%20simulator/">Testing the camera on the simulator</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/23/noescape-attribute/">@noescape attribute</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/10/working-with-cfunction-pointers-in-swift/">Working with CFunction pointers in Swift</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/08/bluetooth-low-energy-the-fun-way/">Bluetooth low energy the fun way</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 -  NSHint <br/>
+</span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

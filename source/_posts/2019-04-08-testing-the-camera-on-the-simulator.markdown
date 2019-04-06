@@ -15,11 +15,11 @@ On iOS, to use the camera, one has to use the machinery that comes with  [`AVFou
 
 <!--more-->
 
-Although you can use `protocols` to generalize the real objects, at some point, you are going to stumble upon a dilemma: The simulator doesn't have a camera, and you can't instantiate the framework classes, making the tests (almost) impossible.
+Although you can use `protocols` to generalize the real objects, at some point, you are going to stumble upon a dilemma: the simulator doesn't have a camera, and you can't instantiate the framework classes making the tests (almost) impossible.
 
 #### What are you talking about?
 
-Let's start with a very simple program that captures QR Code (I'm skipping lots of boilerplate but if you are looking for a more thorough example, [here](https://www.hackingwithswift.com/example-code/media/how-to-scan-a-qr-code) you have a great article.
+Let's start with a very simple program that captures QR Code (I'm skipping lots of boilerplate but if you are looking for a more thorough example, [here](https://www.hackingwithswift.com/example-code/media/how-to-scan-a-qr-code) you have a great article).
 
 ```swift
 enum CameraError: Error {
@@ -67,9 +67,7 @@ extension Camera: AVCaptureMetadataOutputObjectsDelegate {
 }
 ```
 
-When the detection happens, you can compute from framework-provided values, by implementing the following method from [`AVCaptureMetadataOutputObjectsDelegate`](https://developer.apple.com/documentation/avfoundation/avcapturemetadataoutputobjectsdelegate/1389481-metadataoutput) and say we want to exercise our program in a way that we ensure that the `CameraOutputDelegate` methods are properly called, given what
-
-The problem here is that all of these classes are provided by the framework and you can't `init` them.
+When the detection happens, you can compute from framework-provided values, by implementing the following method from [`AVCaptureMetadataOutputObjectsDelegate`](https://developer.apple.com/documentation/avfoundation/avcapturemetadataoutputobjectsdelegate/1389481-metadataoutput). Say we want to exercise our program in a way that we ensure that the `CameraOutputDelegate` methods are properly called, given what `AVFoundation` provides.
 
 ```swift
 final class CameraOutputSpy: CameraOutputDelegate {
@@ -103,6 +101,10 @@ camera.metadataOutput(
 )
 ```
 
+Waat!?
+
+The problem here is that all of these classes are concrete, so we can't abstract them into an interface. Also they are supposed to be created and populated at runtime, hence you can't `init` them.
+
 #### 🍸 `Swizzle` to the rescue
 
 One possible solution for this kind of scenario (since the framework it's all `Objective-C`...for now at least), is to use the [`Objective-C` runtime shenanigans](https://nshipster.com/method-swizzling/) to "fill this gap".
@@ -113,19 +115,19 @@ I'm not going to lay down the nitty-gritty details about how it works, but the m
 
 ```swift
 struct Swizzler {
-    private let `class`: AnyClass
+    private let klass: AnyClass
 
-    init(_ class: AnyClass) {
-        self.`class` = `class`
+    init(_ klass: AnyClass) {
+        self.klass = klass
     }
 
     func injectNSObjectInit(into selector: Selector) {
         let original = [
-            class_getInstanceMethod(`class`, selector)
+            class_getInstanceMethod(klass, selector)
         ].compactMap { $0 }
 
         let swizzled = [
-            class_getInstanceMethod(`class`, #selector(NSObject.init))
+            class_getInstanceMethod(klass, #selector(NSObject.init))
         ].compactMap { $0 }
 
         zip(original, swizzled)

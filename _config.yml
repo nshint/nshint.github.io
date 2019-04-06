@@ -102,7 +102,7 @@ facebook_like: false
 
 social:
   twitter: https://twitter.com/nshintio
-  github: https://github.com/nshintio/
+  github: https://github.com/nshint/
   rss: http://nshint.io/atom.xml
 
 author_ids: [matt, woj, rafa, marcin, kondrat]

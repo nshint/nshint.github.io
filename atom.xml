@@ -4,7 +4,7 @@
   <title><![CDATA[NSHint]]></title>
   <link href="http://nshint.github.io/atom.xml" rel="self"/>
   <link href="http://nshint.github.io/"/>
-  <updated>2019-04-05T12:57:46-03:00</updated>
+  <updated>2019-04-07T11:03:53-03:00</updated>
   <id>http://nshint.github.io/</id>
   <author>
     <name><![CDATA[NSHint]]></name>
@@ -30,11 +30,11 @@
 <!--more-->
 
 
-<p>Although you can use <code>protocols</code> to generalize the real objects, at some point, you are going to stumble upon a dilemma: The simulator doesn&rsquo;t have a camera, and you can&rsquo;t instantiate the framework classes, making the tests (almost) impossible.</p>
+<p>Although you can use <code>protocols</code> to generalize the real objects, at some point, you are going to stumble upon a dilemma: the simulator doesn&rsquo;t have a camera, and you can&rsquo;t instantiate the framework classes making the tests (almost) impossible.</p>
 
 <h4>What are you talking about?</h4>
 
-<p>Let&rsquo;s start with a very simple program that captures QR Code (I&rsquo;m skipping lots of boilerplate but if you are looking for a more thorough example, <a href="https://www.hackingwithswift.com/example-code/media/how-to-scan-a-qr-code">here</a> you have a great article.</p>
+<p>Let&rsquo;s start with a very simple program that captures QR Code (I&rsquo;m skipping lots of boilerplate but if you are looking for a more thorough example, <a href="https://www.hackingwithswift.com/example-code/media/how-to-scan-a-qr-code">here</a> you have a great article).</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -125,9 +125,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>When the detection happens, you can compute from framework-provided values, by implementing the following method from <a href="https://developer.apple.com/documentation/avfoundation/avcapturemetadataoutputobjectsdelegate/1389481-metadataoutput"><code>AVCaptureMetadataOutputObjectsDelegate</code></a> and say we want to exercise our program in a way that we ensure that the <code>CameraOutputDelegate</code> methods are properly called, given what</p>
-
-<p>The problem here is that all of these classes are provided by the framework and you can&rsquo;t <code>init</code> them.</p>
+<p>When the detection happens, you can compute from framework-provided values, by implementing the following method from <a href="https://developer.apple.com/documentation/avfoundation/avcapturemetadataoutputobjectsdelegate/1389481-metadataoutput"><code>AVCaptureMetadataOutputObjectsDelegate</code></a>. Say we want to exercise our program in a way that we ensure that the <code>CameraOutputDelegate</code> methods are properly called, given what <code>AVFoundation</code> provides.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -190,6 +188,10 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+<p>Waat!?</p>
+
+<p>The problem here is that all of these classes are concrete, so we can&rsquo;t abstract them into an interface. Also they are supposed to be created and populated at runtime, hence you can&rsquo;t <code>init</code> them.</p>
+
 <h4>🍸 <code>Swizzle</code> to the rescue</h4>
 
 <p>One possible solution for this kind of scenario (since the framework it&rsquo;s all <code>Objective-C</code>&hellip;for now at least), is to use the <a href="https://nshipster.com/method-swizzling/"><code>Objective-C</code> runtime shenanigans</a> to &ldquo;fill this gap&rdquo;.</p>
@@ -221,19 +223,19 @@
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
 </pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">struct</span> <span class="n">Swizzler</span> <span class="p">{</span>
-</span><span class='line'>    <span class="n">private</span> <span class="k">let</span> <span class="err">`</span><span class="k">class</span><span class="err">`</span><span class="o">:</span> <span class="n">AnyClass</span>
+</span><span class='line'>    <span class="n">private</span> <span class="k">let</span> <span class="nl">klass</span><span class="p">:</span> <span class="n">AnyClass</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="k">init</span><span class="p">(</span><span class="n">_</span> <span class="k">class</span><span class="o">:</span> <span class="n">AnyClass</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="err">`</span><span class="k">class</span><span class="err">`</span> <span class="o">=</span> <span class="err">`</span><span class="k">class</span><span class="err">`</span>
+</span><span class='line'>    <span class="k">init</span><span class="p">(</span><span class="n">_</span> <span class="nl">klass</span><span class="p">:</span> <span class="n">AnyClass</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">klass</span> <span class="o">=</span> <span class="n">klass</span>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="k">func</span> <span class="n">injectNSObjectInit</span><span class="p">(</span><span class="n">into</span> <span class="nl">selector</span><span class="p">:</span> <span class="n">Selector</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>        <span class="k">let</span> <span class="n">original</span> <span class="o">=</span> <span class="p">[</span>
-</span><span class='line'>            <span class="n">class_getInstanceMethod</span><span class="p">(</span><span class="err">`</span><span class="k">class</span><span class="err">`</span><span class="p">,</span> <span class="n">selector</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">class_getInstanceMethod</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">selector</span><span class="p">)</span>
 </span><span class='line'>        <span class="p">].</span><span class="n">compactMap</span> <span class="p">{</span> <span class="err">$</span><span class="mi">0</span> <span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'>        <span class="k">let</span> <span class="n">swizzled</span> <span class="o">=</span> <span class="p">[</span>
-</span><span class='line'>            <span class="n">class_getInstanceMethod</span><span class="p">(</span><span class="err">`</span><span class="k">class</span><span class="err">`</span><span class="p">,</span> <span class="err">#</span><span class="n">selector</span><span class="p">(</span><span class="bp">NSObject</span><span class="p">.</span><span class="k">init</span><span class="p">))</span>
+</span><span class='line'>            <span class="n">class_getInstanceMethod</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="err">#</span><span class="n">selector</span><span class="p">(</span><span class="bp">NSObject</span><span class="p">.</span><span class="k">init</span><span class="p">))</span>
 </span><span class='line'>        <span class="p">].</span><span class="n">compactMap</span> <span class="p">{</span> <span class="err">$</span><span class="mi">0</span> <span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'>        <span class="n">zip</span><span class="p">(</span><span class="n">original</span><span class="p">,</span> <span class="n">swizzled</span><span class="p">)</span>

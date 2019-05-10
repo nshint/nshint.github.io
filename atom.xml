@@ -4,7 +4,7 @@
   <title><![CDATA[NSHint]]></title>
   <link href="http://nshint.github.io/atom.xml" rel="self"/>
   <link href="http://nshint.github.io/"/>
-  <updated>2019-04-13T11:51:30+02:00</updated>
+  <updated>2019-05-10T22:24:06+02:00</updated>
   <id>http://nshint.github.io/</id>
   <author>
     <name><![CDATA[NSHint]]></name>
@@ -12,6 +12,134 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    
+    <title type="html"><![CDATA[Testing Codable]]></title>
+    <link href="http://nshint.github.io/blog/2019/05/10/testing-codable/"/>
+    
+    <updated>2019-05-10T19:55:56+02:00</updated>
+    <id>http://nshint.github.io/blog/2019/05/10/testing-codable</id>
+    
+    <content type="html"><![CDATA[<p>Codable is a great protocol available in Swift. It makes it possible to create a type safe JSON representations of structures used within our application with zero boilerplate.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">struct</span> <span class="nl">Person</span><span class="p">:</span> <span class="n">Codable</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">let</span> <span class="nl">name</span><span class="p">:</span> <span class="n">String</span>
+</span><span class='line'>    <span class="k">let</span> <span class="nl">email</span><span class="p">:</span> <span class="n">String</span>
+</span><span class='line'>    <span class="k">let</span> <span class="nl">age</span><span class="p">:</span> <span class="n">Int</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Once the structure conforms to <code>Codable</code> everything works out of the box. There&rsquo;s a nice way to test those structures and make sure that everything gets the exact JSON format that we aligned with backend.</p>
+
+<!--more-->
+
+
+<p>Let&rsquo;s create the following protocol in the test bundle:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">protocol</span> <span class="n">JSONTestable</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">init</span><span class="o">?</span><span class="p">(</span><span class="n">_</span> <span class="nl">json</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">func</span> <span class="n">json</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="o">?</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After that we can immediately provide an extension which conforms to that protocol in the test bundle:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">extension</span> <span class="n">JSONTestable</span> <span class="k">where</span> <span class="nl">Self</span><span class="p">:</span> <span class="n">Codable</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">init</span><span class="o">?</span><span class="p">(</span><span class="n">_</span> <span class="nl">json</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">guard</span>
+</span><span class='line'>            <span class="k">let</span> <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="nl">using</span><span class="p">:</span> <span class="p">.</span><span class="n">utf8</span><span class="p">),</span>
+</span><span class='line'>            <span class="k">let</span> <span class="n">decoded</span> <span class="o">=</span> <span class="n">try</span><span class="o">?</span> <span class="n">JSONDecoder</span><span class="p">().</span><span class="n">decode</span><span class="p">(</span><span class="kt">Self</span><span class="p">.</span><span class="nb">self</span><span class="p">,</span> <span class="nl">from</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">nil</span> <span class="p">}</span>
+</span><span class='line'>        <span class="nb">self</span> <span class="o">=</span> <span class="n">decoded</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">json</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="o">?</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">guard</span> <span class="k">let</span> <span class="n">data</span> <span class="o">=</span> <span class="n">try</span><span class="o">?</span> <span class="n">JSONEncoder</span><span class="p">().</span><span class="n">encode</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">nil</span> <span class="p">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">String</span><span class="p">(</span><span class="nl">data</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="nl">encoding</span><span class="p">:</span> <span class="p">.</span><span class="n">utf8</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then there&rsquo;s only one simple step which needs to be done in the test bundle in order to test the structure:
+<code>PersonTests.swift</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">extension</span> <span class="nl">Person</span><span class="p">:</span> <span class="n">JSONTestable</span> <span class="p">{}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That&rsquo;s it! Now we can easily test the result of the serialization and deserialization :)</p>
+
+<p>Example tests:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="n">final</span> <span class="k">class</span> <span class="nl">PersonTests</span><span class="p">:</span> <span class="n">XCTestCase</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">func</span> <span class="n">testJsonSerialization</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">let</span> <span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="nl">name</span><span class="p">:</span> <span class="s">&quot;John Appleased&quot;</span><span class="p">,</span> <span class="nl">email</span><span class="p">:</span> <span class="s">&quot;john@appleased.com&quot;</span><span class="p">,</span> <span class="nl">age</span><span class="p">:</span> <span class="mi">30</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">XCTAssertEqual</span><span class="p">(</span><span class="n">personJson</span><span class="p">,</span> <span class="n">person</span><span class="p">.</span><span class="n">json</span><span class="p">())</span> <span class="c1">// ✅</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">testJsonDeserialization</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">let</span> <span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="nl">name</span><span class="p">:</span> <span class="s">&quot;John Appleased&quot;</span><span class="p">,</span> <span class="nl">email</span><span class="p">:</span> <span class="s">&quot;john@appleased.com&quot;</span><span class="p">,</span> <span class="nl">age</span><span class="p">:</span> <span class="mi">30</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">XCTAssertEqual</span><span class="p">(</span><span class="n">person</span><span class="p">,</span> <span class="n">Person</span><span class="p">(</span><span class="n">personJson</span><span class="p">))</span> <span class="c1">// ✅</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">private</span> <span class="k">let</span> <span class="n">personJson</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="p">{</span><span class="s">&quot;name&quot;</span><span class="o">:</span><span class="s">&quot;John Appleased&quot;</span><span class="p">,</span><span class="s">&quot;email&quot;</span><span class="o">:</span><span class="s">&quot;john@appleased.com&quot;</span><span class="p">,</span><span class="s">&quot;age&quot;</span><span class="o">:</span><span class="mi">30</span><span class="p">}</span>
+</span><span class='line'><span class="s">&quot;&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">extension</span> <span class="nl">Person</span><span class="p">:</span> <span class="n">JSONTestable</span><span class="p">,</span> <span class="n">Equatable</span> <span class="p">{}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What do you think about this method? Is there anything which could be improved in this implementation? Please let us know :)</p>
+]]></content>
+    
+  </entry>
   
   <entry>
     
@@ -2584,30 +2712,6 @@ We can solve those situations by using the so called <code>Symbolic Breakpoints<
 
 
 <p>This creates nice fade in/out animation which is exactly what we want.</p>
-]]></content>
-    
-  </entry>
-  
-  <entry>
-    
-    <title type="html"><![CDATA[Fixing UICatalog invalid asset error]]></title>
-    <link href="http://nshint.github.io/blog/2015/07/02/fixing-uicatalog-invalid-asset-error/"/>
-    
-    <updated>2015-07-02T17:29:00+02:00</updated>
-    <id>http://nshint.github.io/blog/2015/07/02/fixing-uicatalog-invalid-asset-error</id>
-    
-    <content type="html"><![CDATA[<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.000000</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This error may happen when you try to load <code>UIImage</code> and your asset string is <code>nil</code>. For now this will not crash your app but may case some future problems. This may also lead to some UI inconsistency. To track down issue like this we need to set symbolic breakpoint:</p>
-
-<!--more-->
-
-
-<p><img class="center" src="http://nshint.github.io/images/uicatalog_invalid_asset/null_asset.png"></p>
-
-<p>Add <code>$arg3 == nil</code> condition (on Simulator) or <code>$r0 == nil</code> condition on iPhone device. This will stop executing your app exactly in the line where you try to load broken image.</p>
 ]]></content>
     
   </entry>

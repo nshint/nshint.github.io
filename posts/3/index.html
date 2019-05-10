@@ -9,14 +9,8 @@
   <meta name="author" content="NSHint">
 
   
-  <meta name="description" content="Do you sometimes see this in your code while performing custom drawing using drawRect? 1
-2
-3
-4
-5
-6
-7
-&lt;Error&gt;: CGContextSaveGState: invalid &hellip;">
+  <meta name="description" content="1
+CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.000000 This error may happen when you try to load UIImage and your &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +72,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+  
+    
+      <h1 class="entry-title"><a href="/blog/2015/07/02/fixing-uicatalog-invalid-asset-error/">Fixing UICatalog Invalid Asset Error</a></h1>
+      
+      
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-07-02T17:29:00+02:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.000000</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This error may happen when you try to load <code>UIImage</code> and your asset string is <code>nil</code>. For now this will not crash your app but may case some future problems. This may also lead to some UI inconsistency. To track down issue like this we need to set symbolic breakpoint:</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/07/02/fixing-uicatalog-invalid-asset-error/">Read on</a> 
+    </footer>
+  
+
+    </article>
   
   
     <article>
@@ -302,6 +342,10 @@ When this happens, we are usually presented with all the stack trace and in the 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2019/05/10/testing-codable/">Testing Codable</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2019/04/08/testing-the-camera-on-the-simulator/">Testing the camera on the simulator</a>
       </li>
     
@@ -315,10 +359,6 @@ When this happens, we are usually presented with all the stack trace and in the 
     
       <li class="post">
         <a href="/blog/2015/10/10/working-with-cfunction-pointers-in-swift/">Working with CFunction pointers in Swift</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/08/bluetooth-low-energy-the-fun-way/">Bluetooth low energy the fun way</a>
       </li>
     
   </ul>

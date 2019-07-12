@@ -1,0 +1,447 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Complete flows, partial models - NSHint</title>
+  <meta name="author" content="NSHint">
+
+  
+  <meta name="description" content="Most apps these days have a sequence of screens that gather information from the user, like a registration flow, a form of some kind. The data from &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://nshint.github.io/blog/2019/07/15/complete-flows-partial-models">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-66445219-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner">
+	<a href="/"><img src="/svg/nshint_logo.svg" height="120px"></a>
+	<br/>
+	<div class="social">
+		<a href="https://twitter.com/nshintio"><img src="/svg/twitter.svg" height="40px"/></a>
+		<a href="https://github.com/nshint/"><img src="/svg/github.svg" height="40px"/></a>
+		<a href="https://nshint.github.io/atom.xml"><img src="/svg/rss.svg" height="40px"/></a>
+	</div>
+
+
+
+</header>
+  <nav role="navigation"><ul class="main-navigation">
+  <li><a href="/">articles</a></li>
+  <li><a href="/blog/archives">archives</a></li>
+  <li><a href="/team">team</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      
+<div>
+<article class="hentry" role="article">
+  
+  <header>
+  
+    
+      <h1 class="entry-title">Complete Flows, Partial Models</h1>
+    
+  
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2019-07-15T14:55:56-03:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Most apps these days have a sequence of screens that gather information from the user, like a registration flow, a form of some kind. The data from each step is typically combined into a single data structure.
+For example, let&rsquo;s say we want the name, age, and the password to authenticate the user.</p>
+
+<!--more-->
+
+
+<p>One way to model it is by using the following data structure:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">struct</span> <span class="n">FormData</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">let</span> <span class="nl">name</span><span class="p">:</span> <span class="n">String</span>
+</span><span class='line'>    <span class="k">let</span> <span class="nl">age</span><span class="p">:</span> <span class="n">Int</span>
+</span><span class='line'>    <span class="k">let</span> <span class="nl">password</span><span class="p">:</span> <span class="n">String</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>One issue we are going to come about is that our model is strict, it needs all the values at once, whereas users will supply each value at a time. First they will type in their name, then their age, and so on.
+Wrapping up the fields in <code>Optional</code>, may loosen its strictness.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">struct</span> <span class="n">FormData</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">let</span> <span class="nl">name</span><span class="p">:</span> <span class="n">String</span><span class="o">?</span>
+</span><span class='line'>    <span class="k">let</span> <span class="nl">age</span><span class="p">:</span> <span class="n">Int</span><span class="o">?</span>
+</span><span class='line'>    <span class="k">let</span> <span class="nl">password</span><span class="p">:</span> <span class="n">String</span><span class="o">?</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Our flow code might look like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">func</span> <span class="nf">firstStepFinished</span><span class="p">(</span><span class="n">with</span> <span class="nl">name</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FormData</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">FormData</span><span class="p">(</span><span class="nl">name</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="nl">age</span><span class="p">:</span> <span class="nb">nil</span><span class="p">,</span> <span class="nl">password</span><span class="p">:</span> <span class="nb">nil</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">func</span> <span class="n">secondStepFinished</span><span class="p">(</span><span class="n">with</span> <span class="nl">age</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="nl">partialFormData</span><span class="p">:</span> <span class="n">FormData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FormData</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">FormData</span><span class="p">(</span><span class="nl">name</span><span class="p">:</span> <span class="n">partialFormData</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="nl">age</span><span class="p">:</span> <span class="n">age</span><span class="p">,</span> <span class="nl">password</span><span class="p">:</span> <span class="nb">nil</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">func</span> <span class="n">thirdStepFinished</span><span class="p">(</span><span class="n">with</span> <span class="nl">password</span><span class="p">:</span> <span class="n">String</span><span class="p">,</span> <span class="nl">partialFormData</span><span class="p">:</span> <span class="n">FormData</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">let</span> <span class="n">formData</span> <span class="o">=</span> <span class="n">FormData</span><span class="p">(</span><span class="nl">name</span><span class="p">:</span> <span class="n">partialFormData</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="nl">age</span><span class="p">:</span> <span class="n">partialFormData</span><span class="p">.</span><span class="n">age</span><span class="p">,</span> <span class="nl">password</span><span class="p">:</span> <span class="n">password</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">api</span><span class="p">.</span><span class="n">performLogin</span><span class="p">(</span><span class="nl">with</span><span class="p">:</span> <span class="n">formData</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>However, now we need to <code>guard</code> against any <code>nil</code> values if we want to use them (for example, to make a network request).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="n">guard</span> <span class="k">let</span> <span class="n">name</span> <span class="o">=</span> <span class="n">formData</span><span class="p">.</span><span class="n">name</span><span class="p">,</span>
+</span><span class='line'>      <span class="k">let</span> <span class="n">age</span> <span class="o">=</span> <span class="n">formData</span><span class="p">.</span><span class="n">age</span><span class="p">,</span>
+</span><span class='line'>      <span class="k">let</span> <span class="n">password</span> <span class="o">=</span> <span class="n">formData</span><span class="p">.</span><span class="n">password</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="c1">// what should we do here???</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// use data</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>From a domain perspective, that <code>return</code> doesn&rsquo;t make any sense.</p>
+
+<p>One could argue that it&rsquo;s &ldquo;save&rdquo; to force unwrap in this case, or that there are <a href="https://www.swiftbysundell.com/posts/handling-non-optional-optionals-in-swift">already a nice approach to this problem</a>.</p>
+
+<p>One may say, <em>&ldquo;we can raise an error to the user&rdquo;</em> or <em>&ldquo;we could track it and check if users are getting stuck somehow&rdquo;</em>. But, at the end of the day, this is not a good solution because you know that when the flow ends, you have all the values.</p>
+
+<p>Our model is &ldquo;lying&rdquo; to us. That&rsquo;s not loosen, it&rsquo;s just flawed.</p>
+
+<p>There are several approaches to make it better, like &ldquo;one model per step&rdquo;:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">struct</span> <span class="n">FirstStep</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">let</span> <span class="nl">name</span><span class="p">:</span> <span class="n">String</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">struct</span> <span class="n">SecondStep</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">let</span> <span class="nl">name</span><span class="p">:</span> <span class="n">String</span>
+</span><span class='line'>    <span class="k">let</span> <span class="nl">age</span><span class="p">:</span> <span class="n">Int</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">init</span><span class="p">(</span><span class="nl">firstStep</span><span class="p">:</span> <span class="n">FirstStep</span><span class="p">,</span> <span class="nl">age</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">firstStep</span><span class="p">.</span><span class="n">name</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="n">age</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">struct</span> <span class="n">ThirdStep</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">let</span> <span class="nl">name</span><span class="p">:</span> <span class="n">String</span>
+</span><span class='line'>    <span class="k">let</span> <span class="nl">age</span><span class="p">:</span> <span class="n">Int</span>
+</span><span class='line'>    <span class="k">let</span> <span class="nl">password</span><span class="p">:</span> <span class="n">String</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">init</span><span class="p">(</span><span class="nl">secondStep</span><span class="p">:</span> <span class="n">SecondStep</span><span class="p">,</span> <span class="nl">password</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">secondStep</span><span class="p">.</span><span class="n">name</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="n">secondStep</span><span class="p">.</span><span class="n">age</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That&rsquo;s better! But there is also another way of doing things that doesn&rsquo;t involve duplication nor partial data structs.</p>
+
+<p>Instead of breaking down our data structure, why not to break down functions?</p>
+
+<p>Our <code>FormData</code> initializer, when interpreted as a function, has this shape:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FormData</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But we can break it down into plain old lambdas<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>, and by applying it to the initializer for our data structure:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FormData</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This technique is called <a href="https://www.pointfree.co/episodes/ep5-higher-order-functions#t42">currying</a>. What it does is, it allow us to translate the evaluation of a function that takes multiple arguments into evaluating a sequence of functions, each with a single argument.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">func</span> <span class="n">curry</span><span class="o">&lt;</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="o">&gt;</span><span class="p">(</span>
+</span><span class='line'>    <span class="n">_</span> <span class="nl">f</span><span class="p">:</span> <span class="p">@</span><span class="n">escaping</span> <span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">D</span>
+</span><span class='line'><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">D</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">{</span> <span class="n">a</span> <span class="k">in</span> <span class="p">{</span> <span class="n">b</span> <span class="k">in</span> <span class="p">{</span> <span class="n">c</span> <span class="k">in</span> <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="p">}</span> <span class="p">}</span> <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The function above goes from a function that takes multiple arguments <code>(A, B, C)</code> and produces a <code>D</code>, to single functions, that take one argument each: <code>(A) -&gt; (B) -&gt; (C)</code> and produces a <code>D</code>, making it possible to partially apply each argument, one at the time, until it can evaluate and return the output value.</p>
+
+<p>Using it in our flow, may look like the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">typealias</span> <span class="n">Name</span> <span class="o">=</span> <span class="n">String</span>
+</span><span class='line'><span class="k">typealias</span> <span class="n">Age</span> <span class="o">=</span> <span class="n">Int</span>
+</span><span class='line'><span class="k">typealias</span> <span class="n">Password</span> <span class="o">=</span> <span class="n">String</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">typealias</span> <span class="n">FromFirstStep</span> <span class="o">=</span> <span class="p">(</span><span class="n">Age</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">Password</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FormData</span>
+</span><span class='line'><span class="k">typealias</span> <span class="n">FromSecondStep</span> <span class="o">=</span> <span class="p">(</span><span class="n">Password</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FormData</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">func</span> <span class="n">firstStepFinished</span><span class="p">(</span><span class="n">with</span> <span class="nl">name</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FromFirstStep</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">let</span> <span class="n">curried</span> <span class="o">=</span> <span class="n">curry</span><span class="p">(</span><span class="n">FormData</span><span class="p">.</span><span class="k">init</span><span class="p">)</span> <span class="c1">// (Name) -&gt; (Age) -&gt; (Password) -&gt; FormData</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">curried</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="c1">// (Age) -&gt; (Password) -&gt; FormData</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">func</span> <span class="n">secondStepFinished</span><span class="p">(</span><span class="n">with</span> <span class="nl">age</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="nl">partialData</span><span class="p">:</span> <span class="n">FromFirstStep</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FromSecondStep</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">partialData</span><span class="p">(</span><span class="n">age</span><span class="p">)</span> <span class="c1">// (Password) -&gt; FormData</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">func</span> <span class="n">thirdStepFinished</span><span class="p">(</span><span class="n">with</span> <span class="nl">password</span><span class="p">:</span> <span class="n">String</span><span class="p">,</span> <span class="nl">partialData</span><span class="p">:</span> <span class="n">FromSecondStep</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">let</span> <span class="n">formData</span> <span class="o">=</span> <span class="n">partialData</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">api</span><span class="p">.</span><span class="n">performLogin</span><span class="p">(</span><span class="nl">with</span><span class="p">:</span> <span class="n">formData</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I&rsquo;ve added a few <code>type aliases</code> just to make it more readable.
+Cleaning up them further, we&rsquo;ll have:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">typealias</span> <span class="n">FromThirdStep</span> <span class="o">=</span> <span class="n">FormData</span> <span class="c1">// just to be explicit</span>
+</span><span class='line'><span class="k">typealias</span> <span class="n">FromSecondStep</span> <span class="o">=</span> <span class="p">(</span><span class="n">Password</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FromThirdStep</span>
+</span><span class='line'><span class="k">typealias</span> <span class="n">FromFirstStep</span> <span class="o">=</span> <span class="p">(</span><span class="n">Age</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FromSecondStep</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you ask me, this is much better because we didn&rsquo;t have to write anything else, other than the <code>curry</code><sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup> function itself, which can be used in other places.</p>
+
+<p>And that&rsquo;s it! Functions have saved the day :)</p>
+
+<p>P.S: I want to thank <a href="https://twitter.com/__chefski__">Sean Olszewski</a>, <a href="https://twitter.com/gfontenot">Gordon Fontenot</a>, <a href="https://github.com/peter-tomaselli">Peter Tomaselli</a>, <a href="https://twitter.com/morbin_">Henrique Morbin</a>, <a href="https://twitter.com/mwgobetti">Marcelo Gobetti</a> and <a href="https://github.com/joaortk">João Rutkoski</a> for their awesome review.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p><code>functions take one argument and return one result.</code> From the book: <a href="http://haskellbook.com/"><code>Haskell Programming from First Principles</code></a><a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p>Or just use the <a href="https://github.com/thoughtbot/Curry">Curry.framework</a><a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+</div>
+
+  <footer>
+    <em>by <a href="https://www.twitter.com/rakaramos" >Rafael Machado</a>, 2019 Jul 15</em>
+    <em><div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://nshint.github.io/blog/2019/07/15/complete-flows-partial-models/" data-via="nshintio" data-counturl="http://nshint.github.io/blog/2019/07/15/complete-flows-partial-models/" >Tweet</a>
+  
+  
+  
+</div>
+</em>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2019/07/15/complete-flows-partial-models/">Complete flows, partial models</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2019/05/10/testing-codable/">Testing Codable</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2019/04/08/testing-the-camera-on-the-simulator/">Testing the camera on the simulator</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/23/noescape-attribute/">@noescape attribute</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 -  NSHint <br/>
+</span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'https://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

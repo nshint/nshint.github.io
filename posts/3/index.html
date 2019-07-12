@@ -9,8 +9,14 @@
   <meta name="author" content="NSHint">
 
   
-  <meta name="description" content="1
-CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.000000 This error may happen when you try to load UIImage and your &hellip;">
+  <meta name="description" content="UILabel properties cannot be easy animated due to some various reasons, so code like this will have no effect on it: 1
+2
+3
+4
+5
+6
+7
+self.someLabel. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +85,65 @@ CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.0000
   <header>
   
     
+      <h1 class="entry-title"><a href="/blog/2015/07/04/how-to-animate-uilabel-properties/">How to Animate UILabel Properties</a></h1>
+      
+      
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-07-04T10:53:09-03:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>UILabel</code> properties cannot be easy animated due to some various reasons, so code like this will have no effect on it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objC'><span class='line'><span class="nb">self</span><span class="p">.</span><span class="n">someLabel</span><span class="p">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIColor</span> <span class="n">blueColor</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">[</span><span class="bp">UIView</span> <span class="nl">animateWithDuration</span><span class="p">:</span><span class="mf">0.3</span>
+</span><span class='line'>                  <span class="nl">animation</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>  
+</span><span class='line'>                      <span class="nb">self</span><span class="p">.</span><span class="n">someLabel</span><span class="p">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIColor</span> <span class="n">redColor</span><span class="p">];</span>
+</span><span class='line'>                  <span class="p">}];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/07/04/how-to-animate-uilabel-properties/">Read on</a> 
+    </footer>
+  
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+  
+    
       <h1 class="entry-title"><a href="/blog/2015/07/02/fixing-uicatalog-invalid-asset-error/">Fixing UICatalog Invalid Asset Error</a></h1>
       
       
@@ -96,7 +161,7 @@ CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.0000
   
 
 
-<time datetime="2015-07-02T17:29:00+02:00" pubdate data-updated="true"></time>
+<time datetime="2015-07-02T12:29:00-03:00" pubdate data-updated="true"></time>
         
       </p>
     
@@ -142,7 +207,7 @@ CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.0000
   
 
 
-<time datetime="2015-06-27T11:35:32+02:00" pubdate data-updated="true"></time>
+<time datetime="2015-06-27T06:35:32-03:00" pubdate data-updated="true"></time>
         
       </p>
     
@@ -200,7 +265,7 @@ CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.0000
   
 
 
-<time datetime="2015-06-25T08:00:00+02:00" pubdate data-updated="true"></time>
+<time datetime="2015-06-25T03:00:00-03:00" pubdate data-updated="true"></time>
         
       </p>
     
@@ -244,7 +309,7 @@ CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.0000
   
 
 
-<time datetime="2015-06-24T10:00:00+02:00" pubdate data-updated="true"></time>
+<time datetime="2015-06-24T05:00:00-03:00" pubdate data-updated="true"></time>
         
       </p>
     
@@ -306,7 +371,7 @@ When this happens, we are usually presented with all the stack trace and in the 
   
 
 
-<time datetime="2015-06-23T22:36:49+02:00" pubdate data-updated="true"></time>
+<time datetime="2015-06-23T17:36:49-03:00" pubdate data-updated="true"></time>
         
       </p>
     
@@ -342,6 +407,10 @@ When this happens, we are usually presented with all the stack trace and in the 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2019/07/15/complete-flows-partial-models/">Complete flows, partial models</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2019/05/10/testing-codable/">Testing Codable</a>
       </li>
     
@@ -355,10 +424,6 @@ When this happens, we are usually presented with all the stack trace and in the 
     
       <li class="post">
         <a href="/blog/2015/10/23/noescape-attribute/">@noescape attribute</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/10/working-with-cfunction-pointers-in-swift/">Working with CFunction pointers in Swift</a>
       </li>
     
   </ul>

@@ -189,7 +189,7 @@ Wrapping up the fields in <code>Optional</code>, may loosen its strictness.</p>
 
 <p>From a domain perspective, that <code>return</code> doesn&rsquo;t make any sense.</p>
 
-<p>One could argue that it&rsquo;s &ldquo;save&rdquo; to force unwrap in this case, or that there are <a href="https://www.swiftbysundell.com/posts/handling-non-optional-optionals-in-swift">already a nice approach to this problem</a>.</p>
+<p>One could argue that it&rsquo;s &ldquo;safe&rdquo; to force unwrap in this case, or that there is <a href="https://www.swiftbysundell.com/posts/handling-non-optional-optionals-in-swift">already a nice approach to this problem</a>.</p>
 
 <p>One may say, <em>&ldquo;we can raise an error to the user&rdquo;</em> or <em>&ldquo;we could track it and check if users are getting stuck somehow&rdquo;</em>. But, at the end of the day, this is not a good solution because you know that when the flow ends, you have all the values.</p>
 

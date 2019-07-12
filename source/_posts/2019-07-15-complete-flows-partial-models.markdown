@@ -63,7 +63,7 @@ guard let name = formData.name,
 
 From a domain perspective, that `return` doesn't make any sense.
 
-One could argue that it's "save" to force unwrap in this case, or that there are [already a nice approach to this problem](https://www.swiftbysundell.com/posts/handling-non-optional-optionals-in-swift).
+One could argue that it's "safe" to force unwrap in this case, or that there is [already a nice approach to this problem](https://www.swiftbysundell.com/posts/handling-non-optional-optionals-in-swift).
 
 One may say, _"we can raise an error to the user"_ or _"we could track it and check if users are getting stuck somehow"_. But, at the end of the day, this is not a good solution because you know that when the flow ends, you have all the values.
 

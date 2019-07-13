@@ -4,7 +4,7 @@
   <title><![CDATA[NSHint]]></title>
   <link href="http://nshint.github.io/atom.xml" rel="self"/>
   <link href="http://nshint.github.io/"/>
-  <updated>2019-07-12T13:21:51-03:00</updated>
+  <updated>2019-07-13T12:25:57+02:00</updated>
   <id>http://nshint.github.io/</id>
   <author>
     <name><![CDATA[NSHint]]></name>
@@ -18,7 +18,7 @@
     <title type="html"><![CDATA[Complete flows, partial models]]></title>
     <link href="http://nshint.github.io/blog/2019/07/15/complete-flows-partial-models/"/>
     
-    <updated>2019-07-15T14:55:56-03:00</updated>
+    <updated>2019-07-15T19:55:56+02:00</updated>
     <id>http://nshint.github.io/blog/2019/07/15/complete-flows-partial-models</id>
     
     <content type="html"><![CDATA[<p>Most apps these days have a sequence of screens that gather information from the user, like a registration flow, a form of some kind. The data from each step is typically combined into a single data structure.
@@ -289,7 +289,7 @@ Cleaning up them further, we&rsquo;ll have:</p>
     <title type="html"><![CDATA[Testing Codable]]></title>
     <link href="http://nshint.github.io/blog/2019/05/10/testing-codable/"/>
     
-    <updated>2019-05-10T14:55:56-03:00</updated>
+    <updated>2019-05-10T19:55:56+02:00</updated>
     <id>http://nshint.github.io/blog/2019/05/10/testing-codable</id>
     
     <content type="html"><![CDATA[<p>Codable is a great protocol available in Swift. It makes it possible to create a type safe JSON representations of structures used within our application with zero boilerplate.</p>
@@ -417,7 +417,7 @@ Cleaning up them further, we&rsquo;ll have:</p>
     <title type="html"><![CDATA[Testing the camera on the simulator]]></title>
     <link href="http://nshint.github.io/blog/2019/04/08/testing-the-camera-on-the-simulator/"/>
     
-    <updated>2019-04-08T17:36:49-03:00</updated>
+    <updated>2019-04-08T22:36:49+02:00</updated>
     <id>http://nshint.github.io/blog/2019/04/08/testing-the-camera-on-the-simulator</id>
     
     <content type="html"><![CDATA[<p>Testing code often demands faking the &ldquo;real world&rdquo;. <a href="https://en.wikipedia.org/wiki/Inversion_of_control">IoC</a> plays a huge role in here where you flip the dependency from a concrete implementation to an interface.</p>
@@ -783,7 +783,7 @@ Cleaning up them further, we&rsquo;ll have:</p>
     <title type="html"><![CDATA[Wrapping API's using the Builder Pattern]]></title>
     <link href="http://nshint.github.io/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/"/>
     
-    <updated>2016-05-02T17:36:49-03:00</updated>
+    <updated>2016-05-02T22:36:49+02:00</updated>
     <id>http://nshint.github.io/blog/2016/05/02/wrapping-apis-using-the-builder-pattern</id>
     
     <content type="html"><![CDATA[<p>The way I was introduced to the <a href="http://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612">Design Patterns</a> lead me to think that those clever and neat solutions were meant to be used just in big softwares solutions. I never considered using them into the small pieces of software. What do I mean by that? Please, read on.</p>
@@ -939,7 +939,7 @@ And there are some other places where you could apply the same principle, for ex
     <title type="html"><![CDATA[@noescape attribute]]></title>
     <link href="http://nshint.github.io/blog/2015/10/23/noescape-attribute/"/>
     
-    <updated>2015-10-23T13:00:00-02:00</updated>
+    <updated>2015-10-23T17:00:00+02:00</updated>
     <id>http://nshint.github.io/blog/2015/10/23/noescape-attribute</id>
     
     <content type="html"><![CDATA[<p>Swift 1.2 introduced us with <code>@noescape</code> attribute. It&rsquo;s a very important feature, when we want to make our code more cleaner and stricter. Using it properly at 3am will prevent many unwanted retain cycles.</p>
@@ -1036,7 +1036,7 @@ And there are some other places where you could apply the same principle, for ex
     <title type="html"><![CDATA[Working with CFunction pointers in Swift]]></title>
     <link href="http://nshint.github.io/blog/2015/10/10/working-with-cfunction-pointers-in-swift/"/>
     
-    <updated>2015-10-10T06:03:46-03:00</updated>
+    <updated>2015-10-10T11:03:46+02:00</updated>
     <id>http://nshint.github.io/blog/2015/10/10/working-with-cfunction-pointers-in-swift</id>
     
     <content type="html"><![CDATA[<p>Swift like objC allow us to mix it with other languages, unfotunately when it comes to Swift we can only choose between our good old friend objC or ANIS C, as there is still lack of C++ support. Basically using function pointers allows us to call C functions inside Swift. Swift will automatically convert methods included in Bridge Header into Swift equivalents:</p>
@@ -1229,7 +1229,7 @@ And there are some other places where you could apply the same principle, for ex
     <title type="html"><![CDATA[Bluetooth low energy the fun way]]></title>
     <link href="http://nshint.github.io/blog/2015/10/08/bluetooth-low-energy-the-fun-way/"/>
     
-    <updated>2015-10-08T13:17:28-03:00</updated>
+    <updated>2015-10-08T18:17:28+02:00</updated>
     <id>http://nshint.github.io/blog/2015/10/08/bluetooth-low-energy-the-fun-way</id>
     
     <content type="html"><![CDATA[<p>Today Bluetooth Low Energy can be found in many cool applications, it can be used from simple data exchange to payment terminals and the more popular usage with iBeacons. But what if we want to build something funny with it? Like some simple game not even realtime, it may be even turn based game. Imagine you do not need to go through this long setup, waiting for server players to be ready etc.</p>
@@ -1777,7 +1777,7 @@ And there are some other places where you could apply the same principle, for ex
     <title type="html"><![CDATA[Easy cast with _ObjectiveCBridgeable]]></title>
     <link href="http://nshint.github.io/blog/2015/10/07/easy-cast-with-_ObjectiveCBridgeable/"/>
     
-    <updated>2015-10-07T14:15:43-03:00</updated>
+    <updated>2015-10-07T19:15:43+02:00</updated>
     <id>http://nshint.github.io/blog/2015/10/07/easy-cast-with-_ObjectiveCBridgeable</id>
     
     <content type="html"><![CDATA[<p>Swift is out there for about a year and it&rsquo;s a great programming language. I think that almost every iOS/OSX developer out there has already written couple of things in Swift (if you haven&rsquo;t, go ahead and try, you won&rsquo;t regret it, I promise). Although, we have many years of libs and frameworks built using Objective-C and sooner or later a project may have both Swift and Objective-C working together.</p>
@@ -1920,7 +1920,7 @@ And there are some other places where you could apply the same principle, for ex
     <title type="html"><![CDATA[UITraitCollection trick]]></title>
     <link href="http://nshint.github.io/blog/2015/09/23/uitraitcollection-trick/"/>
     
-    <updated>2015-09-23T14:15:43-03:00</updated>
+    <updated>2015-09-23T19:15:43+02:00</updated>
     <id>http://nshint.github.io/blog/2015/09/23/uitraitcollection-trick</id>
     
     <content type="html"><![CDATA[<p>Gone are the days where there was just one iPhone for developers as a target. Now we have to support multiple devices with different screen sizes. Fortunately, we have autolayout, which solves a part of this design equation, the other part is solved with <a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UITraitCollection_ClassReference/"><code>UITraitCollection</code></a>. Trait collection object has two size classes: horizontal and vertical. Each of these classes has three possible values: compact, regular or any. The current device+orientation can be described as a combination of the sizes.</p>
@@ -1984,10 +1984,10 @@ And there are some other places where you could apply the same principle, for ex
   <entry>
     
     <title type="html"><![CDATA[Logging excessive blocks on the main thread]]></title>
-    <link href="http://nshint.github.io/blog/2015/09/13/logging-excessive-blocks-on-the-main-thread/"/>
+    <link href="http://nshint.github.io/blog/2015/09/14/logging-excessive-blocks-on-the-main-thread/"/>
     
-    <updated>2015-09-13T20:30:09-03:00</updated>
-    <id>http://nshint.github.io/blog/2015/09/13/logging-excessive-blocks-on-the-main-thread</id>
+    <updated>2015-09-14T01:30:09+02:00</updated>
+    <id>http://nshint.github.io/blog/2015/09/14/logging-excessive-blocks-on-the-main-thread</id>
     
     <content type="html"><![CDATA[<p>Logging excessive blocks on the main thread</p>
 
@@ -2023,7 +2023,7 @@ The worst users experience ever is a frozen and unresponsive screen. It&rsquo;s 
     <title type="html"><![CDATA[Autolayout and NSLocalizedString]]></title>
     <link href="http://nshint.github.io/blog/2015/09/02/autolayout-and-nslocalizedstring/"/>
     
-    <updated>2015-09-02T15:00:52-03:00</updated>
+    <updated>2015-09-02T20:00:52+02:00</updated>
     <id>http://nshint.github.io/blog/2015/09/02/autolayout-and-nslocalizedstring</id>
     
     <content type="html"><![CDATA[<p>A localized application is the one that has all of its texts, translated into the users device current language. And this, for us developers, means one thing, and one thing only. Nightmare.</p>
@@ -2061,7 +2061,7 @@ The worst users experience ever is a frozen and unresponsive screen. It&rsquo;s 
     <title type="html"><![CDATA[Don't forget about UIMottionEffect]]></title>
     <link href="http://nshint.github.io/blog/2015/08/24/dont-forget-about-uimotioneffects/"/>
     
-    <updated>2015-08-24T15:00:52-03:00</updated>
+    <updated>2015-08-24T20:00:52+02:00</updated>
     <id>http://nshint.github.io/blog/2015/08/24/dont-forget-about-uimotioneffects</id>
     
     <content type="html"><![CDATA[<p><code>UIMotionEffects</code> was first introduced in iOS 7. The <a href="https://developer.apple.com/videos/enterprise/#30">WWDC session</a> which presented this, amongst other cool things, is named Implementing Engaging UI on iOS. Nevertheless, <code>UIMotionEffects</code> is still overlooked. But not today, let&rsquo;s make something cool with it.</p>
@@ -2110,7 +2110,7 @@ The worst users experience ever is a frozen and unresponsive screen. It&rsquo;s 
     <title type="html"><![CDATA[Autolayout breakpoints]]></title>
     <link href="http://nshint.github.io/blog/2015/08/17/autolayout-breakpoints/"/>
     
-    <updated>2015-08-17T15:00:52-03:00</updated>
+    <updated>2015-08-17T20:00:52+02:00</updated>
     <id>http://nshint.github.io/blog/2015/08/17/autolayout-breakpoints</id>
     
     <content type="html"><![CDATA[<p>Auto layout has become a crucial tool for iOS and OS X development. It makes creating layout for multiple screen sizes easy peasy. But sometimes it can drive you crazy, with verbose and misleading logs.</p>
@@ -2196,7 +2196,7 @@ And if that&rsquo;s not enough for you to find out your autolayout issue, try ch
     <title type="html"><![CDATA[NSProgressReporting]]></title>
     <link href="http://nshint.github.io/blog/2015/08/09/nsprogressreporting/"/>
     
-    <updated>2015-08-09T15:00:52-03:00</updated>
+    <updated>2015-08-09T20:00:52+02:00</updated>
     <id>http://nshint.github.io/blog/2015/08/09/nsprogressreporting</id>
     
     <content type="html"><![CDATA[<p>In iOS7 and OS X 10.9 Apple released NSProgess. Its a nice, helpful piece of code that was supposed to make our coding lifes easier.
@@ -2258,7 +2258,7 @@ If you finally <a href="http://oleb.net/blog/2014/03/nsprogress/">find a proper 
     <title type="html"><![CDATA[Using sql as date formatter]]></title>
     <link href="http://nshint.github.io/blog/2015/08/04/using-sql-as-date-formatter/"/>
     
-    <updated>2015-08-04T15:50:51-03:00</updated>
+    <updated>2015-08-04T20:50:51+02:00</updated>
     <id>http://nshint.github.io/blog/2015/08/04/using-sql-as-date-formatter</id>
     
     <content type="html"><![CDATA[<p>This post is a quick update to <a href="http://vombat.tumblr.com/post/60530544401/date-parsing-performance-on-ios-nsdateformatter">Vombat&rsquo;s blog post</a> about using SQL instead of <code>NSDateFormatter</code> when it comes to parsing dates in your project. If you don&rsquo;t read it yet, I will highly recommend to do it now. This time we will use Swift to make same measurements.</p>
@@ -2371,7 +2371,7 @@ If you finally <a href="http://oleb.net/blog/2014/03/nsprogress/">find a proper 
     <title type="html"><![CDATA[Law Of Demeter]]></title>
     <link href="http://nshint.github.io/blog/2015/08/03/law-of-demeter/"/>
     
-    <updated>2015-08-03T08:24:06-03:00</updated>
+    <updated>2015-08-03T13:24:06+02:00</updated>
     <id>http://nshint.github.io/blog/2015/08/03/law-of-demeter</id>
     
     <content type="html"><![CDATA[<p>You may haven&rsquo;t heard about this law or if you have, you may have wondered <a href="http://homepages.cwi.nl/~storm/teaching/reader/LieberherrHolland89.pdf">who&rsquo;s this Demeter guy</a>. Regardless of it, the Law Of Demeter (LoD) is a foundation concept that&rsquo;s used among several design patterns, to wit: Delegate, Proxy, Façade, Adapter and Decorator. Therefore, you probably are already taking advantage of this Law, knowing it or not.</p>
@@ -2473,7 +2473,7 @@ If you finally <a href="http://oleb.net/blog/2014/03/nsprogress/">find a proper 
     <title type="html"><![CDATA[Run Script Phase reporting]]></title>
     <link href="http://nshint.github.io/blog/2015/07/23/run-script-phase-reporting/"/>
     
-    <updated>2015-07-23T08:24:06-03:00</updated>
+    <updated>2015-07-23T13:24:06+02:00</updated>
     <id>http://nshint.github.io/blog/2015/07/23/run-script-phase-reporting</id>
     
     <content type="html"><![CDATA[<p>Bash scripts are commonly used in Mac/iOS development to make repetitive operations hands-free. However sometimes things go wrong and in a perfect world I’d like to be properly informed about the errors.
@@ -2521,10 +2521,10 @@ Here comes view called „Report Navigator”, which displays any type of errors
   <entry>
     
     <title type="html"><![CDATA[UICollectionViews now have easy reordering]]></title>
-    <link href="http://nshint.github.io/blog/2015/07/15/uicollectionviews-now-have-easy-reordering/"/>
+    <link href="http://nshint.github.io/blog/2015/07/16/uicollectionviews-now-have-easy-reordering/"/>
     
-    <updated>2015-07-15T20:30:09-03:00</updated>
-    <id>http://nshint.github.io/blog/2015/07/15/uicollectionviews-now-have-easy-reordering</id>
+    <updated>2015-07-16T01:30:09+02:00</updated>
+    <id>http://nshint.github.io/blog/2015/07/16/uicollectionviews-now-have-easy-reordering</id>
     
     <content type="html"><![CDATA[<p>I&rsquo;m a huge fan of <code>UICollectionView</code>. It&rsquo;s way more customizable than his older brother <code>UITableView</code>. Nowadays I use collection view even more often than table view. With iOS 9 it supports easy reordering. Before it wasn&rsquo;t possible out of the box, and to do so means painful work. Let&rsquo;s have look at the API. You can find the accompanying Xcode project <a href="https://github.com/nshintio/uicollectionview-reordering">on GitHub</a>.</p>
 
@@ -2691,7 +2691,7 @@ Here comes view called „Report Navigator”, which displays any type of errors
     <title type="html"><![CDATA[Shared breakpoints]]></title>
     <link href="http://nshint.github.io/blog/2015/07/12/shared-breakpoints/"/>
     
-    <updated>2015-07-12T14:00:40-03:00</updated>
+    <updated>2015-07-12T19:00:40+02:00</updated>
     <id>http://nshint.github.io/blog/2015/07/12/shared-breakpoints</id>
     
     <content type="html"><![CDATA[<p>Developing multithreaded application is not something new and it&rsquo;s become more and more popular with multicore processors. One thing it&rsquo;s for sure, debugging multithread applications is tough.</p>
@@ -2736,7 +2736,7 @@ We can solve those situations by using the so called <code>Symbolic Breakpoints<
     <title type="html"><![CDATA[Working with Core Telephony framework]]></title>
     <link href="http://nshint.github.io/blog/2015/07/05/working-with-coretelephony-framework/"/>
     
-    <updated>2015-07-05T10:52:09-03:00</updated>
+    <updated>2015-07-05T15:52:09+02:00</updated>
     <id>http://nshint.github.io/blog/2015/07/05/working-with-coretelephony-framework</id>
     
     <content type="html"><![CDATA[<p>Have you ever encountered a situation where you want to build some record or music app ? But you need to somehow react on a phone call which in many cases break recording or playing in more advanced app (mostly when it comes to <code>CoreAudio</code>) or switch UI in case of call? <code>CoreTelephony</code> is a great library which will help in most of the situations.</p>

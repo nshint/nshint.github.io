@@ -2,7 +2,7 @@
 layout: post
 author: rafa
 title: "Complete flows, partial models"
-date: 2019-07-15 19:55:56 +0200
+date: 2019-07-13 19:55:56 +0200
 comments: true
 categories: 
 ---

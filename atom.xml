@@ -4,7 +4,7 @@
   <title><![CDATA[NSHint]]></title>
   <link href="http://nshint.github.io/atom.xml" rel="self"/>
   <link href="http://nshint.github.io/"/>
-  <updated>2019-07-13T12:25:57+02:00</updated>
+  <updated>2019-07-13T12:51:38+02:00</updated>
   <id>http://nshint.github.io/</id>
   <author>
     <name><![CDATA[NSHint]]></name>
@@ -16,10 +16,10 @@
   <entry>
     
     <title type="html"><![CDATA[Complete flows, partial models]]></title>
-    <link href="http://nshint.github.io/blog/2019/07/15/complete-flows-partial-models/"/>
+    <link href="http://nshint.github.io/blog/2019/07/13/complete-flows-partial-models/"/>
     
-    <updated>2019-07-15T19:55:56+02:00</updated>
-    <id>http://nshint.github.io/blog/2019/07/15/complete-flows-partial-models</id>
+    <updated>2019-07-13T19:55:56+02:00</updated>
+    <id>http://nshint.github.io/blog/2019/07/13/complete-flows-partial-models</id>
     
     <content type="html"><![CDATA[<p>Most apps these days have a sequence of screens that gather information from the user, like a registration flow, a form of some kind. The data from each step is typically combined into a single data structure.
 For example, let&rsquo;s say we want the name, age, and the password to authenticate the user.</p>

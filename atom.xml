@@ -4,7 +4,7 @@
   <title><![CDATA[NSHint]]></title>
   <link href="http://nshint.github.io/atom.xml" rel="self"/>
   <link href="http://nshint.github.io/"/>
-  <updated>2019-07-13T12:51:38+02:00</updated>
+  <updated>2020-07-07T21:01:42+02:00</updated>
   <id>http://nshint.github.io/</id>
   <author>
     <name><![CDATA[NSHint]]></name>
@@ -12,6 +12,120 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    
+    <title type="html"><![CDATA[Array backwards compatibility using Property Wrappers]]></title>
+    <link href="http://nshint.github.io/blog/2020/07/07/array-backwards-compatibility-using-property-wrappers/"/>
+    
+    <updated>2020-07-07T14:19:05+02:00</updated>
+    <id>http://nshint.github.io/blog/2020/07/07/array-backwards-compatibility-using-property-wrappers</id>
+    
+    <content type="html"><![CDATA[<p>Let&rsquo;s assume that you&rsquo;re doing an application which shows your users pretty pictures of seasons. You contact your backend folks and they tell you that the world is simple, there are only three seasons:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">enum</span> <span class="nl">Season</span><span class="p">:</span> <span class="n">String</span><span class="p">,</span> <span class="n">Decodable</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">case</span> <span class="n">spring</span><span class="p">,</span> <span class="n">summer</span><span class="p">,</span> <span class="n">autumn</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<!--more-->
+
+
+<p>In order to compose things nicely, you put the seasons into a struct:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">struct</span> <span class="nl">Seasons</span><span class="p">:</span> <span class="n">Decodable</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">var</span> <span class="nl">available</span><span class="p">:</span> <span class="p">[</span><span class="n">Season</span><span class="p">]</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The following JSON comes from the server, it gets decoded, everything works well:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="s2">&quot;available&quot;</span><span class="err">:</span> <span class="p">[</span><span class="s2">&quot;spring&quot;</span><span class="p">,</span> <span class="s2">&quot;summer&quot;</span><span class="p">,</span> <span class="s2">&quot;autumn&quot;</span><span class="p">]</span>
+</span><span class='line'><span class="err">//</span> <span class="p">[</span><span class="err">__lldb_expr_</span><span class="mi">12</span><span class="err">.Season.spring</span><span class="p">,</span> <span class="err">__lldb_expr_</span><span class="mi">12</span><span class="err">.Season.summer</span><span class="p">,</span> <span class="err">__lldb_expr_</span><span class="mi">12</span><span class="err">.Season.autumn</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The application gets released. Time passes, winter comes and the app gets updated available seasons from the backend:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="s2">&quot;available&quot;</span><span class="err">:</span> <span class="p">[</span><span class="s2">&quot;spring&quot;</span><span class="p">,</span> <span class="s2">&quot;summer&quot;</span><span class="p">,</span> <span class="s2">&quot;autumn&quot;</span><span class="p">,</span> <span class="s2">&quot;winter&quot;</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What happens now? Your functionality breaks.<br/>
+Since the app can&rsquo;t understand <code>Season.winter</code>, no seasons get decoded. You receive a lot of bug reports, and your users are not happy ☹️</p>
+
+<p>If only there was something we could do to prevent this from happening..<br/>
+This seems like a nice use case for property wrappers!</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="p">@</span><span class="n">propertyWrapper</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">IgnoreUnknown</span><span class="o">&lt;</span><span class="nl">Value</span><span class="p">:</span> <span class="n">Decodable</span><span class="o">&gt;:</span> <span class="n">Decodable</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">var</span> <span class="nl">wrappedValue</span><span class="p">:</span> <span class="p">[</span><span class="n">Value</span><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">private</span> <span class="k">struct</span> <span class="nl">Empty</span><span class="p">:</span> <span class="n">Decodable</span> <span class="p">{}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">init</span><span class="p">(</span><span class="n">from</span> <span class="nl">decoder</span><span class="p">:</span> <span class="n">Decoder</span><span class="p">)</span> <span class="n">throws</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">var</span> <span class="n">container</span> <span class="o">=</span> <span class="n">try</span> <span class="n">decoder</span><span class="p">.</span><span class="n">unkeyedContainer</span><span class="p">()</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">wrappedValue</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span class='line'>        <span class="k">while</span> <span class="o">!</span><span class="n">container</span><span class="p">.</span><span class="n">isAtEnd</span> <span class="p">{</span>
+</span><span class='line'>            <span class="k">do</span> <span class="p">{</span>
+</span><span class='line'>                <span class="n">wrappedValue</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">try</span> <span class="n">container</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">Value</span><span class="p">.</span><span class="nb">self</span><span class="p">))</span>
+</span><span class='line'>            <span class="p">}</span> <span class="n">catch</span> <span class="p">{</span>
+</span><span class='line'>                <span class="n">_</span> <span class="o">=</span> <span class="n">try</span><span class="o">?</span> <span class="n">container</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">Empty</span><span class="p">.</span><span class="nb">self</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This way, we simply add <code>@IgnoreUnknown</code> before our available seasons and voilà! After that, the <code>available</code> array simply skips the values it cannot understand 👏</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">struct</span> <span class="nl">Seasons</span><span class="p">:</span> <span class="n">Decodable</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">@</span><span class="n">IgnoreUnknown</span>
+</span><span class='line'>    <span class="k">var</span> <span class="nl">available</span><span class="p">:</span> <span class="p">[</span><span class="n">Season</span><span class="p">]</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Property Wrappers come with a lot of other great use cases. Please see <a href="https://docs.swift.org/swift-book/LanguageGuide/Properties.html">Properties</a> in Apple documentation for more details 🙂</p>
+
+<p>Hope this blogpost was helpful, thanks for reading!</p>
+]]></content>
+    
+  </entry>
   
   <entry>
     
@@ -2691,7 +2805,7 @@ Here comes view called „Report Navigator”, which displays any type of errors
     <title type="html"><![CDATA[Shared breakpoints]]></title>
     <link href="http://nshint.github.io/blog/2015/07/12/shared-breakpoints/"/>
     
-    <updated>2015-07-12T19:00:40+02:00</updated>
+    <updated>2015-07-12T14:00:40-03:00</updated>
     <id>http://nshint.github.io/blog/2015/07/12/shared-breakpoints</id>
     
     <content type="html"><![CDATA[<p>Developing multithreaded application is not something new and it&rsquo;s become more and more popular with multicore processors. One thing it&rsquo;s for sure, debugging multithread applications is tough.</p>
@@ -2727,200 +2841,6 @@ We can solve those situations by using the so called <code>Symbolic Breakpoints<
 <p>Now, whenever the breakpoint conditions are satisfied, you&rsquo;ll be notified and will have a chance to quickly fix your code, before it crashes into the users hand!</p>
 
 <p><img class="center" src="http://nshint.github.io/images/shared-breakpoints/4.png"></p>
-]]></content>
-    
-  </entry>
-  
-  <entry>
-    
-    <title type="html"><![CDATA[Working with Core Telephony framework]]></title>
-    <link href="http://nshint.github.io/blog/2015/07/05/working-with-coretelephony-framework/"/>
-    
-    <updated>2015-07-05T15:52:09+02:00</updated>
-    <id>http://nshint.github.io/blog/2015/07/05/working-with-coretelephony-framework</id>
-    
-    <content type="html"><![CDATA[<p>Have you ever encountered a situation where you want to build some record or music app ? But you need to somehow react on a phone call which in many cases break recording or playing in more advanced app (mostly when it comes to <code>CoreAudio</code>) or switch UI in case of call? <code>CoreTelephony</code> is a great library which will help in most of the situations.</p>
-
-<p>To detect phone call on your iPhone or iPad app (this may be the case now when we use continuity) simply use this piece of code:</p>
-
-<!--more-->
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &lt;CoreTelephony/CTCall.h&gt;</span>
-</span><span class='line'><span class="cp">#import &lt;CoreTelephony/CTCallCenter.h&gt;</span>
-</span><span class='line'><span class="cp">#import &lt;CoreTelephony/CTCarrier.h&gt;</span>
-</span><span class='line'><span class="cp">#import &lt;CoreTelephony/CTTelephonyNetworkInfo.h&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@interface</span> <span class="nc">MMCallNotificationManager</span><span class="p">()</span>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">,</span> <span class="k">strong</span><span class="p">)</span> <span class="bp">CTCallCenter</span> <span class="o">*</span><span class="n">callCenter</span><span class="p">;</span>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">callWasStarted</span><span class="p">;</span>
-</span><span class='line'><span class="k">@end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@implementation</span> <span class="nc">MMCallNotificationManager</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">instancetype</span><span class="p">)</span><span class="nf">init</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="nb">self</span> <span class="o">=</span> <span class="p">[</span><span class="nb">super</span> <span class="n">init</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">callCenter</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">CTCallCenter</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
-</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">callWasStarted</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">__weak</span> <span class="n">__typeof__</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="n">weakSelf</span> <span class="o">=</span> <span class="nb">self</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">callCenter</span> <span class="nl">setCallEventHandler</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="bp">CTCall</span> <span class="o">*</span><span class="n">call</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">if</span> <span class="p">([[</span><span class="n">call</span> <span class="n">callState</span><span class="p">]</span> <span class="nl">isEqual</span><span class="p">:</span><span class="n">CTCallStateIncoming</span><span class="p">]</span> <span class="o">||</span>
-</span><span class='line'>                <span class="p">[[</span><span class="n">call</span> <span class="n">callState</span><span class="p">]</span> <span class="nl">isEqual</span><span class="p">:</span><span class="n">CTCallStateDialing</span><span class="p">])</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="k">if</span> <span class="p">(</span><span class="n">weakSelf</span><span class="p">.</span><span class="n">callWasStarted</span> <span class="o">==</span> <span class="nb">NO</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>                    <span class="n">weakSelf</span><span class="p">.</span><span class="n">callWasStarted</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>                    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Call was started.&quot;</span><span class="p">);</span>
-</span><span class='line'>                <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">([[</span><span class="n">call</span> <span class="n">callState</span><span class="p">]</span> <span class="nl">isEqual</span><span class="p">:</span><span class="n">CTCallStateDisconnected</span><span class="p">])</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="k">if</span> <span class="p">(</span><span class="n">weakSelf</span><span class="p">.</span><span class="n">callWasStarted</span> <span class="o">==</span> <span class="nb">YES</span><span class="p">)</span>
-</span><span class='line'>                <span class="p">{</span>
-</span><span class='line'>                    <span class="n">weakSelf</span><span class="p">.</span><span class="n">callWasStarted</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>                    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Call was ended.&quot;</span><span class="p">);</span>
-</span><span class='line'>                <span class="p">}</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>        <span class="p">}];</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">return</span> <span class="nb">self</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Another example of usage may be detecting if we have simcard installed on our device. For example our application allows user to call someone within the app, but we want to inform if the card is removed. Of course we can use some iOS urls for that, such as: <code>telprompt:</code> but they likely breaks UI e.g: in iOS8 it blinks twice which is not a nice effect&hellip;</p>
-
-<p>So to detect if simcard is in place, use this code:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &lt;CoreTelephony/CTTelephonyNetworkInfo.h&gt;</span>
-</span><span class='line'><span class="cp">#import &lt;CoreTelephony/CTCarrier.h&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">handleCallButtonPress:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="bp">CTTelephonyNetworkInfo</span> <span class="o">*</span><span class="n">networkInfo</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">CTTelephonyNetworkInfo</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="bp">NSString</span> <span class="o">*</span><span class="n">code</span> <span class="o">=</span> <span class="p">[</span><span class="n">networkInfo</span><span class="p">.</span><span class="n">subscriberCellularProvider</span> <span class="n">mobileCountryCode</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">//this is nil if you take out sim card.</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">code</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="bp">UIAlertView</span> <span class="o">*</span><span class="n">alertView</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIAlertView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithTitle</span><span class="p">:</span><span class="n">NSLocalizedString</span><span class="p">(</span><span class="s">@&quot;aler.error&quot;</span><span class="p">,</span><span class="nb">nil</span><span class="p">)</span>
-</span><span class='line'>                                                            <span class="nl">message</span><span class="p">:</span><span class="n">NSLocalizedString</span><span class="p">(</span><span class="s">@&quot;alert.message.no_sim_card&quot;</span><span class="p">,</span><span class="nb">nil</span><span class="p">)</span>
-</span><span class='line'>                                                           <span class="nl">delegate</span><span class="p">:</span><span class="nb">nil</span>
-</span><span class='line'>                                                  <span class="nl">cancelButtonTitle</span><span class="p">:</span><span class="n">NSLocalizedString</span><span class="p">(</span><span class="s">@&quot;alert.button_dimiss&quot;</span><span class="p">,</span> <span class="nb">nil</span><span class="p">)</span>
-</span><span class='line'>                                                  <span class="nl">otherButtonTitles</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="p">[</span><span class="n">alertView</span> <span class="n">show</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">//make regular phone prompt (with call confirmation)</span>
-</span><span class='line'>    <span class="bp">NSURL</span> <span class="o">*</span><span class="n">phoneUrl</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSURL</span> <span class="nl">URLWithString</span><span class="p">:[</span><span class="bp">NSString</span>  <span class="nl">stringWithFormat</span><span class="p">:</span><span class="s">@&quot;telprompt://%@&quot;</span><span class="p">,</span><span class="n">phoneNumberString</span><span class="p">]];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">if</span> <span class="p">([[</span><span class="bp">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">canOpenURL</span><span class="p">:</span><span class="n">phoneUrl</span><span class="p">])</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="p">[[</span><span class="bp">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">openURL</span><span class="p">:</span><span class="n">phoneUrl</span><span class="p">];</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I hope this will help you reduce potential edge cases in your future apps.</p>
 ]]></content>
     
   </entry>

@@ -9,7 +9,7 @@
   <meta name="author" content="NSHint">
 
   
-  <meta name="description" content="Most apps these days have a sequence of screens that gather information from the user, like a registration flow, a form of some kind. The data from &hellip;">
+  <meta name="description" content="Let&rsquo;s assume that you&rsquo;re doing an application which shows your users pretty pictures of seasons. You contact your backend folks and they &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +71,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+  
+    
+      <h1 class="entry-title"><a href="/blog/2020/07/07/array-backwards-compatibility-using-property-wrappers/">Array Backwards Compatibility Using Property Wrappers</a></h1>
+      
+      
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2020-07-07T14:19:05+02:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Let&rsquo;s assume that you&rsquo;re doing an application which shows your users pretty pictures of seasons. You contact your backend folks and they tell you that the world is simple, there are only three seasons:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">enum</span> <span class="nl">Season</span><span class="p">:</span> <span class="n">String</span><span class="p">,</span> <span class="n">Decodable</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">case</span> <span class="n">spring</span><span class="p">,</span> <span class="n">summer</span><span class="p">,</span> <span class="n">autumn</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2020/07/07/array-backwards-compatibility-using-property-wrappers/">Read on</a> 
+    </footer>
+  
+
+    </article>
   
   
     <article>
@@ -480,51 +531,6 @@ For example, let&rsquo;s say we want the name, age, and the password to authenti
 
     </article>
   
-  
-    <article>
-      
-  <header>
-  
-    
-      <h1 class="entry-title"><a href="/blog/2015/09/14/logging-excessive-blocks-on-the-main-thread/">Logging Excessive Blocks on the Main Thread</a></h1>
-      
-      
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-09-14T01:30:09+02:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Logging excessive blocks on the main thread</p>
-
-<p>Having an application running at 60 FPS is every programmers dream, and users delight.
-The worst users experience ever is a frozen and unresponsive screen. It&rsquo;s a dreadful crime in mobile world nowadays. Users try to interact at any moment and according to Murphy’s law they will find all your mistakes. So, you better keep the main thread slim.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/09/14/logging-excessive-blocks-on-the-main-thread/">Read on</a> 
-    </footer>
-  
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -538,6 +544,10 @@ The worst users experience ever is a frozen and unresponsive screen. It&rsquo;s 
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2020/07/07/array-backwards-compatibility-using-property-wrappers/">Array backwards compatibility using Property Wrappers</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2019/07/13/complete-flows-partial-models/">Complete flows, partial models</a>
@@ -555,10 +565,6 @@ The worst users experience ever is a frozen and unresponsive screen. It&rsquo;s 
         <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/10/23/noescape-attribute/">@noescape attribute</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -572,7 +578,7 @@ The worst users experience ever is a frozen and unresponsive screen. It&rsquo;s 
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2019 -  NSHint <br/>
+  Copyright &copy; 2020 -  NSHint <br/>
 </span>
 </p>
 

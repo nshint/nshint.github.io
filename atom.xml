@@ -4,7 +4,7 @@
   <title><![CDATA[NSHint]]></title>
   <link href="http://nshint.github.io/atom.xml" rel="self"/>
   <link href="http://nshint.github.io/"/>
-  <updated>2020-07-08T11:18:22+02:00</updated>
+  <updated>2020-07-23T00:32:31+02:00</updated>
   <id>http://nshint.github.io/</id>
   <author>
     <name><![CDATA[NSHint]]></name>
@@ -2640,7 +2640,7 @@ Here comes view called „Report Navigator”, which displays any type of errors
     <updated>2015-07-16T01:30:09+02:00</updated>
     <id>http://nshint.github.io/blog/2015/07/16/uicollectionviews-now-have-easy-reordering</id>
     
-    <content type="html"><![CDATA[<p>I&rsquo;m a huge fan of <code>UICollectionView</code>. It&rsquo;s way more customizable than his older brother <code>UITableView</code>. Nowadays I use collection view even more often than table view. With iOS 9 it supports easy reordering. Before it wasn&rsquo;t possible out of the box, and to do so means painful work. Let&rsquo;s have look at the API. You can find the accompanying Xcode project <a href="https://github.com/nshintio/uicollectionview-reordering">on GitHub</a>.</p>
+    <content type="html"><![CDATA[<p>I&rsquo;m a huge fan of <code>UICollectionView</code>. It&rsquo;s way more customizable than his older brother <code>UITableView</code>. Nowadays I use collection view even more often than table view. With iOS 9 it supports easy reordering. Before it wasn&rsquo;t possible out of the box, and to do so means painful work. Let&rsquo;s have look at the API. You can find the accompanying Xcode project <a href="https://github.com/nshint/uicollectionview-reordering">on GitHub</a>.</p>
 
 <!--more-->
 

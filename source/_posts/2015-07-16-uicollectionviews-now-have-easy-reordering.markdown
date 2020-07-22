@@ -7,7 +7,7 @@ author: wojtek
 categories:
 ---
 
-I'm a huge fan of `UICollectionView`. It's way more customizable than his older brother `UITableView`. Nowadays I use collection view even more often than table view. With iOS 9 it supports easy reordering. Before it wasn't possible out of the box, and to do so means painful work. Let's have look at the API. You can find the accompanying Xcode project [on GitHub](https://github.com/nshintio/uicollectionview-reordering).
+I'm a huge fan of `UICollectionView`. It's way more customizable than his older brother `UITableView`. Nowadays I use collection view even more often than table view. With iOS 9 it supports easy reordering. Before it wasn't possible out of the box, and to do so means painful work. Let's have look at the API. You can find the accompanying Xcode project [on GitHub](https://github.com/nshint/uicollectionview-reordering).
 <!--more-->
 The easiest way to add easy reordering is to use `UICollectionViewController`. It now has a new property called `installsStandardGestureForInteractiveMovement` which adds standard gestures to reorder cells. This property is `true` by default, which means that there's only one method we should to override to get things working.
 

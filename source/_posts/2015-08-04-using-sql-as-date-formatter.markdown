@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Using sql as date formatter"
+title: "Using SQL as date formatter"
 date: 2015-08-04 20:50:51 +0200
 comments: false
 author: marcin

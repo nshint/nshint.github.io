@@ -2,33 +2,27 @@
   <header>
   {% if index %}
     {% if post.external-url %}
-      <h1 class="entry-title"><a href="{{ post.external-url }}">{% if site.titlecase %}{{ post.title | titlecase }} {% else %}{{ post.title }}{% endif %}</a> {% if post.external-url %}<a href="{{ root_url }}{{ post.url }}">&#8734;</a> {% endif %}</h1>
+      <h1 class="entry-title"><a href="{{ post.external-url }}">{{ post.title }}</a> <a href="{{ root_url }}{{ post.url }}">&#8734;</a></h1>
       {% else %}
-      <h1 class="entry-title"><a href="{{ root_url }}{{ post.url }}">{% if site.titlecase %}{{ post.title | titlecase }}{% else %}{{ post.title }}{% endif %}</a></h1>
+      <h1 class="entry-title"><a href="{{ root_url }}{{ post.url }}">{{ post.title }}</a></h1>
       {% endif %}
+      <p class="meta">
+        <time datetime="{{ post.date | date_to_xmlschema }}" pubdate>{{ post.date | date: "%B %-d, %Y" }}</time>
+      </p>
       {% else %}
     {% if page.external-url %}
-      <h1 class="entry-title"><a href="{{ page.external-url }}">{% if site.titlecase %}{{ page.title | titlecase }} {% else %}{{ page.title }}{% endif %}</a> &#8734;</h1>
+      <h1 class="entry-title"><a href="{{ page.external-url }}">{{ page.title }}</a> &#8734;</h1>
       {% else %}
-      <h1 class="entry-title">{% if site.titlecase %}{{ page.title | titlecase }}{% else %}{{ page.title }}{% endif %}</h1>
+      <h1 class="entry-title">{{ page.title }}</h1>
     {% endif %}
   {% endif %}
-    {% unless page.meta == false %}
-      <p class="meta">
-        {% include post/date.html %}{{ time }}
-        {% if site.disqus_short_name and page.comments != false and post.comments != false and site.disqus_show_comment_count == true %}
-         | <a href="{% if index %}{{ root_url }}{{ post.url }}{% endif %}#disqus_thread">Comments</a>
-        {% endif %}
-      </p>
-    {% endunless %}
   </header>
 {% endunless %}
 {% if index %}
-  <div class="entry-content">{{ content | excerpt }}</div>
-  {% capture excerpted %}{{ content | has_excerpt }}{% endcapture %}
-  {% if excerpted == 'true' %}
+  <div class="entry-content">{{ post.excerpt }}</div>
+  {% if post.content contains "<!--more-->" %}
     <footer>
-      <a rel="full-article" href="{{ root_url }}{{ post.url }}">{{ site.excerpt_link }}</a> 
+      <a rel="full-article" href="{{ root_url }}{{ post.url }}">{{ site.excerpt_link }}</a>
     </footer>
   {% endif %}
 {% else %}

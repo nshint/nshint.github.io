@@ -1,10 +1,8 @@
-{% capture category %}{% if post %}{{ post.categories | category_links | size }}{% else %}{{ page.categories | category_links | size }}{% endif %}{% endcapture %}
-{% unless category == '0' %}
+{% assign _categories = post.categories | default: page.categories %}
+{% if _categories.size > 0 %}
 <span class="categories">
-  {% if post %}
-    {{ post.categories | category_links }}
-  {% else %}
-    {{ page.categories | category_links }}
-  {% endif %}
+  {% for cat in _categories %}
+    <a href="/blog/categories/{{ cat | slugify }}/">{{ cat }}</a>{% unless forloop.last %}, {% endunless %}
+  {% endfor %}
 </span>
-{% endunless %}
+{% endif %}

@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "Law Of Demeter"
+title: "Law of Demeter"
 date: 2015-08-03 13:24:06 +0200
 comments: false
 author: rafa
 categories:
 ---
-You may haven't heard about this law or if you have, you may have wondered [who's this Demeter guy](http://homepages.cwi.nl/~storm/teaching/reader/LieberherrHolland89.pdf). Regardless of it, the Law Of Demeter (LoD) is a foundation concept that's used among several design patterns, to wit: Delegate, Proxy, Façade, Adapter and Decorator. Therefore, you probably are already taking advantage of this Law, knowing it or not.
+You may haven't heard about this law or if you have, you may have wondered [who's this Demeter guy](http://homepages.cwi.nl/~storm/teaching/reader/LieberherrHolland89.pdf). Regardless of it, the Law of Demeter (LoD) is a foundation concept that's used among several design patterns, to wit: Delegate, Proxy, Façade, Adapter and Decorator. Therefore, you probably are already taking advantage of this Law, knowing it or not.
 <!--more-->
 There's a particular situation that occurs with iOS, that's perfect for applying the LoD. Sometimes it's needed to call method in our `UIApplicationDelegate`. The common way of doing that is the following:
 

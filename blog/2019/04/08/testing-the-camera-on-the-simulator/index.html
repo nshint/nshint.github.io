@@ -188,7 +188,7 @@
         <span class="p">]</span><span class="o">.</span><span class="n">compactMap</span> <span class="p">{</span> <span class="nv">$0</span> <span class="p">}</span>
 
         <span class="k">let</span> <span class="nv">swizzled</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="nf">class_getInstanceMethod</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="kd">#selector(</span><span class="nf">NSObject.init</span><span class="kd">)</span><span class="p">)</span>
+            <span class="nf">class_getInstanceMethod</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="k">#selector</span><span class="p">(</span><span class="kt">NSObject</span><span class="o">.</span><span class="kd">init</span><span class="p">))</span>
         <span class="p">]</span><span class="o">.</span><span class="n">compactMap</span> <span class="p">{</span> <span class="nv">$0</span> <span class="p">}</span>
 
         <span class="nf">zip</span><span class="p">(</span><span class="n">original</span><span class="p">,</span> <span class="n">swizzled</span><span class="p">)</span>
@@ -233,7 +233,7 @@
     <span class="c1">// 2</span>
     <span class="kd">static</span> <span class="kd">func</span> <span class="nf">createFake</span><span class="p">(</span><span class="nv">code</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">AVMetadataObject</span><span class="o">.</span><span class="kt">ObjectType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">FakeMachineReadableCodeObject</span><span class="p">?</span> <span class="p">{</span>
         <span class="c1">// 3</span>
-        <span class="kt">Swizzler</span><span class="p">(</span><span class="k">self</span><span class="p">)</span><span class="o">.</span><span class="nf">injectNSObjectInit</span><span class="p">(</span><span class="nv">into</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">FakeMachineReadableCodeObject.init(fake:)</span><span class="kd">)</span><span class="p">)</span>
+        <span class="kt">Swizzler</span><span class="p">(</span><span class="k">self</span><span class="p">)</span><span class="o">.</span><span class="nf">injectNSObjectInit</span><span class="p">(</span><span class="nv">into</span><span class="p">:</span> <span class="k">#selector</span><span class="p">(</span><span class="kt">FakeMachineReadableCodeObject</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">fake</span><span class="p">:)))</span>
         <span class="k">return</span> <span class="nf">fake</span><span class="p">(</span><span class="nv">fake</span><span class="p">:</span> <span class="n">code</span><span class="p">,</span> <span class="nv">type</span><span class="p">:</span> <span class="n">type</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span>

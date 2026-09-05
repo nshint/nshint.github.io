@@ -79,7 +79,6 @@
   <div class="entry-content"><p>Have you ever encountered a situation where you want to build some record or music app ? But you need to somehow react on a phone call which in many cases break recording or playing in more advanced app (mostly when it comes to <code class="language-plaintext highlighter-rouge">CoreAudio</code>) or switch UI in case of call? <code class="language-plaintext highlighter-rouge">CoreTelephony</code> is a great library which will help in most of the situations.</p>
 
 <p>To detect phone call on your iPhone or iPad app (this may be the case now when we use continuity) simply use this piece of code:</p>
-
 </div>
   
     <footer>
@@ -115,7 +114,6 @@
 				  		self.someLabel.textColor = [UIColor redColor];
 				  	}];
 </code></pre>
-
 </div>
   
     <footer>
@@ -144,7 +142,6 @@
   <div class="entry-content"><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.000000
 </code></pre></div></div>
 <p>This error may happen when you try to load <code class="language-plaintext highlighter-rouge">UIImage</code> and your asset string is <code class="language-plaintext highlighter-rouge">nil</code>. For now this will not crash your app but may case some future problems. This may also lead to some UI inconsistency. To track down issue like this we need to set symbolic breakpoint:</p>
-
 </div>
   
     <footer>
@@ -180,7 +177,6 @@
 &lt;Error&gt;: CGContextDrawImage: invalid context 0x0
 &lt;Error&gt;: CGContextRestoreGState: invalid context 0x0
 </code></pre></div></div>
-
 </div>
   
     <footer>
@@ -209,7 +205,6 @@
   <div class="entry-content"><p>Internationalizing the users interface in Xcode is <a href="https://developer.apple.com/library/ios/documentation/MacOSX/Conceptual/BPInternational/InternationalizingYourUserInterface/InternationalizingYourUserInterface.html">really easy</a>. Xcode separates all the texts from your views in a dictionary. However, we can make it better, using <code class="language-plaintext highlighter-rouge">extensions</code> and <code class="language-plaintext highlighter-rouge">@IBDesignables</code>. How handy would it be, if setting localized strings were as easy as the following?<br /><br />
 <img class="center" src="/images/storyboard-localization/1.png" />
 <br /></p>
-
 </div>
   
     <footer>
@@ -282,7 +277,6 @@ When this happens, we are usually presented with all the stack trace and in the 
   <div class="entry-content"><p>iOS Simulator has a feature that slows animations, you can toggle it either by pressing <code class="language-plaintext highlighter-rouge">⌘T</code> or choosing <code class="language-plaintext highlighter-rouge">Debug &gt; Toggle Slow Animations in Frontmost App</code>. It’s very useful, but what if we want to do the same on device? It’s easy, fast and simple.</p>
 
 <p><code class="language-plaintext highlighter-rouge">CALayer</code> has a property called <code class="language-plaintext highlighter-rouge">speed</code>, which is a time multiplier. This means that if we have an animation with a duration of 1 second, and set the layer’s speed to 2, it’ll take just 0.5 seconds to finish. The best thing about it is that it’s related to the parent layer. So when we change the speed of a particular <code class="language-plaintext highlighter-rouge">CALayer</code>, every child layer will be affected. So, if we change <code class="language-plaintext highlighter-rouge">UIWindow</code> layer speed, every <code class="language-plaintext highlighter-rouge">CALayer</code> in our application will perform animations with that custom speed value. That leaves us with this two extensions:</p>
-
 </div>
   
     <footer>

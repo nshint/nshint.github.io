@@ -14,6 +14,7 @@ description:
 # ----------------------- #
 
 permalink: /blog/:year/:month/:day/:title/
+timezone: UTC
 source: source
 destination: public
 code_dir: downloads/code

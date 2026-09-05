@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem 'jekyll', '~> 3.9'
+gem 'jekyll', '~> 4.4'
 gem 'jekyll-paginate'
 gem 'jekyll-sitemap'
 gem 'kramdown-parser-gfm'

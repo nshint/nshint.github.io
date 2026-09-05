@@ -9,7 +9,7 @@
   <meta name="author" content="NSHint">
 
   
-  <meta name="description" content="Auto layout has become a crucial tool for iOS and OS X development. It makes creating layout for multiple screen sizes easy peasy. But sometimes it &hellip;">
+  <meta name="description" content="Auto layout has become a crucial tool for iOS and OS X development. It makes creating layout for multiple screen sizes easy peasy. But sometimes it...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,10 +18,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://nshint.github.io/blog/2015/08/17/autolayout-breakpoints">
+  <link rel="canonical" href="http://nshint.github.ioblog20150817autolayout-breakpoints/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <link href="" rel="alternate" title="NSHint" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script defer data-domain="nshint.io" src="https://cotam.matoszko.pl/js/script.js"></script>
@@ -65,105 +65,63 @@
   <header>
   
     
-      <h1 class="entry-title">Autolayout Breakpoints</h1>
+      <h1 class="entry-title">Autolayout breakpoints</h1>
     
   
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-08-17T20:00:52+02:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
   </header>
 
 
-<div class="entry-content"><p>Auto layout has become a crucial tool for iOS and OS X development. It makes creating layout for multiple screen sizes easy peasy. But sometimes it can drive you crazy, with verbose and misleading logs.</p>
+<div class="entry-content"><p>Auto layout has become a crucial tool for iOS and OS X development. It makes creating layout for multiple screen sizes easy peasy. But sometimes it can drive you crazy, with verbose and misleading logs.
+<!--more--></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Unable to simultaneously satisfy constraints.
+Probably at least one of the constraints in the following list is one you don't want.
+Try this:
 
-<!--more-->
+(1) look at each constraint and try to figure out which you don't expect;
+(2) find the code that added the unwanted constraint or constraints and fix it.
+(Note: If you're seeing NSAutoresizingMaskLayoutConstraints that you don't understand, refer to the documentation for the UIView property translatesAutoresizingMaskIntoConstraints)
 
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Unable to simultaneously satisfy constraints.
-</span><span class='line'>Probably at least one of the constraints in the following list is one you don't want.
-</span><span class='line'>Try this:
-</span><span class='line'>
-</span><span class='line'>(1) look at each constraint and try to figure out which you don't expect;
-</span><span class='line'>(2) find the code that added the unwanted constraint or constraints and fix it.
-</span><span class='line'>(Note: If you're seeing NSAutoresizingMaskLayoutConstraints that you don't understand, refer to the documentation for the UIView property translatesAutoresizingMaskIntoConstraints)
-</span><span class='line'>
-</span><span class='line'>(...........)
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>Make a symbolic breakpoint at UIViewAlertForUnsatisfiableConstraints to catch this in the debugger.
-</span><span class='line'>The methods in the UIConstraintBasedLayoutDebugging category on UIView listed in &lt;UIKit/UIView.h&gt; may also be helpful.</span></code></pre></td></tr></table></div></figure>
+(...........)
 
 
-<p>That&rsquo;s a huge log! And I cut off the <code>NSLayoutConstraint</code> part. Yet, the second last line is giving a clue in which direction to go to fix this issue. Symbolic breakpoint at <code>UIViewAlertForUnsatisfiableConstraints</code>.</p>
+Make a symbolic breakpoint at UIViewAlertForUnsatisfiableConstraints to catch this in the debugger.
+The methods in the UIConstraintBasedLayoutDebugging category on UIView listed in &lt;UIKit/UIView.h&gt; may also be helpful.
+</code></pre></div></div>
 
-<p>All right, here&rsquo;s what Xcode want&rsquo;s you to do:</p>
+<p>That’s a huge log! And I cut off the <code class="language-plaintext highlighter-rouge">NSLayoutConstraint</code> part. Yet, the second last line is giving a clue in which direction to go to fix this issue. Symbolic breakpoint at <code class="language-plaintext highlighter-rouge">UIViewAlertForUnsatisfiableConstraints</code>.</p>
 
-<p><img class="center" src="/images/autolayout-breakpoints/1.png"></p>
+<p>All right, here’s what Xcode want’s you to do:</p>
 
-<p>Honestly, that won&rsquo;t help much, because basically it&rsquo;ll just stop the execution and leave you up with <code>LLDB</code>, alone in the dark.</p>
+<p><img class="center" src="/images/autolayout-breakpoints/1.png" /></p>
 
-<p>But there&rsquo;s a little trick you can do to enhance the preceding symbolic breakpoint.
-Adding <code>po [[UIWindow keyWindow] _autolayoutTrace]</code> to it (for Obj-C projects) or <code>expr -l objc++ -O -- [[UIWindow keyWindow] _autolayoutTrace]</code> (for Swift projects).</p>
+<p>Honestly, that won’t help much, because basically it’ll just stop the execution and leave you up with <code class="language-plaintext highlighter-rouge">LLDB</code>, alone in the dark.</p>
 
-<p><img class="center" src="/images/autolayout-breakpoints/2.png"></p>
+<p>But there’s a little trick you can do to enhance the preceding symbolic breakpoint.
+Adding <code class="language-plaintext highlighter-rouge">po [[UIWindow keyWindow] _autolayoutTrace]</code> to it (for Obj-C projects) or <code class="language-plaintext highlighter-rouge">expr -l objc++ -O -- [[UIWindow keyWindow] _autolayoutTrace]</code> (for Swift projects).</p>
 
-<p>Now, on console, you&rsquo;ll see all the <code>UIView</code> hierarchy and exactly where it has ambiguity.</p>
+<p><img class="center" src="/images/autolayout-breakpoints/2.png" /></p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="nl">UIWindow</span><span class="p">:</span><span class="mh">0x7f9481c93360</span>
-</span><span class='line'><span class="o">|</span>   <span class="err">•</span><span class="nl">UIView</span><span class="p">:</span><span class="mh">0x7f9481c9d680</span>
-</span><span class='line'><span class="o">|</span>   <span class="o">|</span>   <span class="o">*</span><span class="nl">UIView</span><span class="p">:</span><span class="mh">0x7f9481c9d990</span><span class="o">-</span> <span class="n">AMBIGUOUS</span> <span class="n">LAYOUT</span> <span class="k">for</span> <span class="nl">UIView</span><span class="p">:</span><span class="mh">0x7f9481c9d990</span><span class="p">.</span><span class="n">minX</span><span class="p">{</span><span class="kt">id</span><span class="o">:</span> <span class="mi">13</span><span class="p">},</span> <span class="nl">UIView</span><span class="p">:</span><span class="mh">0x7f9481c9d990</span><span class="p">.</span><span class="n">minY</span><span class="p">{</span><span class="kt">id</span><span class="o">:</span> <span class="mi">16</span><span class="p">}</span>
-</span><span class='line'><span class="o">|</span>   <span class="o">|</span>   <span class="o">*</span><span class="nl">_UILayoutGuide</span><span class="p">:</span><span class="mh">0x7f9481c9e160</span><span class="o">-</span> <span class="n">AMBIGUOUS</span> <span class="n">LAYOUT</span> <span class="k">for</span> <span class="nl">_UILayoutGuide</span><span class="p">:</span><span class="mh">0x7f9481c9e160</span><span class="p">.</span><span class="n">minY</span><span class="p">{</span><span class="kt">id</span><span class="o">:</span> <span class="mi">17</span><span class="p">}</span>
-</span><span class='line'><span class="o">|</span>   <span class="o">|</span>   <span class="o">*</span><span class="nl">_UILayoutGuide</span><span class="p">:</span><span class="mh">0x7f9481c9ebb0</span><span class="o">-</span> <span class="n">AMBIGUOUS</span> <span class="n">LAYOUT</span> <span class="k">for</span> <span class="nl">_UILayoutGuide</span><span class="p">:</span><span class="mh">0x7f9481c9ebb0</span><span class="p">.</span><span class="n">minY</span><span class="p">{</span><span class="kt">id</span><span class="o">:</span> <span class="mi">27</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
+<p>Now, on console, you’ll see all the <code class="language-plaintext highlighter-rouge">UIView</code> hierarchy and exactly where it has ambiguity.</p>
 
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">UIWindow:</span><span class="mh">0x7f9481c93360</span>
+<span class="o">|</span>   <span class="err">•</span><span class="n">UIView</span><span class="o">:</span><span class="mh">0x7f9481c9d680</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">*</span><span class="n">UIView</span><span class="o">:</span><span class="mh">0x7f9481c9d990</span><span class="k">-</span> <span class="n">AMBIGUOUS</span> <span class="n">LAYOUT</span> <span class="k">for</span> <span class="n">UIView</span><span class="o">:</span><span class="mh">0x7f9481c9d990</span><span class="p">.</span><span class="n">minX</span><span class="p">{</span><span class="n">id</span><span class="o">:</span> <span class="mi">13</span><span class="p">},</span> <span class="n">UIView</span><span class="o">:</span><span class="mh">0x7f9481c9d990</span><span class="p">.</span><span class="n">minY</span><span class="p">{</span><span class="n">id</span><span class="o">:</span> <span class="mi">16</span><span class="p">}</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">*</span><span class="n">_UILayoutGuide</span><span class="o">:</span><span class="mh">0x7f9481c9e160</span><span class="k">-</span> <span class="n">AMBIGUOUS</span> <span class="n">LAYOUT</span> <span class="k">for</span> <span class="n">_UILayoutGuide</span><span class="o">:</span><span class="mh">0x7f9481c9e160</span><span class="p">.</span><span class="n">minY</span><span class="p">{</span><span class="n">id</span><span class="o">:</span> <span class="mi">17</span><span class="p">}</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">*</span><span class="n">_UILayoutGuide</span><span class="o">:</span><span class="mh">0x7f9481c9ebb0</span><span class="k">-</span> <span class="n">AMBIGUOUS</span> <span class="n">LAYOUT</span> <span class="k">for</span> <span class="n">_UILayoutGuide</span><span class="o">:</span><span class="mh">0x7f9481c9ebb0</span><span class="p">.</span><span class="n">minY</span><span class="p">{</span><span class="n">id</span><span class="o">:</span> <span class="mi">27</span><span class="p">}</span>
+</code></pre></div></div>
 
-<p>Note that as you hit continue it&rsquo;ll stop at every ambiguous layout you may have.
-And if that&rsquo;s not enough for you to find out your autolayout issue, try changing the view&rsquo;s color, who knows?</p>
+<p>Note that as you hit continue it’ll stop at every ambiguous layout you may have.
+And if that’s not enough for you to find out your autolayout issue, try changing the view’s color, who knows?</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">(</span><span class="n">lldb</span><span class="p">)</span> <span class="n">expr</span> <span class="p">((</span><span class="bp">UIView</span> <span class="o">*</span><span class="p">)</span><span class="mh">0x7f9ea3d43410</span><span class="p">).</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIColor</span> <span class="n">redColor</span><span class="p">]</span>
-</span><span class='line'><span class="p">(</span><span class="n">UICachedDeviceRGBColor</span> <span class="o">*</span><span class="p">)</span> <span class="err">$</span><span class="mi">1</span> <span class="o">=</span> <span class="mh">0x00007f9ea3d43410</span>
-</span></code></pre></td></tr></table></div></figure>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="n">lldb</span><span class="p">)</span> <span class="n">expr</span> <span class="p">((</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="mh">0x7f9ea3d43410</span><span class="p">).</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">redColor</span><span class="p">]</span>
+<span class="p">(</span><span class="n">UICachedDeviceRGBColor</span> <span class="o">*</span><span class="p">)</span> <span class="err">$</span><span class="mi">1</span> <span class="o">=</span> <span class="mh">0x00007f9ea3d43410</span>
+</code></pre></div></div>
 
+<p>Fear no more young Padawan, make symbolic breakpoints and <code class="language-plaintext highlighter-rouge">LLDB</code> work for you!</p>
 
-<p>Fear no more young Padawan, make symbolic breakpoints and <code>LLDB</code> work for you!</p>
-
-<p>I would like to thank <a href="https://twitter.com/PorterHoskins">Porter Hoskins</a> for pointing out the correct <code>LLDB</code> command for Swift.</p>
+<p>I would like to thank <a href="https://twitter.com/PorterHoskins">Porter Hoskins</a> for pointing out the correct <code class="language-plaintext highlighter-rouge">LLDB</code> command for Swift.</p>
 </div>
+
 
   <footer>
     <em>by <a href="https://www.twitter.com/rakaramos" >Rafael Machado</a>, 2015 Aug 17</em>
@@ -182,37 +140,7 @@ And if that&rsquo;s not enough for you to find out your autolayout issue, try ch
 
 <aside class="sidebar">
   
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
     
-      <li class="post">
-        <a href="/blog/2020/07/07/array-backwards-compatibility/">Array backwards compatibility using Property Wrappers</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/07/13/complete-flows-partial-models/">Complete flows, partial models</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/05/10/testing-codable/">Testing Codable</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/04/08/testing-the-camera-on-the-simulator/">Testing the camera on the simulator</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
-      </li>
-    
-  </ul>
-</section>
-
-
-
-
-
   
 </aside>
 
@@ -220,7 +148,7 @@ And if that&rsquo;s not enough for you to find out your autolayout issue, try ch
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2024 -  NSHint <br/>
+  Copyright &copy; 2026 -  NSHint <br/>
 </span>
 </p>
 

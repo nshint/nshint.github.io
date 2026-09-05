@@ -9,7 +9,7 @@
   <meta name="author" content="NSHint">
 
   
-  <meta name="description" content="UIMotionEffects was first introduced in iOS 7. The WWDC session which presented this, amongst other cool things, is named Implementing Engaging UI on &hellip;">
+  <meta name="description" content="UIMotionEffects was first introduced in iOS 7. The WWDC session which presented this, amongst other cool things, is named Implementing Engaging UI ...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,10 +18,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://nshint.github.io/blog/2015/08/24/dont-forget-about-uimotioneffects">
+  <link rel="canonical" href="http://nshint.github.ioblog20150824dont-forget-about-uimotioneffects/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <link href="" rel="alternate" title="NSHint" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script defer data-domain="nshint.io" src="https://cotam.matoszko.pl/js/script.js"></script>
@@ -65,68 +65,42 @@
   <header>
   
     
-      <h1 class="entry-title">Don't Forget About UIMottionEffect</h1>
+      <h1 class="entry-title">Don't forget about UIMottionEffect</h1>
     
   
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-08-24T20:00:52+02:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
   </header>
 
 
-<div class="entry-content"><p><code>UIMotionEffects</code> was first introduced in iOS 7. The <a href="https://developer.apple.com/videos/enterprise/#30">WWDC session</a> which presented this, amongst other cool things, is named Implementing Engaging UI on iOS. Nevertheless, <code>UIMotionEffects</code> is still overlooked. But not today, let&rsquo;s make something cool with it.</p>
+<div class="entry-content"><p><code class="language-plaintext highlighter-rouge">UIMotionEffects</code> was first introduced in iOS 7. The <a href="https://developer.apple.com/videos/enterprise/#30">WWDC session</a> which presented this, amongst other cool things, is named Implementing Engaging UI on iOS. Nevertheless, <code class="language-plaintext highlighter-rouge">UIMotionEffects</code> is still overlooked. But not today, let’s make something cool with it.</p>
 
-<p>Motion effects is an easy way to react to external variations on the device&rsquo;s orientation. To say, <code>UIKit</code> performs UI changes whenever the user tilts the device, vertically or horizontally.</p>
+<p>Motion effects is an easy way to react to external variations on the device’s orientation. To say, <code class="language-plaintext highlighter-rouge">UIKit</code> performs UI changes whenever the user tilts the device, vertically or horizontally.</p>
 
-<p>Let&rsquo;s use <code>UIInterpolatingMotionEffect</code> a subclass of <code>UIMotionEffects</code>, with <code>MapKit</code>. Notice how appealing it is.</p>
-
+<p>Let’s use <code class="language-plaintext highlighter-rouge">UIInterpolatingMotionEffect</code> a subclass of <code class="language-plaintext highlighter-rouge">UIMotionEffects</code>, with <code class="language-plaintext highlighter-rouge">MapKit</code>. Notice how appealing it is.
 <!--more-->
-
-
-<p><img class="center" src="/images/dont-forget-about-motion-effects/01.gif"></p>
+<img class="center" src="/images/dont-forget-about-motion-effects/01.gif" /></p>
 
 <p>Sweet, right?</p>
 
-<p>Achieving it, is easier than you think. Just a few lines of code and you&rsquo;re good to go:</p>
+<p>Achieving it, is easier than you think. Just a few lines of code and you’re good to go:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">var</span> <span class="n">horizontalMotionEffect</span> <span class="o">=</span> <span class="bp">UIInterpolatingMotionEffect</span><span class="p">(</span><span class="nl">keyPath</span><span class="p">:</span> <span class="s">&quot;center.x&quot;</span><span class="p">,</span> <span class="nl">type</span><span class="p">:</span> <span class="p">.</span><span class="n">TiltAlongHorizontalAxis</span><span class="p">)</span>
-</span><span class='line'><span class="n">horizontalMotionEffect</span><span class="p">.</span><span class="n">minimumRelativeValue</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span>
-</span><span class='line'><span class="n">horizontalMotionEffect</span><span class="p">.</span><span class="n">maximumRelativeValue</span> <span class="o">=</span> <span class="mi">100</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">mapView</span><span class="p">.</span><span class="n">addMotionEffect</span><span class="p">(</span><span class="n">horizontalMotionEffect</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="nv">horizontalMotionEffect</span> <span class="o">=</span> <span class="kt">UIInterpolatingMotionEffect</span><span class="p">(</span><span class="nv">keyPath</span><span class="p">:</span> <span class="s">"center.x"</span><span class="p">,</span> <span class="nv">type</span><span class="p">:</span> <span class="o">.</span><span class="kt">TiltAlongHorizontalAxis</span><span class="p">)</span>
+<span class="n">horizontalMotionEffect</span><span class="o">.</span><span class="n">minimumRelativeValue</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span>
+<span class="n">horizontalMotionEffect</span><span class="o">.</span><span class="n">maximumRelativeValue</span> <span class="o">=</span> <span class="mi">100</span>
 
+<span class="n">mapView</span><span class="o">.</span><span class="nf">addMotionEffect</span><span class="p">(</span><span class="n">horizontalMotionEffect</span><span class="p">)</span>
+</code></pre></div></div>
 
-<p>Think of <code>minimumRelativeValue</code> and <code>maximumRelativeValue</code> as leading and tralling constraints, respectivily, to its <code>superview</code>.</p>
+<p>Think of <code class="language-plaintext highlighter-rouge">minimumRelativeValue</code> and <code class="language-plaintext highlighter-rouge">maximumRelativeValue</code> as leading and tralling constraints, respectivily, to its <code class="language-plaintext highlighter-rouge">superview</code>.</p>
 
-<p>That&rsquo;s why you have to create the <code>UIView</code>, <code>MKMapView</code> in this case, outside its <code>superview</code>s bounds. Like so:</p>
+<p>That’s why you have to create the <code class="language-plaintext highlighter-rouge">UIView</code>, <code class="language-plaintext highlighter-rouge">MKMapView</code> in this case, outside its <code class="language-plaintext highlighter-rouge">superview</code>s bounds. Like so:</p>
 
-<p><img class="center" src="/images/dont-forget-about-motion-effects/02.png"></p>
+<p><img class="center" src="/images/dont-forget-about-motion-effects/02.png" /></p>
 
-<p>As the user tilts the device, <code>UIInterpolatingMotionEffect</code> translates the fixed offset values returned by the system to the range of specified values, then <code>UIKit</code> applies the translated values to any target views.</p>
+<p>As the user tilts the device, <code class="language-plaintext highlighter-rouge">UIInterpolatingMotionEffect</code> translates the fixed offset values returned by the system to the range of specified values, then <code class="language-plaintext highlighter-rouge">UIKit</code> applies the translated values to any target views.</p>
 
-<p>Don’t forget about this! Details matters and it&rsquo;s what users love in mobile apps!</p>
+<p>Don’t forget about this! Details matters and it’s what users love in mobile apps!</p>
 </div>
+
 
   <footer>
     <em>by <a href="https://www.twitter.com/rakaramos" >Rafael Machado</a>, 2015 Aug 24</em>
@@ -145,37 +119,7 @@
 
 <aside class="sidebar">
   
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
     
-      <li class="post">
-        <a href="/blog/2020/07/07/array-backwards-compatibility/">Array backwards compatibility using Property Wrappers</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/07/13/complete-flows-partial-models/">Complete flows, partial models</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/05/10/testing-codable/">Testing Codable</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/04/08/testing-the-camera-on-the-simulator/">Testing the camera on the simulator</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
-      </li>
-    
-  </ul>
-</section>
-
-
-
-
-
   
 </aside>
 
@@ -183,7 +127,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2024 -  NSHint <br/>
+  Copyright &copy; 2026 -  NSHint <br/>
 </span>
 </p>
 

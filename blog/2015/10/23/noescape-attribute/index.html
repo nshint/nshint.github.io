@@ -9,7 +9,7 @@
   <meta name="author" content="NSHint">
 
   
-  <meta name="description" content="Swift 1.2 introduced us with @noescape attribute. It&rsquo;s a very important feature, when we want to make our code more cleaner and stricter. Using &hellip;">
+  <meta name="description" content="Swift 1.2 introduced us with @noescape attribute. It’s a very important feature, when we want to make our code more cleaner and stricter. Using it ...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,10 +18,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://nshint.github.io/blog/2015/10/23/noescape-attribute">
+  <link rel="canonical" href="http://nshint.github.ioblog20151023noescape-attribute/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <link href="" rel="alternate" title="NSHint" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script defer data-domain="nshint.io" src="https://cotam.matoszko.pl/js/script.js"></script>
@@ -65,116 +65,70 @@
   <header>
   
     
-      <h1 class="entry-title">@noescape Attribute</h1>
+      <h1 class="entry-title">@noescape attribute</h1>
     
   
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-10-23T17:00:00+02:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
   </header>
 
 
-<div class="entry-content"><p>Swift 1.2 introduced us with <code>@noescape</code> attribute. It&rsquo;s a very important feature, when we want to make our code more cleaner and stricter. Using it properly at 3am will prevent many unwanted retain cycles.</p>
+<div class="entry-content"><p>Swift 1.2 introduced us with <code class="language-plaintext highlighter-rouge">@noescape</code> attribute. It’s a very important feature, when we want to make our code more cleaner and stricter. Using it properly at 3am will prevent many unwanted retain cycles.</p>
 
 <p>While digging into <a href="https://developer.apple.com/library/ios/releasenotes/DeveloperTools/RN-Xcode/Chapters/xc6_release_notes.html">release notes</a> we can see a bunch of clever words:</p>
-
-<blockquote><p>A new <code>@noescape</code> attribute may be used on closure parameters to functions. This indicates that the parameter is only ever called (or passed as an @noescape parameter in a call), which means that it cannot outlive the lifetime of the call. This enables some minor performance optimizations, but more importantly disables the <code>self.</code> requirement in closure arguments.</p></blockquote>
-
+<blockquote>
+  <p>A new <code class="language-plaintext highlighter-rouge">@noescape</code> attribute may be used on closure parameters to functions. This indicates that the parameter is only ever called (or passed as an @noescape parameter in a call), which means that it cannot outlive the lifetime of the call. This enables some minor performance optimizations, but more importantly disables the <code class="language-plaintext highlighter-rouge">self.</code> requirement in closure arguments.
 <!--more-->
+Lets analyze those smart statements and put it into code so everyone can enjoy it:</p>
+</blockquote>
 
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">foo</span><span class="p">(</span><span class="kd">@noescape</span> <span class="nv">code</span><span class="p">:(()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="kt">String</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="s">"foo </span><span class="se">\(</span><span class="nf">bar</span><span class="p">(</span><span class="n">code</span><span class="p">)</span><span class="se">)</span><span class="s">"</span>
+<span class="p">}</span>
 
-<p>Lets analyze those smart statements and put it into code so everyone can enjoy it:</p>
+<span class="kd">func</span> <span class="nf">bar</span><span class="p">(</span><span class="kd">@noescape</span> <span class="nv">code</span><span class="p">:(()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="kt">String</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="nf">code</span><span class="p">()</span> 
+<span class="p">}</span>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">func</span> <span class="nf">foo</span><span class="p">(@</span><span class="n">noescape</span> <span class="nl">code</span><span class="p">:(()</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">String</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="s">&quot;foo \(bar(code))&quot;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">func</span> <span class="n">bar</span><span class="p">(@</span><span class="n">noescape</span> <span class="nl">code</span><span class="p">:(()</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">String</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">code</span><span class="p">()</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">print</span><span class="p">(</span><span class="n">foo</span><span class="p">()</span> <span class="p">{</span><span class="s">&quot;bar&quot;</span><span class="p">})</span>
-</span></code></pre></td></tr></table></div></figure>
+<span class="nf">print</span><span class="p">(</span><span class="nf">foo</span><span class="p">()</span> <span class="p">{</span><span class="s">"bar"</span><span class="p">})</span>
+</code></pre></div></div>
 
+<p>It can be also captured in another <code class="language-plaintext highlighter-rouge">@noescape</code> closure:</p>
 
-<p>It can be also captured in another <code>@noescape</code> closure:</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">baz</span><span class="p">(</span><span class="kd">@noescape</span> <span class="nv">code</span><span class="p">:(()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">))</span>
+<span class="p">{</span>
+    <span class="n">qux</span> <span class="p">{</span>
+        <span class="nf">code</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nf">qux</span><span class="p">(</span><span class="kd">@noescape</span> <span class="nv">code</span><span class="p">:(()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">))</span> <span class="p">{}</span>
+</code></pre></div></div>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">func</span> <span class="nf">baz</span><span class="p">(@</span><span class="n">noescape</span> <span class="nl">code</span><span class="p">:(()</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="p">))</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="n">qux</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">code</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="k">func</span> <span class="nf">qux</span><span class="p">(@</span><span class="n">noescape</span> <span class="nl">code</span><span class="p">:(()</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="p">))</span> <span class="p">{}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>It&rsquo;s important to point out, that closures (and functions) annotated with <code>@noescape</code> can only be passed as <code>@noescape</code> parameters. What this mean is:</p>
+<p>It’s important to point out, that closures (and functions) annotated with <code class="language-plaintext highlighter-rouge">@noescape</code> can only be passed as <code class="language-plaintext highlighter-rouge">@noescape</code> parameters. What this mean is:</p>
 
 <ul>
-<li>we cannot run it asynchronously:
-<img class="center" src="/images/noescape-attribute/noescape-async.png"></li>
-<li>we can&rsquo;t store it
-<img class="center" src="/images/noescape-attribute/noescape-store.png"></li>
-<li>we can&rsquo;t capture it in another non-<code>@noescape</code> closure
-<img class="center" src="/images/noescape-attribute/noescape-capture.png"></li>
+  <li>we cannot run it asynchronously:
+<img class="center" src="/images/noescape-attribute/noescape-async.png" /></li>
+  <li>we can’t store it
+<img class="center" src="/images/noescape-attribute/noescape-store.png" /></li>
+  <li>we can’t capture it in another non-<code class="language-plaintext highlighter-rouge">@noescape</code> closure
+<img class="center" src="/images/noescape-attribute/noescape-capture.png" /></li>
 </ul>
-
 
 <p>Last to mention, in the future releases this will be taken even further:</p>
 
-<blockquote><p>This enables control-flow-like functions to be more transparent about their behavior. In a future beta, the standard library will adopt this attribute in functions like autoreleasepool().</p></blockquote>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">func</span> <span class="nf">autoreleasepool</span><span class="p">(@</span><span class="n">noescape</span> <span class="nl">code</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="p">())</span> <span class="p">{</span>
-</span><span class='line'>    <span class="n">pushAutoreleasePool</span><span class="p">()</span>
-</span><span class='line'>    <span class="n">code</span><span class="p">()</span>
-</span><span class='line'>    <span class="n">popAutoreleasePool</span><span class="p">()</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So dear developer the best is yet to come! ;]</p>
+<blockquote>
+  <p>This enables control-flow-like functions to be more transparent about their behavior. In a future beta, the standard library will adopt this attribute in functions like autoreleasepool().</p>
+  <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">autoreleasepool</span><span class="p">(</span><span class="kd">@noescape</span> <span class="nv">code</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="p">())</span> <span class="p">{</span>
+    <span class="nf">pushAutoreleasePool</span><span class="p">()</span>
+    <span class="nf">code</span><span class="p">()</span>
+    <span class="nf">popAutoreleasePool</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div>  </div>
+  <p>So dear developer the best is yet to come! ;]</p>
+</blockquote>
 </div>
+
 
   <footer>
     <em>by <a href="https://www.twitter.com/mmatoszko" >Mateusz Matoszko</a>, 2015 Oct 23</em>
@@ -193,37 +147,7 @@
 
 <aside class="sidebar">
   
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
     
-      <li class="post">
-        <a href="/blog/2020/07/07/array-backwards-compatibility/">Array backwards compatibility using Property Wrappers</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/07/13/complete-flows-partial-models/">Complete flows, partial models</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/05/10/testing-codable/">Testing Codable</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/04/08/testing-the-camera-on-the-simulator/">Testing the camera on the simulator</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
-      </li>
-    
-  </ul>
-</section>
-
-
-
-
-
   
 </aside>
 
@@ -231,7 +155,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2024 -  NSHint <br/>
+  Copyright &copy; 2026 -  NSHint <br/>
 </span>
 </p>
 

@@ -9,7 +9,7 @@
   <meta name="author" content="NSHint">
 
   
-  <meta name="description" content="There are a lot of tools in Xcode that help us during the debugging process. No doubt. Breakpoints for example are these tiny signals that tell the &hellip;">
+  <meta name="description" content="There are a lot of tools in Xcode that help us during the debugging process. No doubt. Breakpoints for example are these tiny signals that tell the...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,10 +18,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://nshint.github.io/blog/2015/06/24/detailed-exceptions">
+  <link rel="canonical" href="http://nshint.github.ioblog20150624detailed-exceptions/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <link href="" rel="alternate" title="NSHint" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script defer data-domain="nshint.io" src="https://cotam.matoszko.pl/js/script.js"></script>
@@ -68,24 +68,6 @@
       <h1 class="entry-title">Detailed Exceptions</h1>
     
   
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-06-24T10:00:00+02:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
   </header>
 
 
@@ -94,28 +76,26 @@ When this happens, we are usually presented with all the stack trace and in the 
 
 <p>But sometimes we see things like that:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>*** Assertion failure in -[UITableView _endCellAnimationsWithContext:], /SourceCache/UIKit_Sim/UIKit-3347.44/UITableView.m:1623</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Which with tells us literally nothing, when we are not familiar enough with the code that we are working. We get sterile error message that tells us that we are doing something wrong with UITableView animations, but it&rsquo;s all we get out of the box.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>*** Assertion failure in -[UITableView _endCellAnimationsWithContext:], /SourceCache/UIKit_Sim/UIKit-3347.44/UITableView.m:1623
+</code></pre></div></div>
+<p>Which with tells us literally nothing, when we are not familiar enough with the code that we are working. We get sterile error message that tells us that we are doing something wrong with UITableView animations, but it’s all we get out of the box.</p>
 
 <p>However, there is a way to get more detailed info. The thing that we can do to know the issue of our crash is this:</p>
 
-<p><img class="right" src="/images/detailed-exceptions/1.png"></p>
+<p><img class="right" src="/images/detailed-exceptions/1.png" /></p>
 
 <ol>
-<li>Go do debug navigator</li>
-<li>Select <code>objc_exception_throw</code> frame</li>
-<li>Go to console</li>
-<li>Type in: <code>po $eax</code> when using simulator or <code>po $r0</code> when debugging on a device.</li>
+  <li>Go do debug navigator</li>
+  <li>Select <code class="language-plaintext highlighter-rouge">objc_exception_throw</code> frame</li>
+  <li>Go to console</li>
+  <li>Type in: <code class="language-plaintext highlighter-rouge">po $eax</code> when using simulator or <code class="language-plaintext highlighter-rouge">po $r0</code> when debugging on a device.</li>
 </ol>
 
-
-<p><img class="center" src="/images/detailed-exceptions/2.png"></p>
+<p><img class="center" src="/images/detailed-exceptions/2.png" /></p>
 
 <p>This way you get more detailed error description which tells you a lot more about the place that you should be looking for to find your mistake.</p>
 </div>
+
 
   <footer>
     <em>by <a href="https://www.twitter.com/mmatoszko" >Mateusz Matoszko</a>, 2015 Jun 24</em>
@@ -134,37 +114,7 @@ When this happens, we are usually presented with all the stack trace and in the 
 
 <aside class="sidebar">
   
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
     
-      <li class="post">
-        <a href="/blog/2020/07/07/array-backwards-compatibility/">Array backwards compatibility using Property Wrappers</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/07/13/complete-flows-partial-models/">Complete flows, partial models</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/05/10/testing-codable/">Testing Codable</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/04/08/testing-the-camera-on-the-simulator/">Testing the camera on the simulator</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
-      </li>
-    
-  </ul>
-</section>
-
-
-
-
-
   
 </aside>
 
@@ -172,7 +122,7 @@ When this happens, we are usually presented with all the stack trace and in the 
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2024 -  NSHint <br/>
+  Copyright &copy; 2026 -  NSHint <br/>
 </span>
 </p>
 

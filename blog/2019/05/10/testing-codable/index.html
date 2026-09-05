@@ -9,7 +9,7 @@
   <meta name="author" content="NSHint">
 
   
-  <meta name="description" content="Codable is a great protocol available in Swift. It makes it possible to create a type safe JSON representations of structures used within our &hellip;">
+  <meta name="description" content="Codable is a great protocol available in Swift. It makes it possible to create a type safe JSON representations of structures used within our appli...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,10 +18,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://nshint.github.io/blog/2019/05/10/testing-codable">
+  <link rel="canonical" href="http://nshint.github.ioblog20190510testing-codable/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <link href="" rel="alternate" title="NSHint" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script defer data-domain="nshint.io" src="https://cotam.matoszko.pl/js/script.js"></script>
@@ -68,144 +68,75 @@
       <h1 class="entry-title">Testing Codable</h1>
     
   
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2019-05-10T19:55:56+02:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
   </header>
 
 
 <div class="entry-content"><p>Codable is a great protocol available in Swift. It makes it possible to create a type safe JSON representations of structures used within our application with zero boilerplate.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">struct</span> <span class="nl">Person</span><span class="p">:</span> <span class="n">Codable</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">let</span> <span class="nl">name</span><span class="p">:</span> <span class="n">String</span>
-</span><span class='line'>    <span class="k">let</span> <span class="nl">email</span><span class="p">:</span> <span class="n">String</span>
-</span><span class='line'>    <span class="k">let</span> <span class="nl">age</span><span class="p">:</span> <span class="n">Int</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">Person</span><span class="p">:</span> <span class="kt">Codable</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="k">let</span> <span class="nv">email</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="k">let</span> <span class="nv">age</span><span class="p">:</span> <span class="kt">Int</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
+<p>Once the structure conforms to <code class="language-plaintext highlighter-rouge">Codable</code> everything works out of the box. There’s a nice way to test those structures and make sure that everything gets the exact JSON format that we aligned with backend.
+<!--more--></p>
 
-<p>Once the structure conforms to <code>Codable</code> everything works out of the box. There&rsquo;s a nice way to test those structures and make sure that everything gets the exact JSON format that we aligned with backend.</p>
-
-<!--more-->
-
-
-<p>Let&rsquo;s create the following protocol in the test bundle:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">protocol</span> <span class="n">JSONTestable</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">init</span><span class="o">?</span><span class="p">(</span><span class="n">_</span> <span class="nl">json</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">func</span> <span class="n">json</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="o">?</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<p>Let’s create the following protocol in the test bundle:</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">JSONTestable</span> <span class="p">{</span>
+    <span class="nf">init</span><span class="p">?(</span><span class="n">_</span> <span class="nv">json</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+    <span class="kd">func</span> <span class="nf">json</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">?</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <p>After that we can immediately provide an extension which conforms to that protocol in the test bundle:</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">JSONTestable</span> <span class="k">where</span> <span class="k">Self</span><span class="p">:</span> <span class="kt">Codable</span> <span class="p">{</span>
+    <span class="nf">init</span><span class="p">?(</span><span class="n">_</span> <span class="nv">json</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">guard</span>
+            <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="nf">data</span><span class="p">(</span><span class="nv">using</span><span class="p">:</span> <span class="o">.</span><span class="n">utf8</span><span class="p">),</span>
+            <span class="k">let</span> <span class="nv">decoded</span> <span class="o">=</span> <span class="k">try</span><span class="p">?</span> <span class="kt">JSONDecoder</span><span class="p">()</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="k">Self</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
+            <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">nil</span> <span class="p">}</span>
+        <span class="k">self</span> <span class="o">=</span> <span class="n">decoded</span>
+    <span class="p">}</span>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">extension</span> <span class="n">JSONTestable</span> <span class="k">where</span> <span class="nl">Self</span><span class="p">:</span> <span class="n">Codable</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">init</span><span class="o">?</span><span class="p">(</span><span class="n">_</span> <span class="nl">json</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">guard</span>
-</span><span class='line'>            <span class="k">let</span> <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="nl">using</span><span class="p">:</span> <span class="p">.</span><span class="n">utf8</span><span class="p">),</span>
-</span><span class='line'>            <span class="k">let</span> <span class="n">decoded</span> <span class="o">=</span> <span class="n">try</span><span class="o">?</span> <span class="n">JSONDecoder</span><span class="p">().</span><span class="n">decode</span><span class="p">(</span><span class="kt">Self</span><span class="p">.</span><span class="nb">self</span><span class="p">,</span> <span class="nl">from</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">nil</span> <span class="p">}</span>
-</span><span class='line'>        <span class="nb">self</span> <span class="o">=</span> <span class="n">decoded</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">func</span> <span class="n">json</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="o">?</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">guard</span> <span class="k">let</span> <span class="n">data</span> <span class="o">=</span> <span class="n">try</span><span class="o">?</span> <span class="n">JSONEncoder</span><span class="p">().</span><span class="n">encode</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">nil</span> <span class="p">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">String</span><span class="p">(</span><span class="nl">data</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="nl">encoding</span><span class="p">:</span> <span class="p">.</span><span class="n">utf8</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
+    <span class="kd">func</span> <span class="nf">json</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="k">try</span><span class="p">?</span> <span class="kt">JSONEncoder</span><span class="p">()</span><span class="o">.</span><span class="nf">encode</span><span class="p">(</span><span class="k">self</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">nil</span> <span class="p">}</span>
+        <span class="k">return</span> <span class="kt">String</span><span class="p">(</span><span class="nv">data</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="nv">encoding</span><span class="p">:</span> <span class="o">.</span><span class="n">utf8</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
+<p>Then there’s only one simple step which needs to be done in the test bundle in order to test the structure:
+<code class="language-plaintext highlighter-rouge">PersonTests.swift</code>:</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">Person</span><span class="p">:</span> <span class="kt">JSONTestable</span> <span class="p">{}</span>
+</code></pre></div></div>
 
-<p>Then there&rsquo;s only one simple step which needs to be done in the test bundle in order to test the structure:
-<code>PersonTests.swift</code>:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">extension</span> <span class="nl">Person</span><span class="p">:</span> <span class="n">JSONTestable</span> <span class="p">{}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That&rsquo;s it! Now we can easily test the result of the serialization and deserialization :)</p>
+<p>That’s it! Now we can easily test the result of the serialization and deserialization :)</p>
 
 <p>Example tests:</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">final</span> <span class="kd">class</span> <span class="kt">PersonTests</span><span class="p">:</span> <span class="kt">XCTestCase</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">testJsonSerialization</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">person</span> <span class="o">=</span> <span class="kt">Person</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"John Appleased"</span><span class="p">,</span> <span class="nv">email</span><span class="p">:</span> <span class="s">"john@appleased.com"</span><span class="p">,</span> <span class="nv">age</span><span class="p">:</span> <span class="mi">30</span><span class="p">)</span>
+        <span class="kt">XCTAssertEqual</span><span class="p">(</span><span class="n">personJson</span><span class="p">,</span> <span class="n">person</span><span class="o">.</span><span class="nf">json</span><span class="p">())</span> <span class="c1">// ✅</span>
+    <span class="p">}</span>
+    
+    <span class="kd">func</span> <span class="nf">testJsonDeserialization</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">person</span> <span class="o">=</span> <span class="kt">Person</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"John Appleased"</span><span class="p">,</span> <span class="nv">email</span><span class="p">:</span> <span class="s">"john@appleased.com"</span><span class="p">,</span> <span class="nv">age</span><span class="p">:</span> <span class="mi">30</span><span class="p">)</span>
+        <span class="kt">XCTAssertEqual</span><span class="p">(</span><span class="n">person</span><span class="p">,</span> <span class="kt">Person</span><span class="p">(</span><span class="n">personJson</span><span class="p">))</span> <span class="c1">// ✅</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="n">final</span> <span class="k">class</span> <span class="nl">PersonTests</span><span class="p">:</span> <span class="n">XCTestCase</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">func</span> <span class="n">testJsonSerialization</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">let</span> <span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="nl">name</span><span class="p">:</span> <span class="s">&quot;John Appleased&quot;</span><span class="p">,</span> <span class="nl">email</span><span class="p">:</span> <span class="s">&quot;john@appleased.com&quot;</span><span class="p">,</span> <span class="nl">age</span><span class="p">:</span> <span class="mi">30</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">XCTAssertEqual</span><span class="p">(</span><span class="n">personJson</span><span class="p">,</span> <span class="n">person</span><span class="p">.</span><span class="n">json</span><span class="p">())</span> <span class="c1">// ✅</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">func</span> <span class="n">testJsonDeserialization</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">let</span> <span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="nl">name</span><span class="p">:</span> <span class="s">&quot;John Appleased&quot;</span><span class="p">,</span> <span class="nl">email</span><span class="p">:</span> <span class="s">&quot;john@appleased.com&quot;</span><span class="p">,</span> <span class="nl">age</span><span class="p">:</span> <span class="mi">30</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">XCTAssertEqual</span><span class="p">(</span><span class="n">person</span><span class="p">,</span> <span class="n">Person</span><span class="p">(</span><span class="n">personJson</span><span class="p">))</span> <span class="c1">// ✅</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">private</span> <span class="k">let</span> <span class="n">personJson</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
-</span><span class='line'><span class="p">{</span><span class="s">&quot;name&quot;</span><span class="o">:</span><span class="s">&quot;John Appleased&quot;</span><span class="p">,</span><span class="s">&quot;email&quot;</span><span class="o">:</span><span class="s">&quot;john@appleased.com&quot;</span><span class="p">,</span><span class="s">&quot;age&quot;</span><span class="o">:</span><span class="mi">30</span><span class="p">}</span>
-</span><span class='line'><span class="s">&quot;&quot;&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">extension</span> <span class="nl">Person</span><span class="p">:</span> <span class="n">JSONTestable</span><span class="p">,</span> <span class="n">Equatable</span> <span class="p">{}</span>
-</span></code></pre></td></tr></table></div></figure>
+<span class="kd">private</span> <span class="k">let</span> <span class="nv">personJson</span> <span class="o">=</span> <span class="s">"""
+{"</span><span class="n">name</span><span class="s">":"</span><span class="kt">John</span> <span class="kt">Appleased</span><span class="s">","</span><span class="n">email</span><span class="s">":"</span><span class="n">john</span><span class="kd">@appleased</span><span class="o">.</span><span class="n">com</span><span class="s">","</span><span class="n">age</span><span class="s">":30}
+"""</span>
 
+<span class="kd">extension</span> <span class="kt">Person</span><span class="p">:</span> <span class="kt">JSONTestable</span><span class="p">,</span> <span class="kt">Equatable</span> <span class="p">{}</span>
+</code></pre></div></div>
 
 <p>What do you think about this method? Is there anything which could be improved in this implementation? Please let us know :)</p>
 </div>
+
 
   <footer>
     <em>by <a href="https://www.twitter.com/mmatoszko" >Mateusz Matoszko</a>, 2019 May 10</em>
@@ -224,37 +155,7 @@
 
 <aside class="sidebar">
   
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
     
-      <li class="post">
-        <a href="/blog/2020/07/07/array-backwards-compatibility/">Array backwards compatibility using Property Wrappers</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/07/13/complete-flows-partial-models/">Complete flows, partial models</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/05/10/testing-codable/">Testing Codable</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/04/08/testing-the-camera-on-the-simulator/">Testing the camera on the simulator</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
-      </li>
-    
-  </ul>
-</section>
-
-
-
-
-
   
 </aside>
 
@@ -262,7 +163,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2024 -  NSHint <br/>
+  Copyright &copy; 2026 -  NSHint <br/>
 </span>
 </p>
 

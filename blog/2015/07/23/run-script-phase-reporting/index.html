@@ -9,7 +9,7 @@
   <meta name="author" content="NSHint">
 
   
-  <meta name="description" content="Bash scripts are commonly used in Mac/iOS development to make repetitive operations hands-free. However sometimes things go wrong and in a perfect &hellip;">
+  <meta name="description" content="Bash scripts are commonly used in Mac/iOS development to make repetitive operations hands-free. However sometimes things go wrong and in a perfect ...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,10 +18,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://nshint.github.io/blog/2015/07/23/run-script-phase-reporting">
+  <link rel="canonical" href="http://nshint.github.ioblog20150723run-script-phase-reporting/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <link href="" rel="alternate" title="NSHint" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script defer data-domain="nshint.io" src="https://cotam.matoszko.pl/js/script.js"></script>
@@ -65,69 +65,40 @@
   <header>
   
     
-      <h1 class="entry-title">Run Script Phase Reporting</h1>
+      <h1 class="entry-title">Run Script Phase reporting</h1>
     
   
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-07-23T13:24:06+02:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
   </header>
 
 
 <div class="entry-content"><p>Bash scripts are commonly used in Mac/iOS development to make repetitive operations hands-free. However sometimes things go wrong and in a perfect world I’d like to be properly informed about the errors.
-Here comes view called „Report Navigator”, which displays any type of errors, warnings at compile time of Objective-C/Swift, or even while typing new lines of code. Let me show how to use the Report Navigator.</p>
-
+Here comes view called „Report Navigator”, which displays any type of errors, warnings at compile time of Objective-C/Swift, or even while typing new lines of code. Let me show how to use the Report Navigator.
 <!--more-->
+As usual create new <code class="language-plaintext highlighter-rouge">Run Script Phase</code> and insert your Bash script:</p>
 
+<p><img class="center" src="/images/bash-scripts-marks/bash-scripts-new-script-phase.png" /></p>
 
-<p>As usual create new <code>Run Script Phase</code> and insert your Bash script:</p>
+<p>To keep this blog post short, I’ve created a simple script that checks which build configurations were used:</p>
 
-<p><img class="center" src="/images/bash-scripts-marks/bash-scripts-new-script-phase.png"></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s2">"note: Starting script phase.”
+echo "</span>warning: testing <span class="k">for </span>Debug target<span class="s2">"
 
-<p>To keep this blog post short, I&rsquo;ve created a simple script that checks which build configurations were used:</p>
+if [ "</span>Debug<span class="s2">"= "</span><span class="k">${</span><span class="nv">CONFIGURATION</span><span class="k">}</span><span class="s2">" ];
+then
+    echo "</span>error: please run this script on Release target<span class="s2">"
+else
+    echo "</span>warning: running on Debug target<span class="s2">"
+fi
+</span></code></pre></div></div>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">echo</span> <span class="s2">&quot;note: Starting script phase.”</span>
-</span><span class='line'><span class="s2">echo &quot;</span>warning: testing <span class="k">for</span> Debug target<span class="s2">&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="s2">if [ &quot;</span>Debug<span class="s2">&quot;= &quot;</span><span class="k">${</span><span class="nv">CONFIGURATION</span><span class="k">}</span><span class="s2">&quot; ];</span>
-</span><span class='line'><span class="s2">then</span>
-</span><span class='line'><span class="s2">    echo &quot;</span>error: please run this script on Release target<span class="s2">&quot;</span>
-</span><span class='line'><span class="s2">else</span>
-</span><span class='line'><span class="s2">    echo &quot;</span>warning: running on Debug target<span class="err">&quot;</span>
-</span><span class='line'><span class="k">fi</span>
-</span></code></pre></td></tr></table></div></figure>
+<p>Please, take a look in every echo at <code class="language-plaintext highlighter-rouge">note:</code>, <code class="language-plaintext highlighter-rouge">warning:</code> and <code class="language-plaintext highlighter-rouge">error:</code> prefixes. When XCode recognizes any of these tags, the proper indicator will show up in Report Navigator and of course at the top bar:</p>
 
-
-<p>Please, take a look in every echo at <code>note:</code>, <code>warning:</code> and <code>error:</code> prefixes. When XCode recognizes any of these tags, the proper indicator will show up in Report Navigator and of course at the top bar:</p>
-
-<p><img class="center" src="/images/bash-scripts-marks/bash-scripts-error-navigator.png"></p>
+<p><img class="center" src="/images/bash-scripts-marks/bash-scripts-error-navigator.png" /></p>
 
 <p>Pay attention to the colon at the end of each tag. Tags can be placed anywhere in the message.</p>
+
 </div>
+
 
   <footer>
     <em>by <a href="https://www.twitter.com/Maroreram" >Kondrat Kielar</a>, 2015 Jul 23</em>
@@ -146,37 +117,7 @@ Here comes view called „Report Navigator”, which displays any type of errors
 
 <aside class="sidebar">
   
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
     
-      <li class="post">
-        <a href="/blog/2020/07/07/array-backwards-compatibility/">Array backwards compatibility using Property Wrappers</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/07/13/complete-flows-partial-models/">Complete flows, partial models</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/05/10/testing-codable/">Testing Codable</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/04/08/testing-the-camera-on-the-simulator/">Testing the camera on the simulator</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
-      </li>
-    
-  </ul>
-</section>
-
-
-
-
-
   
 </aside>
 
@@ -184,7 +125,7 @@ Here comes view called „Report Navigator”, which displays any type of errors
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2024 -  NSHint <br/>
+  Copyright &copy; 2026 -  NSHint <br/>
 </span>
 </p>
 

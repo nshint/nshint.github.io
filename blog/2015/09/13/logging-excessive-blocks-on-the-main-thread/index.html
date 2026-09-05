@@ -5,11 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Autolayout and NSLocalizedString - NSHint</title>
+  <title>Logging excessive blocks on the main thread - NSHint</title>
   <meta name="author" content="NSHint">
 
   
-  <meta name="description" content="A localized application is the one that has all of its texts, translated into the users device current language. And this, for us developers, means...">
+  <meta name="description" content="Logging excessive blocks on the main thread
+
+Having an application running at 60 FPS is every programmers dream, and users delight.
+The worst users...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://nshint.github.ioblog20150902autolayout-and-nslocalizedstring/">
+  <link rel="canonical" href="http://nshint.github.ioblog20150913logging-excessive-blocks-on-the-main-thread/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="" rel="alternate" title="NSHint" type="application/atom+xml">
@@ -65,43 +68,38 @@
   <header>
   
     
-      <h1 class="entry-title">Autolayout and NSLocalizedString</h1>
+      <h1 class="entry-title">Logging excessive blocks on the main thread</h1>
     
   
   </header>
 
 
-<div class="entry-content"><p>A localized application is the one that has all of its texts, translated into the users device current language. And this, for us developers, means one thing, and one thing only. Nightmare.</p>
+<div class="entry-content"><p>Logging excessive blocks on the main thread</p>
 
-<p>Every time a new translation comes, it’s necessary to run the application and check for broken layouts. Take this quite simple UI.
+<p>Having an application running at 60 FPS is every programmers dream, and users delight.
+The worst users experience ever is a frozen and unresponsive screen. It’s a dreadful crime in mobile world nowadays. Users try to interact at any moment and according to Murphy’s law they will find all your mistakes. So, you better keep the main thread slim.
 <!--more-->
-<img class="center" src="/images/autolayout-and-nslocalizedstrings/01.png" width="375" /></p>
+To keep things smoothly in the users interface, every single operation that’s schedule to run into the main thread can take longer than 16 milliseconds, and there’s a handy solution to get you covered. It’s a little library called <a href="https://github.com/wojteklu/Watchdog">Watchdog</a>.</p>
 
-<p>Simple, huh?</p>
+<p>Watchdog is a very simple and straightforward library that logs excessive blocking on the main thread. Let’s take a look at how to use it:</p>
 
-<p>All right, here’s what you have to do to get covered with future translations, and avoid autolayout nightmares.</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">watchdog</span> <span class="o">=</span> <span class="kt">Watchdog</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+</code></pre></div></div>
 
-<p>Add <code class="language-plaintext highlighter-rouge">-NSDoubleLocalizedStrings YES</code> to <code class="language-plaintext highlighter-rouge">Arguments Passed On Launch</code> to the <code class="language-plaintext highlighter-rouge">Run</code> section at your <code class="language-plaintext highlighter-rouge">Project Schemes</code>.</p>
+<p>Just instantiate it with a number of seconds that you want for Watchdog to consider that the main thread blocked. Also don’t forget to retain Watchdog somewhere or it will get released when it goes out of scope. Whenever the main thread is blocked for more than the value previously defined, it will print out logs, just like this:</p>
 
-<p><img class="center" src="/images/autolayout-and-nslocalizedstrings/02.png" /></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>👮 Main thread was blocked for 1.25s 👮
+</code></pre></div></div>
 
-<p>This argument will duplicate all strings loaded using <code class="language-plaintext highlighter-rouge">NSLocalizedString</code>.</p>
-
-<p><img class="center" src="/images/autolayout-and-nslocalizedstrings/03.png" width="375" /></p>
-
-<p>What’s better then that? What about finding out unlocalized strings?</p>
-
-<p>So, <code class="language-plaintext highlighter-rouge">-NSShowNonLocalizedStrings YES</code> comes to rescue!</p>
-
-<p>Great! Now you go and get yourself a cup of coffee while the translation team does their job :)</p>
+<p>Pretty nice debugging tool!</p>
 </div>
 
 
   <footer>
-    <em>by <a href="https://www.twitter.com/rakaramos" >Rafael Machado</a>, 2015 Sep 2</em>
+    <em>by <a href="https://www.twitter.com/rakaramos" >Rafael Machado</a>, 2015 Sep 13</em>
     <em><div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://nshint.github.io/blog/2015/09/02/autolayout-and-nslocalizedstring/" data-via="nshintio" data-counturl="http://nshint.github.io/blog/2015/09/02/autolayout-and-nslocalizedstring/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://nshint.github.io/blog/2015/09/13/logging-excessive-blocks-on-the-main-thread/" data-via="nshintio" data-counturl="http://nshint.github.io/blog/2015/09/13/logging-excessive-blocks-on-the-main-thread/" >Tweet</a>
   
   
   

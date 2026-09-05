@@ -9,8 +9,9 @@
   <meta name="author" content="NSHint">
 
   
-  <meta name="description" content="1
-CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.000000 This error may happen when you try to load UIImage and your &hellip;">
+  <meta name="description" content="CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.000000
+
+This error may happen when you try to load UIImage and your ass...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,10 +20,10 @@ CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.0000
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://nshint.github.io/blog/2015/07/02/fixing-uicatalog-invalid-asset-error">
+  <link rel="canonical" href="http://nshint.github.ioblog20150702fixing-uicatalog-invalid-asset-error/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <link href="" rel="alternate" title="NSHint" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script defer data-domain="nshint.io" src="https://cotam.matoszko.pl/js/script.js"></script>
@@ -66,43 +67,21 @@ CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.0000
   <header>
   
     
-      <h1 class="entry-title">Fixing UICatalog Invalid Asset Error</h1>
+      <h1 class="entry-title">Fixing UICatalog invalid asset error</h1>
     
   
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-07-02T17:29:00+02:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
   </header>
 
 
-<div class="entry-content"><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.000000</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This error may happen when you try to load <code>UIImage</code> and your asset string is <code>nil</code>. For now this will not crash your app but may case some future problems. This may also lead to some UI inconsistency. To track down issue like this we need to set symbolic breakpoint:</p>
-
+<div class="entry-content"><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.000000
+</code></pre></div></div>
+<p>This error may happen when you try to load <code class="language-plaintext highlighter-rouge">UIImage</code> and your asset string is <code class="language-plaintext highlighter-rouge">nil</code>. For now this will not crash your app but may case some future problems. This may also lead to some UI inconsistency. To track down issue like this we need to set symbolic breakpoint:
 <!--more-->
+<img class="center" src="/images/uicatalog_invalid_asset/null_asset.png" /></p>
 
-
-<p><img class="center" src="/images/uicatalog_invalid_asset/null_asset.png"></p>
-
-<p>Add <code>$arg3 == nil</code> condition (on Simulator) or <code>$r0 == nil</code> condition on iPhone device. This will stop executing your app exactly in the line where you try to load broken image.</p>
+<p>Add <code class="language-plaintext highlighter-rouge">$arg3 == nil</code> condition (on Simulator) or <code class="language-plaintext highlighter-rouge">$r0 == nil</code> condition on iPhone device. This will stop executing your app exactly in the line where you try to load broken image.</p>
 </div>
+
 
   <footer>
     <em>by <a href="https://www.twitter.com/noxytrux" >Marcin Małysz</a>, 2015 Jul 2</em>
@@ -121,37 +100,7 @@ CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.0000
 
 <aside class="sidebar">
   
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
     
-      <li class="post">
-        <a href="/blog/2020/07/07/array-backwards-compatibility/">Array backwards compatibility using Property Wrappers</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/07/13/complete-flows-partial-models/">Complete flows, partial models</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/05/10/testing-codable/">Testing Codable</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/04/08/testing-the-camera-on-the-simulator/">Testing the camera on the simulator</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
-      </li>
-    
-  </ul>
-</section>
-
-
-
-
-
   
 </aside>
 
@@ -159,7 +108,7 @@ CUICatalog: Invalid asset name supplied: (null), or invalid scale factor: 2.0000
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2024 -  NSHint <br/>
+  Copyright &copy; 2026 -  NSHint <br/>
 </span>
 </p>
 

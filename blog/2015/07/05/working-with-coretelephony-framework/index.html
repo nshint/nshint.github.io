@@ -9,7 +9,7 @@
   <meta name="author" content="NSHint">
 
   
-  <meta name="description" content="Have you ever encountered a situation where you want to build some record or music app ? But you need to somehow react on a phone call which in many &hellip;">
+  <meta name="description" content="Have you ever encountered a situation where you want to build some record or music app ? But you need to somehow react on a phone call which in man...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,10 +18,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://nshint.github.io/blog/2015/07/05/working-with-coretelephony-framework">
+  <link rel="canonical" href="http://nshint.github.ioblog20150705working-with-coretelephony-framework/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <link href="" rel="alternate" title="NSHint" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script defer data-domain="nshint.io" src="https://cotam.matoszko.pl/js/script.js"></script>
@@ -65,213 +65,111 @@
   <header>
   
     
-      <h1 class="entry-title">Working With Core Telephony Framework</h1>
+      <h1 class="entry-title">Working with Core Telephony framework</h1>
     
   
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-07-05T15:52:09+02:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
   </header>
 
 
-<div class="entry-content"><p>Have you ever encountered a situation where you want to build some record or music app ? But you need to somehow react on a phone call which in many cases break recording or playing in more advanced app (mostly when it comes to <code>CoreAudio</code>) or switch UI in case of call? <code>CoreTelephony</code> is a great library which will help in most of the situations.</p>
+<div class="entry-content"><p>Have you ever encountered a situation where you want to build some record or music app ? But you need to somehow react on a phone call which in many cases break recording or playing in more advanced app (mostly when it comes to <code class="language-plaintext highlighter-rouge">CoreAudio</code>) or switch UI in case of call? <code class="language-plaintext highlighter-rouge">CoreTelephony</code> is a great library which will help in most of the situations.</p>
 
-<p>To detect phone call on your iPhone or iPad app (this may be the case now when we use continuity) simply use this piece of code:</p>
+<p>To detect phone call on your iPhone or iPad app (this may be the case now when we use continuity) simply use this piece of code:<br />
+<!--more--></p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#import &lt;CoreTelephony/CTCall.h&gt;
+#import &lt;CoreTelephony/CTCallCenter.h&gt;
+#import &lt;CoreTelephony/CTCarrier.h&gt;
+#import &lt;CoreTelephony/CTTelephonyNetworkInfo.h&gt;
+</span>
+<span class="k">@interface</span> <span class="nc">MMCallNotificationManager</span><span class="p">()</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">CTCallCenter</span> <span class="o">*</span><span class="n">callCenter</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">callWasStarted</span><span class="p">;</span>
+<span class="k">@end</span>
 
-<!--more-->
+<span class="k">@implementation</span> <span class="nc">MMCallNotificationManager</span>
 
+<span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="n">init</span>
+<span class="p">{</span>
+    <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">init</span><span class="p">];</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="n">self</span><span class="p">.</span><span class="n">callCenter</span> <span class="o">=</span> <span class="p">[[</span><span class="n">CTCallCenter</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">callWasStarted</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+        
+        <span class="n">__weak</span> <span class="n">__typeof__</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="n">weakSelf</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+        
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">callCenter</span> <span class="nf">setCallEventHandler</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">CTCall</span> <span class="o">*</span><span class="n">call</span><span class="p">)</span> <span class="p">{</span>
+            
+            <span class="k">if</span> <span class="p">([[</span><span class="n">call</span> <span class="nf">callState</span><span class="p">]</span> <span class="nf">isEqual</span><span class="p">:</span><span class="n">CTCallStateIncoming</span><span class="p">]</span> <span class="o">||</span>
+                <span class="p">[[</span><span class="n">call</span> <span class="nf">callState</span><span class="p">]</span> <span class="nf">isEqual</span><span class="p">:</span><span class="n">CTCallStateDialing</span><span class="p">])</span> <span class="p">{</span>
+                
+                <span class="k">if</span> <span class="p">(</span><span class="n">weakSelf</span><span class="p">.</span><span class="n">callWasStarted</span> <span class="o">==</span> <span class="nb">NO</span><span class="p">)</span> <span class="p">{</span>
+                    
+                    <span class="n">weakSelf</span><span class="p">.</span><span class="n">callWasStarted</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+                    
+                    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Call was started."</span><span class="p">);</span>
+                <span class="p">}</span>
+                
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">([[</span><span class="n">call</span> <span class="nf">callState</span><span class="p">]</span> <span class="nf">isEqual</span><span class="p">:</span><span class="n">CTCallStateDisconnected</span><span class="p">])</span> <span class="p">{</span>
+                
+                <span class="k">if</span> <span class="p">(</span><span class="n">weakSelf</span><span class="p">.</span><span class="n">callWasStarted</span> <span class="o">==</span> <span class="nb">YES</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">weakSelf</span><span class="p">.</span><span class="n">callWasStarted</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+                    
+                    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Call was ended."</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}];</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &lt;CoreTelephony/CTCall.h&gt;</span>
-</span><span class='line'><span class="cp">#import &lt;CoreTelephony/CTCallCenter.h&gt;</span>
-</span><span class='line'><span class="cp">#import &lt;CoreTelephony/CTCarrier.h&gt;</span>
-</span><span class='line'><span class="cp">#import &lt;CoreTelephony/CTTelephonyNetworkInfo.h&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@interface</span> <span class="nc">MMCallNotificationManager</span><span class="p">()</span>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">,</span> <span class="k">strong</span><span class="p">)</span> <span class="bp">CTCallCenter</span> <span class="o">*</span><span class="n">callCenter</span><span class="p">;</span>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">callWasStarted</span><span class="p">;</span>
-</span><span class='line'><span class="k">@end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@implementation</span> <span class="nc">MMCallNotificationManager</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">instancetype</span><span class="p">)</span><span class="nf">init</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="nb">self</span> <span class="o">=</span> <span class="p">[</span><span class="nb">super</span> <span class="n">init</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">callCenter</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">CTCallCenter</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
-</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">callWasStarted</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">__weak</span> <span class="n">__typeof__</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="n">weakSelf</span> <span class="o">=</span> <span class="nb">self</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">callCenter</span> <span class="nl">setCallEventHandler</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="bp">CTCall</span> <span class="o">*</span><span class="n">call</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">if</span> <span class="p">([[</span><span class="n">call</span> <span class="n">callState</span><span class="p">]</span> <span class="nl">isEqual</span><span class="p">:</span><span class="n">CTCallStateIncoming</span><span class="p">]</span> <span class="o">||</span>
-</span><span class='line'>                <span class="p">[[</span><span class="n">call</span> <span class="n">callState</span><span class="p">]</span> <span class="nl">isEqual</span><span class="p">:</span><span class="n">CTCallStateDialing</span><span class="p">])</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="k">if</span> <span class="p">(</span><span class="n">weakSelf</span><span class="p">.</span><span class="n">callWasStarted</span> <span class="o">==</span> <span class="nb">NO</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>                    <span class="n">weakSelf</span><span class="p">.</span><span class="n">callWasStarted</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>                    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Call was started.&quot;</span><span class="p">);</span>
-</span><span class='line'>                <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">([[</span><span class="n">call</span> <span class="n">callState</span><span class="p">]</span> <span class="nl">isEqual</span><span class="p">:</span><span class="n">CTCallStateDisconnected</span><span class="p">])</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="k">if</span> <span class="p">(</span><span class="n">weakSelf</span><span class="p">.</span><span class="n">callWasStarted</span> <span class="o">==</span> <span class="nb">YES</span><span class="p">)</span>
-</span><span class='line'>                <span class="p">{</span>
-</span><span class='line'>                    <span class="n">weakSelf</span><span class="p">.</span><span class="n">callWasStarted</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>                    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Call was ended.&quot;</span><span class="p">);</span>
-</span><span class='line'>                <span class="p">}</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>        <span class="p">}];</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">return</span> <span class="nb">self</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@end</span>
-</span></code></pre></td></tr></table></div></figure>
+<span class="k">@end</span>
 
+</code></pre></div></div>
 
-<p>Another example of usage may be detecting if we have simcard installed on our device. For example our application allows user to call someone within the app, but we want to inform if the card is removed. Of course we can use some iOS urls for that, such as: <code>telprompt:</code> but they likely breaks UI e.g: in iOS8 it blinks twice which is not a nice effect&hellip;</p>
+<p>Another example of usage may be detecting if we have simcard installed on our device. For example our application allows user to call someone within the app, but we want to inform if the card is removed. Of course we can use some iOS urls for that, such as: <code class="language-plaintext highlighter-rouge">telprompt:</code> but they likely breaks UI e.g: in iOS8 it blinks twice which is not a nice effect…</p>
 
 <p>So to detect if simcard is in place, use this code:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &lt;CoreTelephony/CTTelephonyNetworkInfo.h&gt;</span>
-</span><span class='line'><span class="cp">#import &lt;CoreTelephony/CTCarrier.h&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">handleCallButtonPress:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="bp">CTTelephonyNetworkInfo</span> <span class="o">*</span><span class="n">networkInfo</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">CTTelephonyNetworkInfo</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="bp">NSString</span> <span class="o">*</span><span class="n">code</span> <span class="o">=</span> <span class="p">[</span><span class="n">networkInfo</span><span class="p">.</span><span class="n">subscriberCellularProvider</span> <span class="n">mobileCountryCode</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">//this is nil if you take out sim card.</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">code</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="bp">UIAlertView</span> <span class="o">*</span><span class="n">alertView</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIAlertView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithTitle</span><span class="p">:</span><span class="n">NSLocalizedString</span><span class="p">(</span><span class="s">@&quot;aler.error&quot;</span><span class="p">,</span><span class="nb">nil</span><span class="p">)</span>
-</span><span class='line'>                                                            <span class="nl">message</span><span class="p">:</span><span class="n">NSLocalizedString</span><span class="p">(</span><span class="s">@&quot;alert.message.no_sim_card&quot;</span><span class="p">,</span><span class="nb">nil</span><span class="p">)</span>
-</span><span class='line'>                                                           <span class="nl">delegate</span><span class="p">:</span><span class="nb">nil</span>
-</span><span class='line'>                                                  <span class="nl">cancelButtonTitle</span><span class="p">:</span><span class="n">NSLocalizedString</span><span class="p">(</span><span class="s">@&quot;alert.button_dimiss&quot;</span><span class="p">,</span> <span class="nb">nil</span><span class="p">)</span>
-</span><span class='line'>                                                  <span class="nl">otherButtonTitles</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="p">[</span><span class="n">alertView</span> <span class="n">show</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">//make regular phone prompt (with call confirmation)</span>
-</span><span class='line'>    <span class="bp">NSURL</span> <span class="o">*</span><span class="n">phoneUrl</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSURL</span> <span class="nl">URLWithString</span><span class="p">:[</span><span class="bp">NSString</span>  <span class="nl">stringWithFormat</span><span class="p">:</span><span class="s">@&quot;telprompt://%@&quot;</span><span class="p">,</span><span class="n">phoneNumberString</span><span class="p">]];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">if</span> <span class="p">([[</span><span class="bp">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">canOpenURL</span><span class="p">:</span><span class="n">phoneUrl</span><span class="p">])</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="p">[[</span><span class="bp">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">openURL</span><span class="p">:</span><span class="n">phoneUrl</span><span class="p">];</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#import &lt;CoreTelephony/CTTelephonyNetworkInfo.h&gt;
+#import &lt;CoreTelephony/CTCarrier.h&gt;
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">IBAction</span><span class="p">)</span><span class="nf">handleCallButtonPress</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">sender</span>
+<span class="p">{</span>
+    <span class="n">CTTelephonyNetworkInfo</span> <span class="o">*</span><span class="n">networkInfo</span> <span class="o">=</span> <span class="p">[[</span><span class="n">CTTelephonyNetworkInfo</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+    
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">code</span> <span class="o">=</span> <span class="p">[</span><span class="n">networkInfo</span><span class="p">.</span><span class="n">subscriberCellularProvider</span> <span class="nf">mobileCountryCode</span><span class="p">];</span>
 
+    <span class="c1">//this is nil if you take out sim card.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">code</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="n">UIAlertView</span> <span class="o">*</span><span class="n">alertView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIAlertView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithTitle</span><span class="p">:</span><span class="n">NSLocalizedString</span><span class="p">(</span><span class="s">@"aler.error"</span><span class="p">,</span><span class="nb">nil</span><span class="p">)</span>
+                                                            <span class="nl">message:</span><span class="n">NSLocalizedString</span><span class="p">(</span><span class="s">@"alert.message.no_sim_card"</span><span class="p">,</span><span class="nb">nil</span><span class="p">)</span>
+                                                           <span class="nl">delegate:</span><span class="nb">nil</span>
+                                                  <span class="nl">cancelButtonTitle:</span><span class="n">NSLocalizedString</span><span class="p">(</span><span class="s">@"alert.button_dimiss"</span><span class="p">,</span> <span class="nb">nil</span><span class="p">)</span>
+                                                  <span class="nl">otherButtonTitles:</span><span class="nb">nil</span><span class="p">];</span>
+        
+        <span class="p">[</span><span class="n">alertView</span> <span class="nf">show</span><span class="p">];</span>
+        
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="c1">//make regular phone prompt (with call confirmation)</span>
+    <span class="n">NSURL</span> <span class="o">*</span><span class="n">phoneUrl</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURL</span> <span class="nf">URLWithString</span><span class="p">:[</span><span class="n">NSString</span>  <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"telprompt://%@"</span><span class="p">,</span><span class="n">phoneNumberString</span><span class="p">]];</span>
+
+    <span class="k">if</span> <span class="p">([[</span><span class="n">UIApplication</span> <span class="nf">sharedApplication</span><span class="p">]</span> <span class="nf">canOpenURL</span><span class="p">:</span><span class="n">phoneUrl</span><span class="p">])</span> <span class="p">{</span>
+        
+        <span class="p">[[</span><span class="n">UIApplication</span> <span class="nf">sharedApplication</span><span class="p">]</span> <span class="nf">openURL</span><span class="p">:</span><span class="n">phoneUrl</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
 
 <p>I hope this will help you reduce potential edge cases in your future apps.</p>
 </div>
+
 
   <footer>
     <em>by <a href="https://www.twitter.com/noxytrux" >Marcin Małysz</a>, 2015 Jul 5</em>
@@ -290,37 +188,7 @@
 
 <aside class="sidebar">
   
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
     
-      <li class="post">
-        <a href="/blog/2020/07/07/array-backwards-compatibility/">Array backwards compatibility using Property Wrappers</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/07/13/complete-flows-partial-models/">Complete flows, partial models</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/05/10/testing-codable/">Testing Codable</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/04/08/testing-the-camera-on-the-simulator/">Testing the camera on the simulator</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
-      </li>
-    
-  </ul>
-</section>
-
-
-
-
-
   
 </aside>
 
@@ -328,7 +196,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2024 -  NSHint <br/>
+  Copyright &copy; 2026 -  NSHint <br/>
 </span>
 </p>
 

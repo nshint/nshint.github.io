@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>UICollectionViews now have easy reordering - NSHint</title>
+  <meta name="author" content="NSHint">
+
+  
+  <meta name="description" content="I’m a huge fan of UICollectionView. It’s way more customizable than his older brother UITableView. Nowadays I use collection view even more often t...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://nshint.github.ioblog20150715uicollectionviews-now-have-easy-reordering/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="" rel="alternate" title="NSHint" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script defer data-domain="nshint.io" src="https://cotam.matoszko.pl/js/script.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner">
+	<a href="/"><img src="/svg/nshint_logo.svg" height="120px"></a>
+	<br/>
+	<div class="social">
+		<a href="https://twitter.com/nshintio"><img src="/svg/twitter.svg" height="40px"/></a>
+		<a href="https://github.com/nshint/"><img src="/svg/github.svg" height="40px"/></a>
+		<a href="https://nshint.github.io/atom.xml"><img src="/svg/rss.svg" height="40px"/></a>
+	</div>
+
+
+
+</header>
+  <nav role="navigation"><ul class="main-navigation">
+  <li><a href="/">articles</a></li>
+  <li><a href="/blog/archives">archives</a></li>
+  <li><a href="/team">team</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      
+<div>
+<article class="hentry" role="article">
+  
+  <header>
+  
+    
+      <h1 class="entry-title">UICollectionViews now have easy reordering</h1>
+    
+  
+  </header>
+
+
+<div class="entry-content"><p>I’m a huge fan of <code class="language-plaintext highlighter-rouge">UICollectionView</code>. It’s way more customizable than his older brother <code class="language-plaintext highlighter-rouge">UITableView</code>. Nowadays I use collection view even more often than table view. With iOS 9 it supports easy reordering. Before it wasn’t possible out of the box, and to do so means painful work. Let’s have look at the API. You can find the accompanying Xcode project <a href="https://github.com/nshint/uicollectionview-reordering">on GitHub</a>.
+<!--more-->
+The easiest way to add easy reordering is to use <code class="language-plaintext highlighter-rouge">UICollectionViewController</code>. It now has a new property called <code class="language-plaintext highlighter-rouge">installsStandardGestureForInteractiveMovement</code> which adds standard gestures to reorder cells. This property is <code class="language-plaintext highlighter-rouge">true</code> by default, which means that there’s only one method we should to override to get things working.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">collectionView</span><span class="p">(</span><span class="nv">collectionView</span><span class="p">:</span> <span class="kt">UICollectionView</span><span class="p">,</span> 
+    <span class="n">moveItemAtIndexPath</span> <span class="nv">sourceIndexPath</span><span class="p">:</span> <span class="kt">NSIndexPath</span><span class="p">,</span> 
+    <span class="n">toIndexPath</span> <span class="nv">destinationIndexPath</span><span class="p">:</span> <span class="kt">NSIndexPath</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// move your data order</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The collection view infers that items can be moved because <code class="language-plaintext highlighter-rouge">moveItemAtIndexPath</code> is overrired.</p>
+
+<p><img class="center" src="/images/uicollectionview-reordering/1.gif" /></p>
+
+<p>Things go complicated when we want to use a simple <code class="language-plaintext highlighter-rouge">UIViewController</code> with collection view. We also need to implement <code class="language-plaintext highlighter-rouge">UICollectionViewDataSource</code> methods mentioned above, but we need to rewrite <code class="language-plaintext highlighter-rouge">installsStandardGestureForInteractiveMovement</code>. No worries, it’s also easily supported.<code class="language-plaintext highlighter-rouge">UILongPressGestureRecognizer</code> is a continuous gesture recognizer and fully supports panning.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+
+            <span class="n">longPressGesture</span> <span class="o">=</span> <span class="kt">UILongPressGestureRecognizer</span><span class="p">(</span><span class="nv">target</span><span class="p">:</span> <span class="k">self</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="s">"handleLongGesture:"</span><span class="p">)</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">collectionView</span><span class="o">.</span><span class="nf">addGestureRecognizer</span><span class="p">(</span><span class="n">longPressGesture</span><span class="p">)</span>
+<span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">handleLongGesture</span><span class="p">(</span><span class="nv">gesture</span><span class="p">:</span> <span class="kt">UILongPressGestureRecognizer</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="k">switch</span><span class="p">(</span><span class="n">gesture</span><span class="o">.</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+            
+        <span class="k">case</span> <span class="kt">UIGestureRecognizerState</span><span class="o">.</span><span class="kt">Began</span><span class="p">:</span>
+            <span class="k">guard</span> <span class="k">let</span> <span class="nv">selectedIndexPath</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">collectionView</span><span class="o">.</span><span class="nf">indexPathForItemAtPoint</span><span class="p">(</span><span class="n">gesture</span><span class="o">.</span><span class="nf">locationInView</span><span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">collectionView</span><span class="p">))</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">break</span>
+            <span class="p">}</span>
+            <span class="n">collectionView</span><span class="o">.</span><span class="nf">beginInteractiveMovementForItemAtIndexPath</span><span class="p">(</span><span class="n">selectedIndexPath</span><span class="p">)</span>
+        <span class="k">case</span> <span class="kt">UIGestureRecognizerState</span><span class="o">.</span><span class="kt">Changed</span><span class="p">:</span>
+            <span class="n">collectionView</span><span class="o">.</span><span class="nf">updateInteractiveMovementTargetPosition</span><span class="p">(</span><span class="n">gesture</span><span class="o">.</span><span class="nf">locationInView</span><span class="p">(</span><span class="n">gesture</span><span class="o">.</span><span class="n">view</span><span class="o">!</span><span class="p">))</span>
+        <span class="k">case</span> <span class="kt">UIGestureRecognizerState</span><span class="o">.</span><span class="kt">Ended</span><span class="p">:</span>
+            <span class="n">collectionView</span><span class="o">.</span><span class="nf">endInteractiveMovement</span><span class="p">()</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="n">collectionView</span><span class="o">.</span><span class="nf">cancelInteractiveMovement</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>We stored selected index path obtained in long press gesture handler and depending on wether it has any value we allow to pan gesture to kick in. Then, we call some new collection view methods accordingly to the gesture state:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">beginInteractiveMovementForItemAtIndexPath(indexPath: NSIndexPath)</code> which starts interactive movement for cell at specific index path</li>
+  <li><code class="language-plaintext highlighter-rouge">updateInteractiveMovementTargetPosition(targetPosition: CGPoint)</code> which updates interactive movement target position during gesture</li>
+  <li><code class="language-plaintext highlighter-rouge">endInteractiveMovement()</code> which ends interactive movement after you finish pan gesture</li>
+  <li><code class="language-plaintext highlighter-rouge">cancelInteractiveMovement()</code> which cancels interactive movement</li>
+</ul>
+
+<p>And this makes handling pan gesture obvious.</p>
+
+<p><img class="center" src="/images/uicollectionview-reordering/2.gif" /></p>
+
+<p>The behavior is the same as with standard <code class="language-plaintext highlighter-rouge">UICollectionViewController</code>. Really cool, but what makes it even cooler is that we can apply reordering to collection view with our custom collection view layout. Check interactive movement with simple waterfall layout.</p>
+
+<p><img class="center" src="/images/uicollectionview-reordering/3.gif" /></p>
+
+<p>Uhm, looks cool, but what if we don’t want to change cell size during movement? Selected cell size during interactive movement should remain the same. This is possible. <code class="language-plaintext highlighter-rouge">UICollectionViewLayout</code> also gets additional methods to handle reordering.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">invalidationContextForInteractivelyMovingItems</span><span class="p">(</span><span class="nv">targetIndexPaths</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSIndexPath</span><span class="p">],</span> 
+    <span class="n">withTargetPosition</span> <span class="nv">targetPosition</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">,</span> 
+    <span class="nv">previousIndexPaths</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSIndexPath</span><span class="p">],</span> 
+    <span class="nv">previousPosition</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutInvalidationContext</span>
+
+<span class="kd">func</span> <span class="nf">invalidationContextForEndingInteractiveMovementOfItemsToFinalIndexPaths</span><span class="p">(</span><span class="nv">indexPaths</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSIndexPath</span><span class="p">],</span> 
+    <span class="nv">previousIndexPaths</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSIndexPath</span><span class="p">],</span> 
+    <span class="nv">movementCancelled</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutInvalidationContext</span>
+</code></pre></div></div>
+
+<p>The former is called during the cells interactive movement with target and previous cell’s indexPaths. The next one is similar, but it’s called just after interactive movement ends. With this knowledge we can achieve our requirement using one little trick.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">internal</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">invalidationContextForInteractivelyMovingItems</span><span class="p">(</span><span class="nv">targetIndexPaths</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSIndexPath</span><span class="p">],</span>
+    <span class="n">withTargetPosition</span> <span class="nv">targetPosition</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">,</span> 
+    <span class="nv">previousIndexPaths</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSIndexPath</span><span class="p">],</span> 
+    <span class="nv">previousPosition</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutInvalidationContext</span> <span class="p">{</span>
+
+    <span class="k">var</span> <span class="nv">context</span> <span class="o">=</span> <span class="k">super</span><span class="o">.</span><span class="nf">invalidationContextForInteractivelyMovingItems</span><span class="p">(</span><span class="n">targetIndexPaths</span><span class="p">,</span> 
+        <span class="nv">withTargetPosition</span><span class="p">:</span> <span class="n">targetPosition</span><span class="p">,</span> <span class="nv">previousIndexPaths</span><span class="p">:</span> <span class="n">previousIndexPaths</span><span class="p">,</span> 
+        <span class="nv">previousPosition</span><span class="p">:</span> <span class="n">previousPosition</span><span class="p">)</span>
+
+    <span class="k">self</span><span class="o">.</span><span class="n">delegate</span><span class="p">?</span><span class="o">.</span><span class="nf">collectionView</span><span class="o">!</span><span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">collectionView</span><span class="o">!</span><span class="p">,</span> <span class="nv">moveItemAtIndexPath</span><span class="p">:</span> <span class="n">previousIndexPaths</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> 
+        <span class="nv">toIndexPath</span><span class="p">:</span> <span class="n">targetIndexPaths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">context</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Solution is straightforward. Grab previous and target index paths of currently moving cell. Then call <code class="language-plaintext highlighter-rouge">UICollectionViewDataSource</code> method to move this items around.</p>
+
+<p><img class="center" src="/images/uicollectionview-reordering/4.gif" /></p>
+
+<p>Without a doubt, a collection view reordering is a fantastic addition. UIKit engineers made awesome job! :)</p>
+
+<p>P.S: I would like to thanks <a href="https://twitter.com/qdoug">Douglas Hill</a> for hinting out some improvements in our code. Thanks Douglas, keep up the good work!</p>
+</div>
+
+
+  <footer>
+    <em>by <a href="https://www.twitter.com/wojteklu" >Wojciech Łukaszuk</a>, 2015 Jul 15</em>
+    <em><div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://nshint.github.io/blog/2015/07/15/uicollectionviews-now-have-easy-reordering/" data-via="nshintio" data-counturl="http://nshint.github.io/blog/2015/07/15/uicollectionviews-now-have-easy-reordering/" >Tweet</a>
+  
+  
+  
+</div>
+</em>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2026 -  NSHint <br/>
+</span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'https://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

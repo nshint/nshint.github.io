@@ -9,14 +9,10 @@
   <meta name="author" content="NSHint">
 
   
-  <meta name="description" content="Do you sometimes see this in your code while performing custom drawing using drawRect? 1
-2
-3
-4
-5
-6
-7
-&lt;Error&gt;: CGContextSaveGState: invalid &hellip;">
+  <meta name="description" content="Do you sometimes see this in your code while performing custom drawing using drawRect?
+
+&lt;Error&gt;: CGContextSaveGState: invalid context 0x0
+&lt...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -25,10 +21,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://nshint.github.io/blog/2015/06/27/tracking-drawing-errors">
+  <link rel="canonical" href="http://nshint.github.ioblog20150627tracking-drawing-errors/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <link href="" rel="alternate" title="NSHint" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script defer data-domain="nshint.io" src="https://cotam.matoszko.pl/js/script.js"></script>
@@ -72,60 +68,34 @@
   <header>
   
     
-      <h1 class="entry-title">Tracking Down Drawing Errors</h1>
+      <h1 class="entry-title">Tracking down drawing errors</h1>
     
   
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-06-27T11:35:32+02:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
   </header>
 
 
 <div class="entry-content"><p>Do you sometimes see this in your code while performing custom drawing using <code>drawRect</code>?</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;Error&gt;: CGContextSaveGState: invalid context 0x0
-</span><span class='line'>&lt;Error&gt;: CGContextSetBlendMode: invalid context 0x0
-</span><span class='line'>&lt;Error&gt;: CGContextSetAlpha: invalid context 0x0
-</span><span class='line'>&lt;Error&gt;: CGContextTranslateCTM: invalid context 0x0
-</span><span class='line'>&lt;Error&gt;: CGContextScaleCTM: invalid context 0x0
-</span><span class='line'>&lt;Error&gt;: CGContextDrawImage: invalid context 0x0
-</span><span class='line'>&lt;Error&gt;: CGContextRestoreGState: invalid context 0x0</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;Error&gt;: CGContextSaveGState: invalid context 0x0
+&lt;Error&gt;: CGContextSetBlendMode: invalid context 0x0
+&lt;Error&gt;: CGContextSetAlpha: invalid context 0x0
+&lt;Error&gt;: CGContextTranslateCTM: invalid context 0x0
+&lt;Error&gt;: CGContextScaleCTM: invalid context 0x0
+&lt;Error&gt;: CGContextDrawImage: invalid context 0x0
+&lt;Error&gt;: CGContextRestoreGState: invalid context 0x0
+</code></pre></div></div>
 <!--more-->
-
-
 <p>And as always is very hard to track, because you cannot exactly say which draw command actually cause this or where does it comes from.
 But there is a simple solution to this:</p>
 
 <p>Use this symbolic breakpoint <code>CGPostError</code> in your xcode to stop executing on exact line where drawing error appears.</p>
 
-<p><img class="center" src="/images/track-drawin-errors/screen_cgposterror.png"></p>
+<p><img class="center" src="/images/track-drawin-errors/screen_cgposterror.png" /></p>
 
 <p>Now you can see all callstack and all values to find root cause of incorrect drawing.</p>
+
 </div>
+
 
   <footer>
     <em>by <a href="https://www.twitter.com/noxytrux" >Marcin Małysz</a>, 2015 Jun 27</em>
@@ -144,37 +114,7 @@ But there is a simple solution to this:</p>
 
 <aside class="sidebar">
   
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
     
-      <li class="post">
-        <a href="/blog/2020/07/07/array-backwards-compatibility/">Array backwards compatibility using Property Wrappers</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/07/13/complete-flows-partial-models/">Complete flows, partial models</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/05/10/testing-codable/">Testing Codable</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/04/08/testing-the-camera-on-the-simulator/">Testing the camera on the simulator</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
-      </li>
-    
-  </ul>
-</section>
-
-
-
-
-
   
 </aside>
 
@@ -182,7 +122,7 @@ But there is a simple solution to this:</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2024 -  NSHint <br/>
+  Copyright &copy; 2026 -  NSHint <br/>
 </span>
 </p>
 

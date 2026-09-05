@@ -9,14 +9,9 @@
   <meta name="author" content="NSHint">
 
   
-  <meta name="description" content="UILabel properties cannot be easy animated due to some various reasons, so code like this will have no effect on it: 1
-2
-3
-4
-5
-6
-7
-self.someLabel. &hellip;">
+  <meta name="description" content="UILabel properties cannot be easy animated due to some various reasons, so code like this will have no effect on it:
+
+self.someLabel.textColor = [U...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -25,10 +20,10 @@ self.someLabel. &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://nshint.github.io/blog/2015/07/04/how-to-animate-uilabel-properties">
+  <link rel="canonical" href="http://nshint.github.ioblog20150704how-to-animate-uilabel-properties/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="NSHint" type="application/atom+xml">
+  <link href="" rel="alternate" title="NSHint" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script defer data-domain="nshint.io" src="https://cotam.matoszko.pl/js/script.js"></script>
@@ -72,81 +67,42 @@ self.someLabel. &hellip;">
   <header>
   
     
-      <h1 class="entry-title">How to Animate UILabel Properties</h1>
+      <h1 class="entry-title">How to animate UILabel properties</h1>
     
   
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-07-04T15:53:09+02:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
   </header>
 
 
-<div class="entry-content"><p><code>UILabel</code> properties cannot be easy animated due to some various reasons, so code like this will have no effect on it:</p>
+<div class="entry-content"><p><code class="language-plaintext highlighter-rouge">UILabel</code> properties cannot be easy animated due to some various reasons, so code like this will have no effect on it:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='objC'><span class='line'><span class="nb">self</span><span class="p">.</span><span class="n">someLabel</span><span class="p">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIColor</span> <span class="n">blueColor</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">[</span><span class="bp">UIView</span> <span class="nl">animateWithDuration</span><span class="p">:</span><span class="mf">0.3</span>
-</span><span class='line'>                  <span class="nl">animation</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
-</span><span class='line'>  
-</span><span class='line'>                      <span class="nb">self</span><span class="p">.</span><span class="n">someLabel</span><span class="p">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIColor</span> <span class="n">redColor</span><span class="p">];</span>
-</span><span class='line'>                  <span class="p">}];</span>
-</span></code></pre></td></tr></table></div></figure>
+<pre><code class="language-objC">self.someLabel.textColor = [UIColor blueColor];
 
-
+[UIView animateWithDuration:0.3 
+				    animation:^{
+	
+				  		self.someLabel.textColor = [UIColor redColor];
+				  	}];
+</code></pre>
 <!--more-->
-
-
 <p>But there is a simple solution. Instead of animating property we will perform transition on object itself.</p>
 
-<p>Using <code>transitionWithView</code> should solve our problem:</p>
+<p>Using <code class="language-plaintext highlighter-rouge">transitionWithView</code> should solve our problem:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='objC'><span class='line'><span class="nb">self</span><span class="p">.</span><span class="n">someLabel</span><span class="p">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIColor</span> <span class="n">blueColor</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">[</span><span class="bp">UIView</span> <span class="nl">transitionWithView</span><span class="p">:</span><span class="nb">self</span><span class="p">.</span><span class="n">someLabel</span>
-</span><span class='line'>                  <span class="nl">duration</span><span class="p">:</span><span class="mf">0.3</span>
-</span><span class='line'>                   <span class="nl">options</span><span class="p">:</span><span class="n">UIViewAnimationOptionTransitionCrossDissolve</span>
-</span><span class='line'>                <span class="nl">animations</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>                      <span class="nb">self</span><span class="p">.</span><span class="n">someLabel</span><span class="p">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIColor</span> <span class="n">redColor</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="p">}</span> <span class="nl">completion</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
-</span></code></pre></td></tr></table></div></figure>
+<pre><code class="language-objC">self.someLabel.textColor = [UIColor blueColor];
 
+[UIView transitionWithView:self.someLabel 
+				    duration:0.3 
+				     options:UIViewAnimationOptionTransitionCrossDissolve 
+				  animations:^{
+
+    					self.someLabel.textColor = [UIColor redColor];
+
+				  } completion:nil];
+</code></pre>
 
 <p>This creates nice fade in/out animation which is exactly what we want.</p>
 </div>
+
 
   <footer>
     <em>by <a href="https://www.twitter.com/noxytrux" >Marcin Małysz</a>, 2015 Jul 4</em>
@@ -165,37 +121,7 @@ self.someLabel. &hellip;">
 
 <aside class="sidebar">
   
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
     
-      <li class="post">
-        <a href="/blog/2020/07/07/array-backwards-compatibility/">Array backwards compatibility using Property Wrappers</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/07/13/complete-flows-partial-models/">Complete flows, partial models</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/05/10/testing-codable/">Testing Codable</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2019/04/08/testing-the-camera-on-the-simulator/">Testing the camera on the simulator</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/05/02/wrapping-apis-using-the-builder-pattern/">Wrapping API's using the Builder Pattern</a>
-      </li>
-    
-  </ul>
-</section>
-
-
-
-
-
   
 </aside>
 
@@ -203,7 +129,7 @@ self.someLabel. &hellip;">
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2024 -  NSHint <br/>
+  Copyright &copy; 2026 -  NSHint <br/>
 </span>
 </p>
 
